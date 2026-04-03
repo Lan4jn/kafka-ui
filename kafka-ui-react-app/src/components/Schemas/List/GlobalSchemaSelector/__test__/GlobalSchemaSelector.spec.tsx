@@ -6,6 +6,7 @@ import GlobalSchemaSelector from 'components/Schemas/List/GlobalSchemaSelector/G
 import userEvent from '@testing-library/user-event';
 import { clusterSchemasPath } from 'lib/paths';
 import fetchMock from 'fetch-mock';
+import { en } from 'locales/en';
 
 const clusterName = 'testClusterName';
 
@@ -60,13 +61,15 @@ describe('GlobalSchemaSelector', () => {
   it('shows popup when select value is changed', async () => {
     expectOptionIsSelected(CompatibilityLevelCompatibilityEnum.FULL);
     await selectForwardOption();
-    expect(screen.getByText('Confirm the action')).toBeInTheDocument();
+    expect(screen.getByText(en['confirmation.title'])).toBeInTheDocument();
   });
 
   it('resets select value when cancel is clicked', async () => {
     await selectForwardOption();
     await userEvent.click(screen.getByText('Cancel'));
-    expect(screen.queryByText('Confirm the action')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(en['confirmation.title'])
+    ).not.toBeInTheDocument();
     expectOptionIsSelected(CompatibilityLevelCompatibilityEnum.FULL);
   });
 
@@ -92,7 +95,9 @@ describe('GlobalSchemaSelector', () => {
     await waitFor(() => expect(getSchemasMock.called()).toBeTruthy());
 
     await waitFor(() =>
-      expect(screen.queryByText('Confirm the action')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText(en['confirmation.title'])
+      ).not.toBeInTheDocument()
     );
 
     await waitFor(() =>

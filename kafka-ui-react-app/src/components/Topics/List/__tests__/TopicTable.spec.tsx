@@ -13,6 +13,7 @@ import {
 } from 'lib/hooks/api/topics';
 import TopicTable from 'components/Topics/List/TopicTable';
 import { clusterTopicsPath } from 'lib/paths';
+import { en } from 'locales/en';
 
 const clusterName = 'test-cluster';
 
@@ -306,7 +307,9 @@ describe('TopicTable Components', () => {
           renderComponent({ topics: [topicsPayload[1]] });
           await expectDropdownExists();
           await userEvent.click(screen.getByText('Remove Topic'));
-          expect(screen.getByText('Confirm the action')).toBeInTheDocument();
+          expect(
+            screen.getByText(en['confirmation.title'])
+          ).toBeInTheDocument();
           await userEvent.click(
             screen.getByRole('button', { name: 'Confirm' })
           );
@@ -318,7 +321,9 @@ describe('TopicTable Components', () => {
           renderComponent({ topics: [topicsPayload[1]] });
           await expectDropdownExists();
           await userEvent.click(screen.getByText('Recreate Topic'));
-          expect(screen.getByText('Confirm the action')).toBeInTheDocument();
+          expect(
+            screen.getByText(en['confirmation.title'])
+          ).toBeInTheDocument();
           await userEvent.click(
             screen.getByRole('button', { name: 'Confirm' })
           );

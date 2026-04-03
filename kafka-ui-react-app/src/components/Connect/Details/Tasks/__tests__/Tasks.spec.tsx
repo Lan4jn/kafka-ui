@@ -10,6 +10,7 @@ import {
   useRestartConnectorTask,
 } from 'lib/hooks/api/kafkaConnect';
 import { Task } from 'generated-sources';
+import { en } from 'locales/en';
 
 jest.mock('lib/hooks/api/kafkaConnect', () => ({
   useConnectorTasks: jest.fn(),
@@ -117,7 +118,7 @@ describe('Tasks', () => {
         screen.getByText('Are you sure you want to restart the task?')
       ).toBeInTheDocument();
 
-      expect(screen.getByText('Confirm the action')).toBeInTheDocument();
+      expect(screen.getByText(en['confirmation.title'])).toBeInTheDocument();
       userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
       await waitFor(() => expect(restartConnectorMock).toHaveBeenCalled());
