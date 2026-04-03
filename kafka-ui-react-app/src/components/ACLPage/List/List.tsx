@@ -29,9 +29,7 @@ const ACList: React.FC = () => {
 
   const onDeleteClick = (acl: KafkaAcl | null) => {
     if (acl) {
-      modal(t('acl.list.confirmDelete'), () =>
-        deleteResource(acl)
-      );
+      modal(t('acl.list.confirmDelete'), () => deleteResource(acl));
     }
   };
 

@@ -23,7 +23,7 @@ describe('Dashboard', () => {
     isFetched = true,
     hasDynamicConfig = true,
   }: {
-    data?: typeof onlineClusterPayload[];
+    data?: (typeof onlineClusterPayload)[];
     isFetched?: boolean;
     hasDynamicConfig?: boolean;
   } = {}) => {

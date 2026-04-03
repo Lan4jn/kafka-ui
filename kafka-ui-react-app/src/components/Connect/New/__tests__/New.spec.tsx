@@ -79,9 +79,7 @@ describe('New', () => {
     expect(screen.getByText('Connect *')).toBeInTheDocument();
     expect(screen.getByText('名称')).toBeInTheDocument();
     expect(screen.getByText('配置')).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: '提交' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '提交' })).toBeInTheDocument();
   });
 
   it('calls createConnector on form submit and redirects to the list page on success', async () => {

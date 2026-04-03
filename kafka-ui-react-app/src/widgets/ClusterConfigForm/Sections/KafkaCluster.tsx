@@ -65,7 +65,9 @@ const KafkaCluster: React.FC = () => {
               <div>
                 <Input
                   name={`bootstrapServers.${index}.host`}
-                  placeholder={t('clusterConfig.kafkaCluster.placeholders.host')}
+                  placeholder={t(
+                    'clusterConfig.kafkaCluster.placeholders.host'
+                  )}
                   type="text"
                   inputSize="L"
                   withError
@@ -74,7 +76,9 @@ const KafkaCluster: React.FC = () => {
               <div>
                 <Input
                   name={`bootstrapServers.${index}.port`}
-                  placeholder={t('clusterConfig.kafkaCluster.placeholders.port')}
+                  placeholder={t(
+                    'clusterConfig.kafkaCluster.placeholders.port'
+                  )}
                   type="number"
                   positiveOnly
                   withError

@@ -60,11 +60,7 @@ describe('TopicTable Components', () => {
     });
   });
 
-  const getComponent = (
-    currentData: TopicsResponse | undefined = undefined,
-    isReadOnly = false,
-    isTopicDeletionAllowed = true
-  ) => (
+  const getComponent = (isReadOnly = false, isTopicDeletionAllowed = true) => (
     <ClusterContext.Provider
       value={{
         isReadOnly,
@@ -88,12 +84,9 @@ describe('TopicTable Components', () => {
       data: currentData,
     }));
 
-    return render(
-      getComponent(currentData, isReadOnly, isTopicDeletionAllowed),
-      {
-        initialEntries: [clusterTopicsPath(clusterName)],
-      }
-    );
+    return render(getComponent(isReadOnly, isTopicDeletionAllowed), {
+      initialEntries: [clusterTopicsPath(clusterName)],
+    });
   };
 
   describe('without data', () => {
@@ -328,7 +321,9 @@ describe('TopicTable Components', () => {
           });
           await expectDropdownExists();
           const actionBtn = screen.getAllByRole('menuitem');
-          expect(actionBtn[0]).toHaveTextContent(en['topics.actions.clearMessages']);
+          expect(actionBtn[0]).toHaveTextContent(
+            en['topics.actions.clearMessages']
+          );
           expect(actionBtn[0]).toHaveAttribute('aria-disabled');
         });
         it('works as expected', async () => {
@@ -343,10 +338,10 @@ describe('TopicTable Components', () => {
           });
           await expectDropdownExists();
           await userEvent.click(screen.getByText('清空消息'));
-          expect(screen.getByText('确定要清空主题消息吗？')).toBeInTheDocument();
-          await userEvent.click(
-            screen.getByRole('button', { name: '确认' })
-          );
+          expect(
+            screen.getByText('确定要清空主题消息吗？')
+          ).toBeInTheDocument();
+          await userEvent.click(screen.getByRole('button', { name: '确认' }));
           expect(clearTopicMessages).toHaveBeenCalled();
         });
       });

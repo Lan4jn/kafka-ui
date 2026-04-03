@@ -101,11 +101,12 @@ describe('Connectors List Page', () => {
       expect(connectorsIndicator).toBeInTheDocument();
       expect(connectorsIndicator).toHaveTextContent('Connectors -');
 
-      const failedConnectorsIndicator = within(metrics).getByTitle(
-        '失败的 Connectors 数量'
-      );
+      const failedConnectorsIndicator =
+        within(metrics).getByTitle('失败的 Connectors 数量');
       expect(failedConnectorsIndicator).toBeInTheDocument();
-      expect(failedConnectorsIndicator).toHaveTextContent('失败的 Connectors 0');
+      expect(failedConnectorsIndicator).toHaveTextContent(
+        '失败的 Connectors 0'
+      );
 
       const failedTasksIndicator = within(metrics).getByTitle('失败的任务数量');
       expect(failedTasksIndicator).toBeInTheDocument();
@@ -126,9 +127,8 @@ describe('Connectors List Page', () => {
       expect(connectorsIndicator).toBeInTheDocument();
       expect(connectorsIndicator).toHaveTextContent('Connectors -');
 
-      const failedConnectorsIndicator = within(metrics).getByTitle(
-        '失败的 Connectors 数量'
-      );
+      const failedConnectorsIndicator =
+        within(metrics).getByTitle('失败的 Connectors 数量');
       expect(failedConnectorsIndicator).toBeInTheDocument();
       expect(failedConnectorsIndicator).toHaveTextContent(
         '失败的 Connectors -'
@@ -156,11 +156,12 @@ describe('Connectors List Page', () => {
         `Connectors ${connectors.length}`
       );
 
-      const failedConnectorsIndicator = within(metrics).getByTitle(
-        '失败的 Connectors 数量'
-      );
+      const failedConnectorsIndicator =
+        within(metrics).getByTitle('失败的 Connectors 数量');
       expect(failedConnectorsIndicator).toBeInTheDocument();
-      expect(failedConnectorsIndicator).toHaveTextContent('失败的 Connectors 1');
+      expect(failedConnectorsIndicator).toHaveTextContent(
+        '失败的 Connectors 1'
+      );
 
       const failedTasksIndicator = within(metrics).getByTitle('失败的任务数量');
       expect(failedTasksIndicator).toBeInTheDocument();

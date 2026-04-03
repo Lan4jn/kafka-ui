@@ -44,7 +44,9 @@ const KafkaConnect = () => {
                   <Input
                     label={t('clusterConfig.kafkaConnect.fields.name')}
                     name={`kafkaConnect.${index}.name`}
-                    placeholder={t('clusterConfig.kafkaConnect.placeholders.name')}
+                    placeholder={t(
+                      'clusterConfig.kafkaConnect.placeholders.name'
+                    )}
                     type="text"
                     hint={t('clusterConfig.kafkaConnect.hints.name')}
                     withError
@@ -52,14 +54,18 @@ const KafkaConnect = () => {
                   <Input
                     label={t('clusterConfig.kafkaConnect.fields.url')}
                     name={`kafkaConnect.${index}.address`}
-                    placeholder={t('clusterConfig.kafkaConnect.placeholders.url')}
+                    placeholder={t(
+                      'clusterConfig.kafkaConnect.placeholders.url'
+                    )}
                     type="text"
                     hint={t('clusterConfig.kafkaConnect.hints.url')}
                     withError
                   />
                   <Credentials
                     prefix={`kafkaConnect.${index}`}
-                    title={t('clusterConfig.kafkaConnect.fields.isSecuredWithAuth')}
+                    title={t(
+                      'clusterConfig.kafkaConnect.fields.isSecuredWithAuth'
+                    )}
                   />
                   <SSLForm
                     prefix={`kafkaConnect.${index}.keystore`}

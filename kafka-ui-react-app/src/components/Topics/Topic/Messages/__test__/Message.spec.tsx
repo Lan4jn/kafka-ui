@@ -25,6 +25,10 @@ jest.mock(
 );
 
 describe('Message component', () => {
+  beforeEach(() => {
+    localStorage.setItem('locale', 'zh-CN');
+  });
+
   const mockMessage: TopicMessage = {
     timestamp: new Date(),
     timestampType: TopicMessageTimestampTypeEnum.CREATE_TIME,
@@ -85,7 +89,7 @@ describe('Message component', () => {
 
   it('should check the dropdown being visible during hover', async () => {
     renderComponent();
-    const text = 'Save as a file';
+    const text = '另存为文件';
     const trElement = screen.getByRole('row');
     expect(screen.queryByText(text)).not.toBeInTheDocument();
 
@@ -94,6 +98,21 @@ describe('Message component', () => {
 
     await userEvent.unhover(trElement);
     expect(screen.queryByText(text)).not.toBeInTheDocument();
+  });
+
+  it('shows localized action labels and fallback tooltip', async () => {
+    renderComponent({
+      message: {
+        ...mockMessage,
+        keySerde: 'Fallback',
+        valueSerde: 'Fallback',
+      },
+    });
+
+    await userEvent.hover(screen.getByRole('row'));
+
+    expect(screen.getByText('复制到剪贴板')).toBeInTheDocument();
+    expect(screen.getByText('另存为文件')).toBeInTheDocument();
   });
 
   it('should check open Message Content functionality', async () => {

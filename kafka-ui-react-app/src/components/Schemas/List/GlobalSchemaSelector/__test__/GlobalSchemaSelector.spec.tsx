@@ -6,6 +6,7 @@ import GlobalSchemaSelector from 'components/Schemas/List/GlobalSchemaSelector/G
 import userEvent from '@testing-library/user-event';
 import { clusterSchemasPath } from 'lib/paths';
 import fetchMock from 'fetch-mock';
+
 const clusterName = 'testClusterName';
 
 const selectForwardOption = async () => {
@@ -62,13 +63,12 @@ describe('GlobalSchemaSelector', () => {
     expectOptionIsSelected(CompatibilityLevelCompatibilityEnum.FULL);
     expect(screen.getByText('全局兼容级别：')).toBeInTheDocument();
     await selectForwardOption();
+    expect(screen.getByRole('button', { name: '确认' })).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: '确认' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText((_, element) =>
-        element?.textContent ===
-        '确定要更新全局兼容级别，并将其设置为 FORWARD 吗？这可能会影响各个 Schema 的兼容级别。'
+      screen.getByText(
+        (_, element) =>
+          element?.textContent ===
+          '确定要更新全局兼容级别，并将其设置为 FORWARD 吗？这可能会影响各个 Schema 的兼容级别。'
       )
     ).toBeInTheDocument();
   });
@@ -76,9 +76,7 @@ describe('GlobalSchemaSelector', () => {
   it('resets select value when cancel is clicked', async () => {
     await selectForwardOption();
     await userEvent.click(screen.getByText('取消'));
-    expect(
-      screen.queryByText('确认')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('确认')).not.toBeInTheDocument();
     expectOptionIsSelected(CompatibilityLevelCompatibilityEnum.FULL);
   });
 

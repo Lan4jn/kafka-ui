@@ -10,10 +10,7 @@ type CredentialsProps = {
   title?: string;
 };
 
-const Credentials: React.FC<CredentialsProps> = ({
-  prefix,
-  title,
-}) => {
+const Credentials: React.FC<CredentialsProps> = ({ prefix, title }) => {
   const { t } = useTranslation();
   const { watch } = useFormContext();
   const checkboxTitle = title || t('clusterConfig.credentials.securedWithAuth');

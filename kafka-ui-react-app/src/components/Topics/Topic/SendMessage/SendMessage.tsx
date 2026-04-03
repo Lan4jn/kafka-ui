@@ -199,7 +199,9 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
                 <Switch name={name} onChange={onChange} checked={value} />
               )}
             />
-            <InputLabel>{t('topics.sendMessage.fields.keepContents')}</InputLabel>
+            <InputLabel>
+              {t('topics.sendMessage.fields.keepContents')}
+            </InputLabel>
           </div>
         </S.Columns>
         <S.Columns>

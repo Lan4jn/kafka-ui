@@ -134,7 +134,8 @@ describe('BrokersList Component', () => {
         renderComponent();
         const onlineWidgetDef = screen.getByText(testInSyncReplicasCount);
         const onlineWidget = screen.getByText(
-          (_, element) => element?.textContent === ` / ${testInSyncReplicasCount}`
+          (_, element) =>
+            element?.textContent === ` / ${testInSyncReplicasCount}`
         );
         expect(onlineWidgetDef).toBeInTheDocument();
         expect(onlineWidget).toBeInTheDocument();

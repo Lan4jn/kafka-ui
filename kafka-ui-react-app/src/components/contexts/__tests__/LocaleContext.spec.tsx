@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-
 import { zhCN } from 'locales/zh-CN';
 import { render as renderWithProviders } from 'lib/testHelpers';
 import {

@@ -30,7 +30,9 @@ const PartitionInfoRow: React.FC<{ row: Row<TopicAnalysisStats> }> = ({
   return (
     <S.PartitionInfo>
       <div>
-        <Heading level={4}>{t('topics.statistics.partitionInfo.partitionStats')}</Heading>
+        <Heading level={4}>
+          {t('topics.statistics.partitionInfo.partitionStats')}
+        </Heading>
         <List>
           <Label>{t('topics.statistics.partitionInfo.totalMessages')}</Label>
           <span>{totalMsgs}</span>
@@ -51,7 +53,9 @@ const PartitionInfoRow: React.FC<{ row: Row<TopicAnalysisStats> }> = ({
         </List>
       </div>
       <div>
-        <Heading level={4}>{t('topics.statistics.partitionInfo.keySizes')}</Heading>
+        <Heading level={4}>
+          {t('topics.statistics.partitionInfo.keySizes')}
+        </Heading>
         <List>
           <Label>{t('topics.statistics.partitionInfo.totalKeySize')}</Label>
           <BytesFormatted value={keySize?.sum} />
@@ -74,7 +78,9 @@ const PartitionInfoRow: React.FC<{ row: Row<TopicAnalysisStats> }> = ({
         </List>
       </div>
       <div>
-        <Heading level={4}>{t('topics.statistics.partitionInfo.valueSizes')}</Heading>
+        <Heading level={4}>
+          {t('topics.statistics.partitionInfo.valueSizes')}
+        </Heading>
         <List>
           <Label>{t('topics.statistics.partitionInfo.totalValueSize')}</Label>
           <BytesFormatted value={valueSize?.sum} />

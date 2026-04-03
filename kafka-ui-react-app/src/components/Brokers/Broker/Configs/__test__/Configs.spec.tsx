@@ -35,12 +35,16 @@ describe('Configs', () => {
   });
 
   it('renders configs table', async () => {
+    expect(screen.getByPlaceholderText('按键或值搜索')).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText('按键或值搜索')
+      screen.getByRole('columnheader', { name: '键' })
     ).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: '键' })).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: '值' })).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: '来源' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: '值' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: '来源' })
+    ).toBeInTheDocument();
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.getAllByRole('row').length).toEqual(
       brokerConfigPayload.length + 1
@@ -54,10 +58,11 @@ describe('Configs', () => {
         .querySelector('svg') as Element
     );
     expect(
-      screen.getAllByText((_, element) =>
-        element?.textContent?.includes(
-          'DYNAMIC_TOPIC_CONFIG = 为特定主题配置的动态主题配置'
-        ) || false
+      screen.getAllByText(
+        (_, element) =>
+          element?.textContent?.includes(
+            'DYNAMIC_TOPIC_CONFIG = 为特定主题配置的动态主题配置'
+          ) || false
       ).length
     ).toBeGreaterThan(0);
   });

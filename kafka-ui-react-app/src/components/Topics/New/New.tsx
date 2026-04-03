@@ -52,7 +52,9 @@ const New: React.FC = () => {
   return (
     <>
       <PageHeading
-        text={search ? t('topics.new.title.copy') : t('topics.new.title.create')}
+        text={
+          search ? t('topics.new.title.copy') : t('topics.new.title.create')
+        }
         backText={t('topics.new.backToList')}
         backTo={clusterTopicsPath(clusterName)}
       />

@@ -10,10 +10,9 @@ jest.mock('lib/hooks/api/consumers', () => ({
   useConsumerGroupDetails: jest.fn(),
 }));
 
-jest.mock(
-  'components/ConsumerGroups/Details/ResetOffsets/Form',
-  () => () => <div>ResetOffsetsFormMock</div>
-);
+jest.mock('components/ConsumerGroups/Details/ResetOffsets/Form', () => () => (
+  <div>ResetOffsetsFormMock</div>
+));
 
 const clusterName = 'local';
 const consumerGroupID = 'group-id';
@@ -40,9 +39,7 @@ describe('ResetOffsets', () => {
       }
     );
 
-    expect(
-      screen.getByRole('link', { name: '消费者组' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '消费者组' })).toBeInTheDocument();
     expect(screen.getByText('ResetOffsetsFormMock')).toBeInTheDocument();
   });
 });

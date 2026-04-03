@@ -59,7 +59,9 @@ const New: React.FC = () => {
             SCHEMA_NAME_VALIDATION_PATTERN,
             t('schemas.new.validation.subjectPattern')
           ),
-        schema: yup.string().required(t('schemas.new.validation.schemaRequired')),
+        schema: yup
+          .string()
+          .required(t('schemas.new.validation.schemaRequired')),
         schemaType: yup
           .string()
           .required(t('schemas.new.validation.schemaTypeRequired')),

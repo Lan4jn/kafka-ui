@@ -158,7 +158,8 @@ const Overview: React.FC = () => {
           </Metrics.Indicator>
           <Metrics.Indicator label={t('topics.overview.metrics.cleanupPolicy')}>
             <Tag color="gray">
-              {data?.cleanUpPolicy || t('topics.overview.cleanupPolicy.unknown')}
+              {data?.cleanUpPolicy ||
+                t('topics.overview.cleanupPolicy.unknown')}
             </Tag>
           </Metrics.Indicator>
           <Metrics.Indicator label={t('topics.overview.metrics.messageCount')}>

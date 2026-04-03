@@ -7,11 +7,15 @@ import { useGetUserInfo } from 'lib/hooks/api/roles';
 import { useAppInfo } from 'lib/hooks/api/appConfig';
 import { useClusters } from 'lib/hooks/api/clusters';
 
-jest.mock('components/Dashboard/Dashboard', () => () => <div>Dashboard Page</div>);
+jest.mock('components/Dashboard/Dashboard', () => () => (
+  <div>Dashboard Page</div>
+));
 
 jest.mock('components/Version/Version', () => () => <div>Version</div>);
 
-jest.mock('components/NavBar/UserInfo/UserInfo', () => () => <div>User Info</div>);
+jest.mock('components/NavBar/UserInfo/UserInfo', () => () => (
+  <div>User Info</div>
+));
 
 jest.mock('lib/hooks/api/roles', () => ({
   useGetUserInfo: jest.fn(),

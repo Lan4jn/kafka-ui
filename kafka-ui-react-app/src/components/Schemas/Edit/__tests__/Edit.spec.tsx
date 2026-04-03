@@ -71,7 +71,9 @@ describe('Edit', () => {
           screen.getByText('schemas.edit.fields.compatibilityLevel')
         ).toBeInTheDocument();
         expect(
-          screen.getByRole('heading', { name: 'schemas.edit.fields.latestSchema' })
+          screen.getByRole('heading', {
+            name: 'schemas.edit.fields.latestSchema',
+          })
         ).toBeInTheDocument();
         expect(
           screen.getByRole('heading', { name: 'schemas.edit.fields.newSchema' })

@@ -489,7 +489,9 @@ const Filters: React.FC<FiltersProps> = ({
             </S.SeekTypeSelectorWrapper>
           </div>
           <div>
-            <InputLabel>{t('consumerGroups.resetOffsets.fields.partitions')}</InputLabel>
+            <InputLabel>
+              {t('consumerGroups.resetOffsets.fields.partitions')}
+            </InputLabel>
             <MultiSelect
               options={partitions.map((p) => ({
                 label: `Partition #${p.partition.toString()}`,

@@ -101,7 +101,9 @@ const MessageContent: React.FC<MessageContentProps> = ({
           </S.ContentBox>
           <S.MetadataWrapper>
             <S.Metadata>
-              <S.MetadataLabel>{t('topics.messages.table.timestamp')}</S.MetadataLabel>
+              <S.MetadataLabel>
+                {t('topics.messages.table.timestamp')}
+              </S.MetadataLabel>
               <span>
                 <S.MetadataValue>{formatTimestamp(timestamp)}</S.MetadataValue>
                 <S.MetadataMeta>
@@ -113,21 +115,27 @@ const MessageContent: React.FC<MessageContentProps> = ({
             </S.Metadata>
 
             <S.Metadata>
-              <S.MetadataLabel>{t('topics.sendMessage.fields.keySerde')}</S.MetadataLabel>
+              <S.MetadataLabel>
+                {t('topics.sendMessage.fields.keySerde')}
+              </S.MetadataLabel>
               <span>
                 <S.MetadataValue>{keySerde}</S.MetadataValue>
                 <S.MetadataMeta>
-                  {t('topics.messages.details.size')}: <BytesFormatted value={keySize} />
+                  {t('topics.messages.details.size')}:{' '}
+                  <BytesFormatted value={keySize} />
                 </S.MetadataMeta>
               </span>
             </S.Metadata>
 
             <S.Metadata>
-              <S.MetadataLabel>{t('topics.sendMessage.fields.valueSerde')}</S.MetadataLabel>
+              <S.MetadataLabel>
+                {t('topics.sendMessage.fields.valueSerde')}
+              </S.MetadataLabel>
               <span>
                 <S.MetadataValue>{valueSerde}</S.MetadataValue>
                 <S.MetadataMeta>
-                  {t('topics.messages.details.size')}: <BytesFormatted value={contentSize} />
+                  {t('topics.messages.details.size')}:{' '}
+                  <BytesFormatted value={contentSize} />
                 </S.MetadataMeta>
               </span>
             </S.Metadata>

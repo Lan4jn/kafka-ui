@@ -31,7 +31,9 @@ const AuthenticationMethods: React.FC<{ method: string }> = ({ method }) => {
       return (
         <>
           <Input
-            label={t('clusterConfig.authentication.methods.kerberosServiceName')}
+            label={t(
+              'clusterConfig.authentication.methods.kerberosServiceName'
+            )}
             type="text"
             name="auth.props.saslKerberosServiceName"
             withError
@@ -96,7 +98,10 @@ const AuthenticationMethods: React.FC<{ method: string }> = ({ method }) => {
       );
     case 'mTLS':
       return (
-        <SSLForm prefix="auth.keystore" title={t('clusterConfig.common.keystore')} />
+        <SSLForm
+          prefix="auth.keystore"
+          title={t('clusterConfig.common.keystore')}
+        />
       );
     default:
       return null;

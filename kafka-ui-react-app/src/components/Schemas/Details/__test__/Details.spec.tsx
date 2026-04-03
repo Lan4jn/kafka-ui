@@ -115,7 +115,9 @@ describe('Details', () => {
           screen.getByRole('heading', { name: 'schemas.details.oldVersions' })
         ).toBeInTheDocument();
         expect(
-          screen.getByRole('columnheader', { name: 'schemas.list.table.version' })
+          screen.getByRole('columnheader', {
+            name: 'schemas.list.table.version',
+          })
         ).toBeInTheDocument();
         expect(
           screen.getByRole('columnheader', { name: 'schemas.list.table.type' })

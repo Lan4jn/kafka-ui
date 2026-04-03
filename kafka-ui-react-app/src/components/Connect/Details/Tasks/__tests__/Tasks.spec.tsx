@@ -123,9 +123,7 @@ describe('Tasks', () => {
       await userEvent.click(actionBtn[0]);
       expect(screen.getByText('确定要重启该任务吗？')).toBeInTheDocument();
 
-      expect(
-        screen.getByRole('button', { name: '确认' })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: '确认' })).toBeInTheDocument();
       userEvent.click(screen.getByRole('button', { name: '确认' }));
 
       await waitFor(() => expect(restartConnectorMock).toHaveBeenCalled());

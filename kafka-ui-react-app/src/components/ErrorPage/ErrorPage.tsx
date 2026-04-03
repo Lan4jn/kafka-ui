@@ -10,11 +10,7 @@ interface Props {
   btnText?: string;
 }
 
-const ErrorPage: React.FC<Props> = ({
-  status = 404,
-  text,
-  btnText,
-}) => {
+const ErrorPage: React.FC<Props> = ({ status = 404, text, btnText }) => {
   const { t } = useTranslation();
   return (
     <S.Wrapper>

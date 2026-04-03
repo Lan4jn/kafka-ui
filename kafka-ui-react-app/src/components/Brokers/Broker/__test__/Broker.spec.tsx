@@ -86,7 +86,9 @@ describe('Broker Component', () => {
 
     await renderComponent();
 
-    expect(screen.getByRole('link', { name: 'Broker 列表' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Broker 列表' })
+    ).toBeInTheDocument();
     expect(screen.getByText('Segment 大小')).toBeInTheDocument();
     expect(screen.getByText('Segment 数量')).toBeInTheDocument();
     expect(screen.getByText('端口')).toBeInTheDocument();

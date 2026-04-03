@@ -156,7 +156,9 @@ const Form: React.FC = () => {
             </div>
 
             <div>
-              <InputLabel>{t('schemas.edit.fields.compatibilityLevel')}</InputLabel>
+              <InputLabel>
+                {t('schemas.edit.fields.compatibilityLevel')}
+              </InputLabel>
               <Controller
                 control={control}
                 name="compatibilityLevel"

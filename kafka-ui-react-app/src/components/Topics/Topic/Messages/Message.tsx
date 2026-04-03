@@ -9,6 +9,7 @@ import { JSONPath } from 'jsonpath-plus';
 import Ellipsis from 'components/common/Ellipsis/Ellipsis';
 import WarningRedIcon from 'components/common/Icons/WarningRedIcon';
 import Tooltip from 'components/common/Tooltip/Tooltip';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import MessageContent from './MessageContent/MessageContent';
 import * as S from './MessageContent/MessageContent.styled';
@@ -41,6 +42,7 @@ const Message: React.FC<Props> = ({
   keyFilters,
   contentFilters,
 }) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = React.useState(false);
   const savedMessageJson = {
     Value: content,
@@ -114,7 +116,7 @@ const Message: React.FC<Props> = ({
             {keySerde === 'Fallback' && (
               <Tooltip
                 value={<WarningRedIcon />}
-                content="Fallback serde was used"
+                content={t('topics.messages.row.fallbackSerdeTooltip')}
                 placement="left"
               />
             )}
@@ -127,7 +129,7 @@ const Message: React.FC<Props> = ({
                 {valueSerde === 'Fallback' && (
                   <Tooltip
                     value={<WarningRedIcon />}
-                    content="Fallback serde was used"
+                    content={t('topics.messages.row.fallbackSerdeTooltip')}
                     placement="left"
                   />
                 )}
@@ -139,9 +141,11 @@ const Message: React.FC<Props> = ({
           {vEllipsisOpen && (
             <Dropdown>
               <DropdownItem onClick={copyToClipboard}>
-                Copy to clipboard
+                {t('topics.messages.row.actions.copyToClipboard')}
               </DropdownItem>
-              <DropdownItem onClick={saveFile}>Save as a file</DropdownItem>
+              <DropdownItem onClick={saveFile}>
+                {t('topics.messages.row.actions.saveAsFile')}
+              </DropdownItem>
             </Dropdown>
           )}
         </td>

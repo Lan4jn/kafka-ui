@@ -39,7 +39,8 @@ const Actions: React.FC = () => {
   const deleteConnectorHandler = () =>
     confirm(
       <>
-        {t('connectors.details.confirmDelete.prefix')} <b>{routerProps.connectorName}</b>{' '}
+        {t('connectors.details.confirmDelete.prefix')}{' '}
+        <b>{routerProps.connectorName}</b>{' '}
         {t('connectors.details.confirmDelete.suffix')}
       </>,
       async () => {
@@ -68,7 +69,9 @@ const Actions: React.FC = () => {
       <Dropdown
         label={
           <S.RestartButton>
-            <S.ButtonLabel>{t('connectors.details.actions.restart')}</S.ButtonLabel>
+            <S.ButtonLabel>
+              {t('connectors.details.actions.restart')}
+            </S.ButtonLabel>
             <ChevronDownIcon />
           </S.RestartButton>
         }

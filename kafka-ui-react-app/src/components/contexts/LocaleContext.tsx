@@ -1,6 +1,5 @@
 import React from 'react';
 import type { PropsWithChildren } from 'react';
-
 import type { AppLocale, TranslationParams } from 'locales/types';
 import {
   detectBrowserLocale,

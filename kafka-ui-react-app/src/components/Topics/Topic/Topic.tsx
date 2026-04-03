@@ -131,13 +131,14 @@ const Topic: React.FC = () => {
           </ActionDropdownItem>
 
           <ActionDropdownItem
-          onClick={recreateTopic.mutateAsync}
-          confirm={
-            <>
-              {t('topics.details.confirmations.recreate.prefix')} <b>{topicName}</b>{' '}
-              {t('topics.details.confirmations.recreate.suffix')}
-            </>
-          }
+            onClick={recreateTopic.mutateAsync}
+            confirm={
+              <>
+                {t('topics.details.confirmations.recreate.prefix')}{' '}
+                <b>{topicName}</b>{' '}
+                {t('topics.details.confirmations.recreate.suffix')}
+              </>
+            }
             danger
             permission={{
               resource: ResourceType.TOPIC,
@@ -149,12 +150,13 @@ const Topic: React.FC = () => {
           </ActionDropdownItem>
           <ActionDropdownItem
             onClick={deleteTopicHandler}
-          confirm={
-            <>
-              {t('topics.details.confirmations.remove.prefix')} <b>{topicName}</b>{' '}
-              {t('topics.details.confirmations.remove.suffix')}
-            </>
-          }
+            confirm={
+              <>
+                {t('topics.details.confirmations.remove.prefix')}{' '}
+                <b>{topicName}</b>{' '}
+                {t('topics.details.confirmations.remove.suffix')}
+              </>
+            }
             disabled={!isTopicDeletionAllowed}
             danger
             permission={{

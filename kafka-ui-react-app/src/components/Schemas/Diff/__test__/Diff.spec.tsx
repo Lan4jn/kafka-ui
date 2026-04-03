@@ -177,9 +177,7 @@ describe('Diff', () => {
       expect(
         screen.getByRole('heading', { name: `${defaultSubject} 比较版本` })
       ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: '返回' })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: '返回' })).toBeInTheDocument();
       expect(screen.getAllByText('版本 3').length).toEqual(2);
     });
   });

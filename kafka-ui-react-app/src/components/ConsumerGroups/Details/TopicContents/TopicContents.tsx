@@ -87,12 +87,27 @@ const TopicContents: React.FC<Props> = ({ consumers }) => {
   const [sortOrder, setSortOrder] = React.useState<SortOrder>(SortOrder.DESC);
   const tableHeaders = React.useMemo<Headers[]>(
     () => [
-      { title: t('consumerGroups.topicContents.table.partition'), orderBy: 'partition' },
-      { title: t('consumerGroups.topicContents.table.consumerId'), orderBy: 'consumerId' },
+      {
+        title: t('consumerGroups.topicContents.table.partition'),
+        orderBy: 'partition',
+      },
+      {
+        title: t('consumerGroups.topicContents.table.consumerId'),
+        orderBy: 'consumerId',
+      },
       { title: t('brokers.list.table.host'), orderBy: 'host' },
-      { title: t('consumerGroups.list.table.consumerLag'), orderBy: 'consumerLag' },
-      { title: t('consumerGroups.topicContents.table.currentOffset'), orderBy: 'currentOffset' },
-      { title: t('consumerGroups.topicContents.table.endOffset'), orderBy: 'endOffset' },
+      {
+        title: t('consumerGroups.list.table.consumerLag'),
+        orderBy: 'consumerLag',
+      },
+      {
+        title: t('consumerGroups.topicContents.table.currentOffset'),
+        orderBy: 'currentOffset',
+      },
+      {
+        title: t('consumerGroups.topicContents.table.endOffset'),
+        orderBy: 'endOffset',
+      },
     ],
     [t]
   );

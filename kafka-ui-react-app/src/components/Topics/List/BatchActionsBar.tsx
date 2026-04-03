@@ -50,23 +50,20 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
   };
 
   const purgeTopicsHandler = () => {
-    confirm(
-      t('topics.confirmations.purgeSelectedTopics'),
-      async () => {
-        try {
-          await Promise.all(
-            selectedTopics.map((topicName) =>
-              clearTopicMessagesHandler(topicName)
-            )
-          );
-          resetRowSelection();
-        } catch (e) {
-          // do nothing;
-        } finally {
-          client.invalidateQueries(topicKeys.all(clusterName));
-        }
+    confirm(t('topics.confirmations.purgeSelectedTopics'), async () => {
+      try {
+        await Promise.all(
+          selectedTopics.map((topicName) =>
+            clearTopicMessagesHandler(topicName)
+          )
+        );
+        resetRowSelection();
+      } catch (e) {
+        // do nothing;
+      } finally {
+        client.invalidateQueries(topicKeys.all(clusterName));
       }
-    );
+    });
   };
 
   type Tuple = [string, string];

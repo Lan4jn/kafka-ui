@@ -3,17 +3,17 @@ import { zhCN } from 'locales/zh-CN';
 import { AppLocale, TranslationParams, supportedLocales } from 'locales/types';
 
 export const DEFAULT_LOCALE: AppLocale = 'en';
-export const translationDictionaries: Record<AppLocale, Record<string, string>> =
-  {
-    en,
-    'zh-CN': zhCN,
-  };
+export const translationDictionaries: Record<
+  AppLocale,
+  Record<string, string>
+> = {
+  en,
+  'zh-CN': zhCN,
+};
 
 const zhLocalePattern = /^zh($|-|_)/i;
 
-export const normalizeLocale = (
-  locale?: string | null
-): AppLocale | null => {
+export const normalizeLocale = (locale?: string | null): AppLocale | null => {
   if (!locale) return null;
 
   const lowered = locale.toLowerCase();
@@ -27,13 +27,11 @@ export const normalizeLocale = (
 
 export const detectBrowserLocale = (): AppLocale => {
   const candidateLocales = [navigator.language, ...(navigator.languages ?? [])];
-
-  for (const candidate of candidateLocales) {
-    const normalized = normalizeLocale(candidate);
-    if (normalized) return normalized;
-  }
-
-  return DEFAULT_LOCALE;
+  return (
+    candidateLocales
+      .map((candidate) => normalizeLocale(candidate))
+      .find((locale): locale is AppLocale => locale !== null) ?? DEFAULT_LOCALE
+  );
 };
 
 export const resolveLocale = (
@@ -51,7 +49,7 @@ export const interpolateMessage = (
   if (!params) return message;
 
   return Object.entries(params).reduce((formatted, [key, value]) => {
-    const placeholder = '{' + key + '}';
+    const placeholder = `{${key}}`;
     return formatted.replaceAll(placeholder, String(value));
   }, message);
 };
@@ -73,6 +71,7 @@ export const translateMessage = (
   }
 
   if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line no-console
     console.warn(`[i18n] Missing translation key: "${key}"`);
   }
 

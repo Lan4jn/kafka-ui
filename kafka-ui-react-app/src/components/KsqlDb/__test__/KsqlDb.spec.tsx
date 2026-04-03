@@ -12,13 +12,11 @@ jest.mock('components/KsqlDb/Query/Query', () => () => <div>QueryMock</div>);
 jest.mock('lib/hooks/api/ksqlDb', () => ({
   useKsqlkDb: jest.fn(),
 }));
-jest.mock(
-  'components/common/SQLEditor/SQLEditor',
-  () =>
-    React.forwardRef<
-      HTMLTextAreaElement,
-      React.TextareaHTMLAttributes<HTMLTextAreaElement>
-    >((props, ref) => <textarea ref={ref} {...props} />)
+jest.mock('components/common/SQLEditor/SQLEditor', () =>
+  React.forwardRef<
+    HTMLTextAreaElement,
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>
+  >((props, ref) => <textarea ref={ref} {...props} />)
 );
 
 const clusterName = 'local';

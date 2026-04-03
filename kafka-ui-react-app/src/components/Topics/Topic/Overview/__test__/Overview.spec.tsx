@@ -115,7 +115,9 @@ describe('Overview', () => {
     expect(
       screen.getByRole('columnheader', { name: '分区 ID' })
     ).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: '副本' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: '副本' })
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('columnheader', { name: '起始偏移量' })
     ).toBeInTheDocument();

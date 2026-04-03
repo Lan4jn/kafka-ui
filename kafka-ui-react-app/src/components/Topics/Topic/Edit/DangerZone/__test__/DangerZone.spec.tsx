@@ -37,7 +37,7 @@ const renderComponent = (props?: Partial<DangerZoneProps>) =>
 const clickOnDialogSubmitButton = async () => {
   await userEvent.click(
     within(screen.getByRole('dialog')).getByRole('button', {
-      name: 'Confirm',
+      name: '确认',
     })
   );
 };
@@ -45,40 +45,44 @@ const clickOnDialogSubmitButton = async () => {
 const checkDialogThenPressCancel = async () => {
   const dialog = screen.getByRole('dialog');
   expect(screen.getByRole('dialog')).toBeInTheDocument();
-  await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
+  await userEvent.click(within(dialog).getByRole('button', { name: '取消' }));
   await waitFor(() =>
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   );
 };
 
 describe('DangerZone', () => {
+  beforeEach(() => {
+    localStorage.setItem('locale', 'zh-CN');
+  });
+
   it('renders the component', () => {
     renderComponent();
 
     const numberOfPartitionsEditForm = screen.getByRole('form', {
-      name: 'Edit number of partitions',
+      name: '编辑分区数',
     });
     expect(numberOfPartitionsEditForm).toBeInTheDocument();
     expect(
       within(numberOfPartitionsEditForm).getByRole('spinbutton', {
-        name: 'Number of partitions *',
+        name: '分区数 *',
       })
     ).toBeInTheDocument();
     expect(
-      within(numberOfPartitionsEditForm).getByRole('button', { name: 'Submit' })
+      within(numberOfPartitionsEditForm).getByRole('button', { name: '提交' })
     ).toBeInTheDocument();
 
     const replicationFactorEditForm = screen.getByRole('form', {
-      name: 'Edit replication factor',
+      name: '编辑副本因子',
     });
     expect(replicationFactorEditForm).toBeInTheDocument();
     expect(
       within(replicationFactorEditForm).getByRole('spinbutton', {
-        name: 'Replication Factor *',
+        name: '副本因子 *',
       })
     ).toBeInTheDocument();
     expect(
-      within(replicationFactorEditForm).getByRole('button', { name: 'Submit' })
+      within(replicationFactorEditForm).getByRole('button', { name: '提交' })
     ).toBeInTheDocument();
   });
 
@@ -89,7 +93,7 @@ describe('DangerZone', () => {
     }));
     renderComponent();
     const numberOfPartitionsEditForm = screen.getByRole('form', {
-      name: 'Edit number of partitions',
+      name: '编辑分区数',
     });
     await userEvent.type(
       within(numberOfPartitionsEditForm).getByRole('spinbutton'),
@@ -110,15 +114,15 @@ describe('DangerZone', () => {
     }));
     renderComponent();
     const replicationFactorEditForm = screen.getByRole('form', {
-      name: 'Edit replication factor',
+      name: '编辑副本因子',
     });
     expect(
       within(replicationFactorEditForm).getByRole('spinbutton', {
-        name: 'Replication Factor *',
+        name: '副本因子 *',
       })
     ).toBeInTheDocument();
     expect(
-      within(replicationFactorEditForm).getByRole('button', { name: 'Submit' })
+      within(replicationFactorEditForm).getByRole('button', { name: '提交' })
     ).toBeInTheDocument();
 
     await userEvent.type(
@@ -137,8 +141,8 @@ describe('DangerZone', () => {
 
   it('should view the validation error when partition value is lower than the default passed or empty', async () => {
     renderComponent();
-    const partitionInput = screen.getByPlaceholderText('Number of partitions');
-    const partitionInputSubmitBtn = screen.getAllByText(/submit/i)[0];
+    const partitionInput = screen.getByPlaceholderText('分区数');
+    const partitionInputSubmitBtn = screen.getAllByText('提交')[0];
     const value = (defaultPartitions - 4).toString();
     expect(partitionInputSubmitBtn).toBeDisabled();
 
@@ -150,33 +154,30 @@ describe('DangerZone', () => {
 
     await userEvent.click(partitionInputSubmitBtn);
 
-    expect(
-      screen.getByText(/You can only increase the number of partitions!/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText('只能增加分区数！')).toBeInTheDocument();
     await userEvent.clear(partitionInput);
-    expect(screen.getByText(/are required/i)).toBeInTheDocument();
+    expect(screen.getByText('分区数为必填项')).toBeInTheDocument();
   });
 
   it('should view the validation error when Replication Facto value is lower than the default passed or empty', async () => {
     renderComponent();
-    const replicatorFactorInput =
-      screen.getByPlaceholderText('Replication Factor');
-    const replicatorFactorInputSubmitBtn = screen.getAllByText(/submit/i)[1];
+    const replicatorFactorInput = screen.getByPlaceholderText('副本因子');
+    const replicatorFactorInputSubmitBtn = screen.getAllByText('提交')[1];
 
     await userEvent.clear(replicatorFactorInput);
 
     expect(replicatorFactorInputSubmitBtn).toBeEnabled();
     await userEvent.click(replicatorFactorInputSubmitBtn);
-    expect(screen.getByText(/are required/i)).toBeInTheDocument();
+    expect(screen.getByText('副本因子为必填项')).toBeInTheDocument();
     await userEvent.type(replicatorFactorInput, '1');
-    expect(screen.queryByText(/are required/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('副本因子为必填项')).not.toBeInTheDocument();
   });
 
   it('should close the partitions dialog if he cancel button is pressed', async () => {
     renderComponent();
 
-    const partitionInput = screen.getByPlaceholderText('Number of partitions');
-    const partitionInputSubmitBtn = screen.getAllByText(/submit/i)[0];
+    const partitionInput = screen.getByPlaceholderText('分区数');
+    const partitionInputSubmitBtn = screen.getAllByText('提交')[0];
 
     await userEvent.type(partitionInput, '5');
     await userEvent.click(partitionInputSubmitBtn);
@@ -186,9 +187,8 @@ describe('DangerZone', () => {
 
   it('should close the replicator dialog if he cancel button is pressed', async () => {
     renderComponent();
-    const replicatorFactorInput =
-      screen.getByPlaceholderText('Replication Factor');
-    const replicatorFactorInputSubmitBtn = screen.getAllByText(/submit/i)[1];
+    const replicatorFactorInput = screen.getByPlaceholderText('副本因子');
+    const replicatorFactorInputSubmitBtn = screen.getAllByText('提交')[1];
 
     await userEvent.type(replicatorFactorInput, '5');
     await userEvent.click(replicatorFactorInputSubmitBtn);

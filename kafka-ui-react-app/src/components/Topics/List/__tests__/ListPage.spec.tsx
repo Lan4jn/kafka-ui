@@ -35,15 +35,11 @@ describe('ListPage Component', () => {
     });
 
     it('renders localized page controls', () => {
-      expect(
-        screen.getByRole('heading', { name: '主题' })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: '主题' })).toBeInTheDocument();
       expect(
         screen.getByRole('link', { name: '新增主题' })
       ).toBeInTheDocument();
-      expect(
-        screen.getByPlaceholderText('按主题名称搜索')
-      ).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('按主题名称搜索')).toBeInTheDocument();
       expect(screen.getByLabelText('显示内部主题')).toBeInTheDocument();
     });
 

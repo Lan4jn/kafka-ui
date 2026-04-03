@@ -132,7 +132,9 @@ const Details: React.FC = () => {
           >
             {consumerGroup.data?.coordinator?.id}
           </Metrics.Indicator>
-          <Metrics.Indicator label={t('consumerGroups.details.metrics.totalLag')}>
+          <Metrics.Indicator
+            label={t('consumerGroups.details.metrics.totalLag')}
+          >
             {consumerGroup.data?.consumerLag}
           </Metrics.Indicator>
         </Metrics.Section>

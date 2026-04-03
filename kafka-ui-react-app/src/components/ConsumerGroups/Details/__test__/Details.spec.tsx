@@ -63,9 +63,7 @@ describe('ConsumerGroups Details', () => {
   it('renders localized controls and confirmation content', async () => {
     renderComponent();
 
-    expect(
-      screen.getByRole('link', { name: '消费者组' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '消费者组' })).toBeInTheDocument();
     expect(screen.getByText('状态')).toBeInTheDocument();
     expect(screen.getByText('成员数')).toBeInTheDocument();
     expect(screen.getByText('已分配主题数')).toBeInTheDocument();
@@ -85,8 +83,6 @@ describe('ConsumerGroups Details', () => {
 
     await userEvent.click(screen.getByText('删除消费者组'));
 
-    expect(
-      screen.getByText('确定要删除这个消费者组吗？')
-    ).toBeInTheDocument();
+    expect(screen.getByText('确定要删除这个消费者组吗？')).toBeInTheDocument();
   });
 });

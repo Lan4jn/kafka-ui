@@ -2,7 +2,11 @@ import React from 'react';
 import ClusterConfigForm from 'widgets/ClusterConfigForm';
 import { render } from 'lib/testHelpers';
 import { screen } from '@testing-library/react';
-import { useAppConfigFilesUpload, useUpdateAppConfig, useValidateAppConfig } from 'lib/hooks/api/appConfig';
+import {
+  useAppConfigFilesUpload,
+  useUpdateAppConfig,
+  useValidateAppConfig,
+} from 'lib/hooks/api/appConfig';
 
 jest.mock('components/contexts/LocaleContext', () => ({
   ...jest.requireActual('components/contexts/LocaleContext'),
@@ -98,7 +102,9 @@ describe('ClusterConfigForm', () => {
       screen.getByRole('heading', { name: 'clusterConfig.kafkaCluster.title' })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('textbox', { name: 'clusterConfig.kafkaCluster.fields.name' })
+      screen.getByRole('textbox', {
+        name: 'clusterConfig.kafkaCluster.fields.name',
+      })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('checkbox', {
@@ -106,7 +112,9 @@ describe('ClusterConfigForm', () => {
       })
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText('clusterConfig.kafkaCluster.placeholders.host')
+      screen.getByPlaceholderText(
+        'clusterConfig.kafkaCluster.placeholders.host'
+      )
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', {
@@ -119,13 +127,17 @@ describe('ClusterConfigForm', () => {
       }).length
     ).toBeGreaterThan(0);
     expect(
-      screen.getByRole('heading', { name: 'clusterConfig.authentication.title' })
+      screen.getByRole('heading', {
+        name: 'clusterConfig.authentication.title',
+      })
     ).toBeInTheDocument();
     expect(
       screen.getByText('clusterConfig.authentication.fields.method')
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: 'clusterConfig.schemaRegistry.title' })
+      screen.getByRole('heading', {
+        name: 'clusterConfig.schemaRegistry.title',
+      })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'clusterConfig.kafkaConnect.title' })
@@ -137,7 +149,8 @@ describe('ClusterConfigForm', () => {
       screen.getByRole('heading', { name: 'clusterConfig.metrics.title' })
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole('button', { name: 'clusterConfig.actions.reset' }).length
+      screen.getAllByRole('button', { name: 'clusterConfig.actions.reset' })
+        .length
     ).toBeGreaterThan(0);
     expect(
       screen.getByRole('button', { name: 'clusterConfig.actions.validate' })

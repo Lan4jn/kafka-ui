@@ -23,7 +23,10 @@ const Tasks: React.FC = () => {
   const columns = React.useMemo<ColumnDef<Task>[]>(
     () => [
       { header: t('connect.tasks.table.id'), accessorKey: 'status.id' },
-      { header: t('connect.tasks.table.worker'), accessorKey: 'status.workerId' },
+      {
+        header: t('connect.tasks.table.worker'),
+        accessorKey: 'status.workerId',
+      },
       {
         header: t('connect.tasks.table.state'),
         accessorKey: 'status.state',

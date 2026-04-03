@@ -92,13 +92,17 @@ const Dashboard: React.FC = () => {
             label={<Tag color="green">{t('dashboard.metrics.online')}</Tag>}
           >
             <span>{config.online || 0}</span>{' '}
-            <Metrics.LightText>{t('dashboard.metrics.clusters')}</Metrics.LightText>
+            <Metrics.LightText>
+              {t('dashboard.metrics.clusters')}
+            </Metrics.LightText>
           </Metrics.Indicator>
           <Metrics.Indicator
             label={<Tag color="gray">{t('dashboard.metrics.offline')}</Tag>}
           >
             <span>{config.offline || 0}</span>{' '}
-            <Metrics.LightText>{t('dashboard.metrics.clusters')}</Metrics.LightText>
+            <Metrics.LightText>
+              {t('dashboard.metrics.clusters')}
+            </Metrics.LightText>
           </Metrics.Indicator>
         </Metrics.Section>
       </Metrics.Wrapper>

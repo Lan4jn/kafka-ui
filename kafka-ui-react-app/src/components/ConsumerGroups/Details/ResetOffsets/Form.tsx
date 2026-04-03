@@ -122,11 +122,15 @@ const Form: React.FC<FormProps> = ({ defaultValues, partitions, topics }) => {
           <ControlledSelect
             name="resetType"
             label={t('consumerGroups.resetOffsets.fields.resetType')}
-            placeholder={t('consumerGroups.resetOffsets.placeholders.resetType')}
+            placeholder={t(
+              'consumerGroups.resetOffsets.placeholders.resetType'
+            )}
             options={resetTypeOptions}
           />
           <div>
-            <InputLabel>{t('consumerGroups.resetOffsets.fields.partitions')}</InputLabel>
+            <InputLabel>
+              {t('consumerGroups.resetOffsets.fields.partitions')}
+            </InputLabel>
             <MultiSelect
               options={partitionOptions}
               value={partitionsValue.map((p) => ({
@@ -134,7 +138,9 @@ const Form: React.FC<FormProps> = ({ defaultValues, partitions, topics }) => {
                 label: String(p),
               }))}
               onChange={onSelectedPartitionsChange}
-              labelledBy={t('consumerGroups.resetOffsets.placeholders.partitions')}
+              labelledBy={t(
+                'consumerGroups.resetOffsets.placeholders.partitions'
+              )}
               overrideStrings={{
                 selectSomeItems: t(
                   'consumerGroups.resetOffsets.placeholders.partitions'
@@ -179,9 +185,12 @@ const Form: React.FC<FormProps> = ({ defaultValues, partitions, topics }) => {
                 {fields.map((field, index) => (
                   <Input
                     key={field.id}
-                    label={t('consumerGroups.resetOffsets.fields.partitionOffset', {
-                      partition: String(field.partition),
-                    })}
+                    label={t(
+                      'consumerGroups.resetOffsets.fields.partitionOffset',
+                      {
+                        partition: String(field.partition),
+                      }
+                    )}
                     type="number"
                     name={`partitionsOffsets.${index}.offset` as const}
                     hookFormOptions={{

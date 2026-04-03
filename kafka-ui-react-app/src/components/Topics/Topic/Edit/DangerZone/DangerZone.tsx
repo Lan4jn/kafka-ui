@@ -8,6 +8,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { RouteParamsClusterTopic } from 'lib/paths';
 import useAppParams from 'lib/hooks/useAppParams';
 import { useConfirm } from 'lib/hooks/useConfirm';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import {
   useIncreaseTopicPartitionsCount,
   useUpdateTopicReplicationFactor,
@@ -24,6 +25,7 @@ const DangerZone: React.FC<DangerZoneProps> = ({
   defaultPartitions,
   defaultReplicationFactor,
 }) => {
+  const { t } = useTranslation();
   const params = useAppParams<RouteParamsClusterTopic>();
   const [partitions, setPartitions] = React.useState<number>(defaultPartitions);
   const [replicationFactor, setReplicationFactor] = React.useState<number>(
@@ -46,16 +48,13 @@ const DangerZone: React.FC<DangerZoneProps> = ({
 
   const confirm = useConfirm();
   const confirmPartitionsChange = () =>
-    confirm(
-      `Are you sure you want to increase the number of partitions?
-        Do it only if you 100% know what you are doing!`,
-      () =>
-        increaseTopicPartitionsCount.mutateAsync(
-          partitionsMethods.getValues('partitions')
-        )
+    confirm(t('topics.edit.dangerZone.confirmations.partitions'), () =>
+      increaseTopicPartitionsCount.mutateAsync(
+        partitionsMethods.getValues('partitions')
+      )
     );
   const confirmReplicationFactorChange = () =>
-    confirm('Are you sure you want to update the replication factor?', () =>
+    confirm(t('topics.edit.dangerZone.confirmations.replicationFactor'), () =>
       updateTopicReplicationFactor.mutateAsync(
         replicationFactorMethods.getValues('replicationFactor')
       )
@@ -65,7 +64,7 @@ const DangerZone: React.FC<DangerZoneProps> = ({
     if (data.partitions < defaultPartitions) {
       partitionsMethods.setError('partitions', {
         type: 'manual',
-        message: 'You can only increase the number of partitions!',
+        message: t('topics.edit.dangerZone.validation.partitionsMin'),
       });
     } else {
       setPartitions(data.partitions);
@@ -84,20 +83,17 @@ const DangerZone: React.FC<DangerZoneProps> = ({
 
   return (
     <S.Wrapper>
-      <S.Title>Danger Zone</S.Title>
-      <S.Warning>
-        Change these parameters only if you are absolutely sure what you are
-        doing.
-      </S.Warning>
+      <S.Title>{t('topics.edit.dangerZone.title')}</S.Title>
+      <S.Warning>{t('topics.edit.dangerZone.warning')}</S.Warning>
       <div>
         <FormProvider {...partitionsMethods}>
           <S.Form
             onSubmit={partitionsMethods.handleSubmit(validatePartitions)}
-            aria-label="Edit number of partitions"
+            aria-label={t('topics.edit.dangerZone.aria.partitionsForm')}
           >
             <div>
               <InputLabel htmlFor="partitions">
-                Number of partitions *
+                {t('topics.edit.dangerZone.fields.partitions')}
               </InputLabel>
               <Input
                 inputSize="M"
@@ -105,9 +101,13 @@ const DangerZone: React.FC<DangerZoneProps> = ({
                 id="partitions"
                 name="partitions"
                 hookFormOptions={{
-                  required: 'Partiotions are required',
+                  required: t(
+                    'topics.edit.dangerZone.validation.partitionsRequired'
+                  ),
                 }}
-                placeholder="Number of partitions"
+                placeholder={t(
+                  'topics.edit.dangerZone.placeholders.partitions'
+                )}
               />
             </div>
             <div>
@@ -117,7 +117,7 @@ const DangerZone: React.FC<DangerZoneProps> = ({
                 type="submit"
                 disabled={!partitionsMethods.formState.isDirty}
               >
-                Submit
+                {t('topics.edit.dangerZone.actions.submit')}
               </Button>
             </div>
           </S.Form>
@@ -133,20 +133,24 @@ const DangerZone: React.FC<DangerZoneProps> = ({
             onSubmit={replicationFactorMethods.handleSubmit(
               validateReplicationFactor
             )}
-            aria-label="Edit replication factor"
+            aria-label={t('topics.edit.dangerZone.aria.replicationFactorForm')}
           >
             <div>
               <InputLabel htmlFor="replicationFactor">
-                Replication Factor *
+                {t('topics.edit.dangerZone.fields.replicationFactor')}
               </InputLabel>
               <Input
                 id="replicationFactor"
                 inputSize="M"
                 type="number"
-                placeholder="Replication Factor"
+                placeholder={t(
+                  'topics.edit.dangerZone.placeholders.replicationFactor'
+                )}
                 name="replicationFactor"
                 hookFormOptions={{
-                  required: 'Replication Factor are required',
+                  required: t(
+                    'topics.edit.dangerZone.validation.replicationFactorRequired'
+                  ),
                 }}
               />
             </div>
@@ -157,7 +161,7 @@ const DangerZone: React.FC<DangerZoneProps> = ({
                 type="submit"
                 disabled={!replicationFactorMethods.formState.isDirty}
               >
-                Submit
+                {t('topics.edit.dangerZone.actions.submit')}
               </Button>
             </div>
           </S.Form>

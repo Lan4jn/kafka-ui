@@ -6,6 +6,7 @@ import { MILLISECONDS_IN_WEEK, MILLISECONDS_IN_SECOND } from 'lib/constants';
 import { InputLabel } from 'components/common/Input/InputLabel.styled';
 import Input from 'components/common/Input/Input';
 import { FormError } from 'components/common/Input/Input.styled';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './TopicForm.styled';
 import TimeToRetainBtns from './TimeToRetainBtns';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const TimeToRetain: React.FC<Props> = ({ isSubmitting }) => {
+  const { t } = useTranslation();
   const {
     watch,
     formState: { errors },
@@ -32,17 +34,20 @@ const TimeToRetain: React.FC<Props> = ({ isSubmitting }) => {
     <>
       <S.Label>
         <InputLabel htmlFor="timeToRetain">
-          Time to retain data (in ms)
+          {t('topics.form.fields.retentionMs')}
         </InputLabel>
         {valueHint && <span>{valueHint}</span>}
       </S.Label>
       <Input
         id="timeToRetain"
         type="number"
-        placeholder=" Time to retain data (in ms)"
+        placeholder={t('topics.form.placeholders.retentionMs')}
         name={name}
         hookFormOptions={{
-          min: { value: -1, message: 'must be greater than or equal to -1' },
+          min: {
+            value: -1,
+            message: t('topics.form.validation.retentionMsMin'),
+          },
         }}
         disabled={isSubmitting}
       />

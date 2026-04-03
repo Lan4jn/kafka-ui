@@ -20,7 +20,7 @@ describe('ConsumerGroups List', () => {
   }: {
     data?: {
       pageCount: number;
-      consumerGroups: typeof consumerGroupPayload[];
+      consumerGroups: (typeof consumerGroupPayload)[];
     };
     isSuccess?: boolean;
     isFetching?: boolean;

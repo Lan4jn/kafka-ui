@@ -27,9 +27,7 @@ describe('NavBar', () => {
   it('correctly renders header', () => {
     const header = screen.getByLabelText('Page Header');
     expect(header).toBeInTheDocument();
-    expect(
-      within(header).getByText(en['navbar.title'])
-    ).toBeInTheDocument();
+    expect(within(header).getByText(en['navbar.title'])).toBeInTheDocument();
     expect(within(header).getAllByRole('separator').length).toEqual(3);
     expect(
       within(header).getByRole('button', burgerButtonOptions)

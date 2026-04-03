@@ -65,8 +65,7 @@ export const en: Record<string, string> = {
   'consumerGroups.resetOffsets.actions.submit': 'Reset Offsets',
   'consumerGroups.resetOffsets.validation.timestampRequired':
     'Timestamp is required',
-  'consumerGroups.resetOffsets.validation.offsetRequired':
-    'Offset is required',
+  'consumerGroups.resetOffsets.validation.offsetRequired': 'Offset is required',
   'consumerGroups.resetOffsets.validation.offsetMin':
     'must be greater than or equal to 0',
   'consumerGroups.resetOffsets.partitionOption': 'Partition #{partition}',
@@ -79,8 +78,7 @@ export const en: Record<string, string> = {
   'consumerGroups.topicContents.table.currentOffset': 'Current Offset',
   'consumerGroups.topicContents.table.endOffset': 'End Offset',
   'topics.actions.clearMessages': 'Clear messages',
-  'topics.actions.purgeSelectedTopics':
-    'Purge messages of selected topics',
+  'topics.actions.purgeSelectedTopics': 'Purge messages of selected topics',
   'topics.confirmations.clearMessages':
     'Are you sure you want to clear topic messages?',
   'topics.confirmations.purgeSelectedTopics':
@@ -137,8 +135,7 @@ export const en: Record<string, string> = {
   'topics.details.confirmations.recreate.prefix':
     'Are you sure want to recreate',
   'topics.details.confirmations.recreate.suffix': 'topic?',
-  'topics.details.confirmations.remove.prefix':
-    'Are you sure want to remove',
+  'topics.details.confirmations.remove.prefix': 'Are you sure want to remove',
   'topics.details.confirmations.remove.suffix': 'topic?',
   'topics.details.hints.editSettings.line1':
     'Pay attention! This operation has',
@@ -164,10 +161,24 @@ export const en: Record<string, string> = {
   'topics.messages.table.empty': 'No messages found',
   'topics.messages.preview': 'Preview',
   'topics.messages.previewSelected': '({count} selected)',
+  'topics.messages.previewModal.fields.field': 'Field',
+  'topics.messages.previewModal.fields.path': 'JSON path',
+  'topics.messages.previewModal.placeholders.field': 'Field',
+  'topics.messages.previewModal.placeholders.path': 'JSON Path',
+  'topics.messages.previewModal.validation.fieldRequired': 'Field is required',
+  'topics.messages.previewModal.validation.pathRequired':
+    'JSON path is required',
+  'topics.messages.previewModal.actions.edit': 'Edit',
+  'topics.messages.previewModal.actions.cancel': 'Cancel',
+  'topics.messages.previewModal.actions.close': 'Close',
+  'topics.messages.previewModal.actions.save': 'Save',
   'topics.messages.pagination.back': 'Back',
   'topics.messages.pagination.next': 'Next',
   'topics.messages.details.timestampType': 'Timestamp type: {type}',
   'topics.messages.details.size': 'Size',
+  'topics.messages.row.fallbackSerdeTooltip': 'Fallback serde was used',
+  'topics.messages.row.actions.copyToClipboard': 'Copy to clipboard',
+  'topics.messages.row.actions.saveAsFile': 'Save as a file',
   'topics.messages.filters.seekType': 'Seek Type',
   'topics.messages.filters.offsetPlaceholder': 'Offset',
   'topics.messages.filters.timestampPlaceholder': 'Select timestamp',
@@ -176,6 +187,27 @@ export const en: Record<string, string> = {
   'topics.messages.filters.submit': 'Submit',
   'topics.messages.filters.search': 'Search',
   'topics.messages.filters.addFilters': 'Add Filters',
+  'topics.messages.filters.add': 'Add filter',
+  'topics.messages.filters.validation.duplicateName':
+    'Filter with the same name already exists',
+  'topics.messages.filters.form.ariaLabel': 'Filters submit form',
+  'topics.messages.filters.form.code': 'Filter code',
+  'topics.messages.filters.form.displayName': 'Display name',
+  'topics.messages.filters.form.saveFilter': 'Save this filter',
+  'topics.messages.filters.form.placeholders.name': 'Enter Name',
+  'topics.messages.filters.form.validation.codeRequired':
+    'Filter code is required',
+  'topics.messages.filters.form.validation.nameRequired':
+    'Display name is required',
+  'topics.messages.filters.saved.back': 'Back to create filters',
+  'topics.messages.filters.saved.title': 'Saved Filters',
+  'topics.messages.filters.saved.empty': 'No saved filter(s)',
+  'topics.messages.filters.saved.edit': 'Edit',
+  'topics.messages.filters.saved.select': 'Select filter',
+  'topics.messages.filters.saved.confirmDelete':
+    'Are you sure want to remove {name}?',
+  'topics.messages.filters.saved.activeWarning':
+    'Warning: this filter is currently selected.',
   'topics.messages.filters.loading': 'Loading messages.',
   'topics.messages.filters.stopLoading': 'Stop loading',
   'topics.messages.filters.metrics.elapsedTime': 'Elapsed Time',
@@ -228,8 +260,7 @@ export const en: Record<string, string> = {
   'topics.statistics.partitionInfo.maxTimestamp': 'Max. timestamp',
   'topics.statistics.partitionInfo.nullKeys': 'Null keys amount',
   'topics.statistics.partitionInfo.nullValues': 'Null values amount',
-  'topics.statistics.partitionInfo.uniqueKeys':
-    'Approx. unique keys amount',
+  'topics.statistics.partitionInfo.uniqueKeys': 'Approx. unique keys amount',
   'topics.statistics.partitionInfo.uniqueValues':
     'Approx. unique values amount',
   'topics.statistics.partitionInfo.keySizes': 'Key sizes',
@@ -245,6 +276,70 @@ export const en: Record<string, string> = {
   'topics.new.title.create': 'Create',
   'topics.new.title.copy': 'Copy',
   'topics.new.backToList': 'Topics',
+  'topics.form.fields.name': 'Topic Name *',
+  'topics.form.fields.partitions': 'Number of Partitions *',
+  'topics.form.fields.cleanupPolicy': 'Cleanup policy',
+  'topics.form.fields.minInSyncReplicas': 'Min In Sync Replicas',
+  'topics.form.fields.replicationFactor': 'Replication Factor',
+  'topics.form.fields.retentionMs': 'Time to retain data (in ms)',
+  'topics.form.fields.retentionBytes': 'Max size on disk in GB',
+  'topics.form.fields.maxMessageBytes': 'Maximum message size in bytes',
+  'topics.form.placeholders.name': 'Topic Name',
+  'topics.form.placeholders.partitions': 'Number of Partitions',
+  'topics.form.placeholders.minInSyncReplicas': 'Min In Sync Replicas',
+  'topics.form.placeholders.replicationFactor': 'Replication Factor',
+  'topics.form.placeholders.retentionMs': 'Time to retain data (in ms)',
+  'topics.form.placeholders.maxMessageBytes': 'Maximum message size',
+  'topics.form.validation.retentionMsMin':
+    'must be greater than or equal to -1',
+  'topics.form.cleanupPolicy.delete': 'Delete',
+  'topics.form.cleanupPolicy.compact': 'Compact',
+  'topics.form.cleanupPolicy.compactDelete': 'Compact,Delete',
+  'topics.form.retentionPresets.hours12': '12 hours',
+  'topics.form.retentionPresets.day1': '1 day',
+  'topics.form.retentionPresets.days2': '2 days',
+  'topics.form.retentionPresets.days7': '7 days',
+  'topics.form.retentionPresets.weeks4': '4 weeks',
+  'topics.form.retentionBytes.notSet': 'Not Set',
+  'topics.form.retentionBytes.gb1': '1 GB',
+  'topics.form.retentionBytes.gb10': '10 GB',
+  'topics.form.retentionBytes.gb20': '20 GB',
+  'topics.form.retentionBytes.gb50': '50 GB',
+  'topics.form.customParameters': 'Custom parameters',
+  'topics.form.customParams.fields.name': 'Custom Parameter *',
+  'topics.form.customParams.fields.value': 'Value *',
+  'topics.form.customParams.placeholders.select': 'Select',
+  'topics.form.customParams.placeholders.value': 'Value',
+  'topics.form.customParams.validation.nameRequired':
+    'Custom parameter is required.',
+  'topics.form.customParams.validation.valueRequired': 'Value is required.',
+  'topics.form.customParams.actions.add': 'Add Custom Parameter',
+  'topics.form.customParams.actions.remove':
+    'Delete custom parameter field {index}',
+  'topics.form.actions.cancel': 'Cancel',
+  'topics.form.actions.create': 'Create topic',
+  'topics.form.actions.update': 'Update topic',
+  'topics.edit.dangerZone.title': 'Danger Zone',
+  'topics.edit.dangerZone.warning':
+    'Change these parameters only if you are absolutely sure what you are doing.',
+  'topics.edit.dangerZone.fields.partitions': 'Number of partitions *',
+  'topics.edit.dangerZone.fields.replicationFactor': 'Replication Factor *',
+  'topics.edit.dangerZone.placeholders.partitions': 'Number of partitions',
+  'topics.edit.dangerZone.placeholders.replicationFactor': 'Replication Factor',
+  'topics.edit.dangerZone.validation.partitionsRequired':
+    'Partitions are required',
+  'topics.edit.dangerZone.validation.replicationFactorRequired':
+    'Replication Factor is required',
+  'topics.edit.dangerZone.validation.partitionsMin':
+    'You can only increase the number of partitions!',
+  'topics.edit.dangerZone.actions.submit': 'Submit',
+  'topics.edit.dangerZone.aria.partitionsForm': 'Edit number of partitions',
+  'topics.edit.dangerZone.aria.replicationFactorForm':
+    'Edit replication factor',
+  'topics.edit.dangerZone.confirmations.partitions':
+    'Are you sure you want to increase the number of partitions? Do it only if you 100% know what you are doing!',
+  'topics.edit.dangerZone.confirmations.replicationFactor':
+    'Are you sure you want to update the replication factor?',
   'schemas.list.title': 'Schema Registry',
   'schemas.list.actions.create': 'Create Schema',
   'schemas.list.searchPlaceholder': 'Search by Schema Name',
@@ -296,7 +391,8 @@ export const en: Record<string, string> = {
   'connect.list.empty': 'No connectors found',
   'connect.listPage.title': 'Connectors',
   'connect.listPage.actions.create': 'Create Connector',
-  'connect.listPage.searchPlaceholder': 'Search by Connect Name, Status or Type',
+  'connect.listPage.searchPlaceholder':
+    'Search by Connect Name, Status or Type',
   'connect.listPage.metrics.connectors.label': 'Connectors',
   'connect.listPage.metrics.connectors.title': 'Total number of connectors',
   'connect.listPage.metrics.failedConnectors.label': 'Failed Connectors',
@@ -361,8 +457,7 @@ export const en: Record<string, string> = {
   'clusterConfig.kafkaCluster.actions.addBootstrapServer':
     'Add Bootstrap Server',
   'clusterConfig.kafkaCluster.truststore.title': 'Truststore',
-  'clusterConfig.kafkaCluster.truststore.addButtonText':
-    'Configure Truststore',
+  'clusterConfig.kafkaCluster.truststore.addButtonText': 'Configure Truststore',
   'clusterConfig.metrics.title': 'Metrics',
   'clusterConfig.metrics.addButtonText': 'Configure Metrics',
   'clusterConfig.metrics.fields.type': 'Metrics Type',
@@ -401,8 +496,7 @@ export const en: Record<string, string> = {
     'Select authentication method',
   'clusterConfig.authentication.placeholders.securityProtocol':
     'Select security protocol',
-  'clusterConfig.authentication.methods.saslJaasConfig':
-    'sasl.jaas.config',
+  'clusterConfig.authentication.methods.saslJaasConfig': 'sasl.jaas.config',
   'clusterConfig.authentication.methods.saslMechanism': 'sasl.mechanism',
   'clusterConfig.authentication.methods.kerberosServiceName':
     'Kerberos service name',
@@ -480,8 +574,7 @@ export const en: Record<string, string> = {
   'connectors.details.actions.restartConnector': 'Restart Connector',
   'connectors.details.actions.restartAllTasks': 'Restart All Tasks',
   'connectors.details.actions.restartFailedTasks': 'Restart Failed Tasks',
-  'connectors.details.confirmDelete.prefix':
-    'Are you sure you want to remove',
+  'connectors.details.confirmDelete.prefix': 'Are you sure you want to remove',
   'connectors.details.confirmDelete.suffix': 'connector?',
   'brokers.configs.table.source': 'Source',
   'brokers.configs.tooltip.source':

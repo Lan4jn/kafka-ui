@@ -127,7 +127,10 @@ const BrokersList: React.FC = () => {
           );
         },
       },
-      { header: t('brokers.list.table.leaders'), accessorKey: 'partitionsLeader' },
+      {
+        header: t('brokers.list.table.leaders'),
+        accessorKey: 'partitionsLeader',
+      },
       {
         header: t('brokers.list.table.leaderSkew'),
         accessorKey: 'leadersSkew',
@@ -210,7 +213,8 @@ const BrokersList: React.FC = () => {
             <Metrics.LightText>
               {t('common.metrics.currentOfTotal', {
                 current: '',
-                total: (onlinePartitionCount || 0) + (offlinePartitionCount || 0),
+                total:
+                  (onlinePartitionCount || 0) + (offlinePartitionCount || 0),
               })}
             </Metrics.LightText>
           </Metrics.Indicator>
@@ -245,7 +249,9 @@ const BrokersList: React.FC = () => {
               })}
             </Metrics.LightText>
           </Metrics.Indicator>
-          <Metrics.Indicator label={t('brokers.list.metrics.outOfSyncReplicas')}>
+          <Metrics.Indicator
+            label={t('brokers.list.metrics.outOfSyncReplicas')}
+          >
             {outOfSyncReplicasCount}
           </Metrics.Indicator>
         </Metrics.Section>
