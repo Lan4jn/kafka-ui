@@ -11,6 +11,7 @@ import { BrokerConfig, ConfigSource } from 'generated-sources';
 import Search from 'components/common/Search/Search';
 import Tooltip from 'components/common/Tooltip/Tooltip';
 import InfoIcon from 'components/common/Icons/InfoIcon';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import InputCell from './InputCell';
 import * as S from './Configs.styled';
@@ -26,6 +27,7 @@ UNKNOWN = source unknown e.g. in the ConfigEntry used for alter requests where s
 const Configs: React.FC = () => {
   const [keyword, setKeyword] = React.useState('');
   const { clusterName, brokerId } = useAppParams<ClusterBrokerParam>();
+  const { t } = useTranslation();
   const { data = [] } = useBrokerConfig(clusterName, Number(brokerId));
   const stateMutation = useUpdateBrokerConfigByName(
     clusterName,
@@ -69,9 +71,9 @@ const Configs: React.FC = () => {
 
   const columns = React.useMemo<ColumnDef<BrokerConfig>[]>(
     () => [
-      { header: 'Key', accessorKey: 'name' },
+      { header: t('brokers.configs.table.key'), accessorKey: 'name' },
       {
-        header: 'Value',
+        header: t('brokers.configs.table.value'),
         accessorKey: 'value',
         cell: renderCell,
       },
@@ -80,7 +82,7 @@ const Configs: React.FC = () => {
         header: () => {
           return (
             <S.Source>
-              Source
+              {t('brokers.configs.table.source')}
               <Tooltip
                 value={<InfoIcon />}
                 content={tooltipContent}
@@ -92,7 +94,7 @@ const Configs: React.FC = () => {
         accessorKey: 'source',
       },
     ],
-    []
+    [t]
   );
 
   return (
@@ -100,7 +102,7 @@ const Configs: React.FC = () => {
       <S.SearchWrapper>
         <Search
           onChange={setKeyword}
-          placeholder="Search by Key or Value"
+          placeholder={t('brokers.configs.searchPlaceholder')}
           value={keyword}
         />
       </S.SearchWrapper>

@@ -30,10 +30,25 @@ describe('ListPage Component', () => {
 
   describe('Component Render', () => {
     beforeEach(() => {
+      localStorage.setItem('locale', 'zh-CN');
       renderComponent();
     });
+
+    it('renders localized page controls', () => {
+      expect(
+        screen.getByRole('heading', { name: '主题' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: '新增主题' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('按主题名称搜索')
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText('显示内部主题')).toBeInTheDocument();
+    });
+
     it('handles switch of Internal Topics visibility', async () => {
-      const switchInput = screen.getByLabelText('Show Internal Topics');
+      const switchInput = screen.getByLabelText('显示内部主题');
       expect(switchInput).toBeInTheDocument();
 
       expect(global.localStorage.getItem('hideInternalTopics')).toBeNull();

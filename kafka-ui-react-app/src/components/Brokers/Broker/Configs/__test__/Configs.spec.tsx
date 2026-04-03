@@ -27,6 +27,7 @@ describe('Configs', () => {
   };
 
   beforeEach(() => {
+    localStorage.setItem('locale', 'zh-CN');
     (useBrokerConfig as jest.Mock).mockImplementation(() => ({
       data: brokerConfigPayload,
     }));
@@ -34,6 +35,12 @@ describe('Configs', () => {
   });
 
   it('renders configs table', async () => {
+    expect(
+      screen.getByPlaceholderText('按键或值搜索')
+    ).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: '键' })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: '值' })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: '来源' })).toBeInTheDocument();
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.getAllByRole('row').length).toEqual(
       brokerConfigPayload.length + 1

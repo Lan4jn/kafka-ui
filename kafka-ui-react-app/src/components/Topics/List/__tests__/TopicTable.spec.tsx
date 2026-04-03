@@ -97,21 +97,46 @@ describe('TopicTable Components', () => {
   };
 
   describe('without data', () => {
-    it('renders empty table when payload is undefined', () => {
+    it('renders localized empty table when payload is undefined', () => {
+      localStorage.setItem('locale', 'zh-CN');
       renderComponent();
       expect(
-        screen.getByRole('row', { name: 'No topics found' })
+        screen.getByRole('row', { name: '未找到主题' })
       ).toBeInTheDocument();
     });
 
-    it('renders empty table when payload is empty', () => {
+    it('renders localized empty table when payload is empty', () => {
+      localStorage.setItem('locale', 'zh-CN');
       renderComponent({ topics: [] });
       expect(
-        screen.getByRole('row', { name: 'No topics found' })
+        screen.getByRole('row', { name: '未找到主题' })
       ).toBeInTheDocument();
     });
   });
   describe('with topics', () => {
+    it('renders localized table headers', () => {
+      localStorage.setItem('locale', 'zh-CN');
+      renderComponent({ topics: topicsPayload, pageCount: 1 });
+      expect(
+        screen.getByRole('columnheader', { name: '主题名称' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '分区数' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '未同步副本' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '副本因子' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '消息数' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '大小' })
+      ).toBeInTheDocument();
+    });
+
     it('renders correct rows', () => {
       renderComponent({ topics: topicsPayload, pageCount: 1 });
       expect(

@@ -42,6 +42,7 @@ describe('BrokersList Component', () => {
   describe('BrokersList', () => {
     describe('when the brokers are loaded', () => {
       beforeEach(() => {
+        localStorage.setItem('locale', 'zh-CN');
         (useBrokers as jest.Mock).mockImplementation(() => ({
           data: brokersPayload,
         }));
@@ -51,6 +52,17 @@ describe('BrokersList Component', () => {
       });
       it('renders', async () => {
         renderComponent();
+        expect(
+          screen.getByRole('heading', { name: 'Broker 列表' })
+        ).toBeInTheDocument();
+        expect(screen.getByText('运行状态')).toBeInTheDocument();
+        expect(screen.getByText('分区')).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: 'Broker ID' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: '磁盘使用量' })
+        ).toBeInTheDocument();
         expect(screen.getByRole('table')).toBeInTheDocument();
         expect(screen.getAllByRole('row').length).toEqual(3);
       });
@@ -159,6 +171,7 @@ describe('BrokersList Component', () => {
 
     describe('when diskUsage is empty', () => {
       beforeEach(() => {
+        localStorage.setItem('locale', 'zh-CN');
         (useBrokers as jest.Mock).mockImplementation(() => ({
           data: brokersPayload,
         }));
@@ -178,7 +191,7 @@ describe('BrokersList Component', () => {
           renderComponent();
           expect(screen.getByRole('table')).toBeInTheDocument();
           expect(
-            screen.getByRole('row', { name: 'No clusters are online' })
+            screen.getByRole('row', { name: '当前没有在线的 Broker' })
           ).toBeInTheDocument();
         });
       });

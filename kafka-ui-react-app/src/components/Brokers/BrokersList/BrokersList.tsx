@@ -12,6 +12,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { clusterBrokerPath } from 'lib/paths';
 import Tooltip from 'components/common/Tooltip/Tooltip';
 import ColoredCell from 'components/common/NewTable/ColoredCell';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import SkewHeader from './SkewHeader/SkewHeader';
 import * as S from './BrokersList.styled';
@@ -21,6 +22,7 @@ const NA = 'N/A';
 const BrokersList: React.FC = () => {
   const navigate = useNavigate();
   const { clusterName } = useAppParams<{ clusterName: ClusterName }>();
+  const { t } = useTranslation();
   const { data: clusterStats = {} } = useClusterStats(clusterName);
   const { data: brokers } = useBrokers(clusterName);
 
@@ -70,7 +72,7 @@ const BrokersList: React.FC = () => {
   const columns = React.useMemo<ColumnDef<(typeof rows)[number]>[]>(
     () => [
       {
-        header: 'Broker ID',
+        header: t('brokers.list.table.brokerId'),
         accessorKey: 'brokerId',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue }) => (
@@ -82,7 +84,7 @@ const BrokersList: React.FC = () => {
             {getValue<string | number>() === activeControllers && (
               <Tooltip
                 value={<CheckMarkRoundIcon />}
-                content="Active Controller"
+                content={t('brokers.list.table.activeController')}
                 placement="right"
               />
             )}
@@ -90,7 +92,7 @@ const BrokersList: React.FC = () => {
         ),
       },
       {
-        header: 'Disk usage',
+        header: t('brokers.list.table.diskUsage'),
         accessorKey: 'size',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue, table, cell, column, renderValue, row }) =>
@@ -125,9 +127,9 @@ const BrokersList: React.FC = () => {
           );
         },
       },
-      { header: 'Leaders', accessorKey: 'partitionsLeader' },
+      { header: t('brokers.list.table.leaders'), accessorKey: 'partitionsLeader' },
       {
-        header: 'Leader skew',
+        header: t('brokers.list.table.leaderSkew'),
         accessorKey: 'leadersSkew',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue }) => {
@@ -142,7 +144,7 @@ const BrokersList: React.FC = () => {
         },
       },
       {
-        header: 'Online partitions',
+        header: t('brokers.list.table.onlinePartitions'),
         accessorKey: 'inSyncPartitions',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue, row }) => {
@@ -155,13 +157,13 @@ const BrokersList: React.FC = () => {
           );
         },
       },
-      { header: 'Port', accessorKey: 'port' },
+      { header: t('brokers.list.table.port'), accessorKey: 'port' },
       {
-        header: 'Host',
+        header: t('brokers.list.table.host'),
         accessorKey: 'host',
       },
     ],
-    []
+    [activeControllers, t]
   );
 
   const replicas = (inSyncReplicasCount ?? 0) + (outOfSyncReplicasCount ?? 0);
@@ -172,27 +174,31 @@ const BrokersList: React.FC = () => {
 
   return (
     <>
-      <PageHeading text="Brokers" />
+      <PageHeading text={t('brokers.list.title')} />
       <Metrics.Wrapper>
-        <Metrics.Section title="Uptime">
-          <Metrics.Indicator label="Broker Count">
+        <Metrics.Section title={t('brokers.list.metrics.uptime')}>
+          <Metrics.Indicator label={t('brokers.list.metrics.brokerCount')}>
             {brokerCount}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label="Active Controller"
+            label={t('brokers.list.metrics.activeController')}
             isAlert={isActiveControllerUnKnown}
           >
             {isActiveControllerUnKnown ? (
-              <S.DangerText>No Active Controller</S.DangerText>
+              <S.DangerText>
+                {t('brokers.list.metrics.noActiveController')}
+              </S.DangerText>
             ) : (
               activeControllers
             )}
           </Metrics.Indicator>
-          <Metrics.Indicator label="Version">{version}</Metrics.Indicator>
+          <Metrics.Indicator label={t('brokers.list.metrics.version')}>
+            {version}
+          </Metrics.Indicator>
         </Metrics.Section>
-        <Metrics.Section title="Partitions">
+        <Metrics.Section title={t('brokers.list.metrics.partitions')}>
           <Metrics.Indicator
-            label="Online"
+            label={t('brokers.list.metrics.online')}
             isAlert
             alertType={partitionIsOffline ? 'error' : 'success'}
           >
@@ -209,8 +215,8 @@ const BrokersList: React.FC = () => {
             </Metrics.LightText>
           </Metrics.Indicator>
           <Metrics.Indicator
-            label="URP"
-            title="Under replicated partitions"
+            label={t('brokers.list.metrics.urp')}
+            title={t('brokers.list.metrics.urpTitle')}
             isAlert
             alertType={!underReplicatedPartitionCount ? 'success' : 'error'}
           >
@@ -223,7 +229,7 @@ const BrokersList: React.FC = () => {
             )}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label="In Sync Replicas"
+            label={t('brokers.list.metrics.inSyncReplicas')}
             isAlert
             alertType={areAllInSync ? 'success' : 'error'}
           >
@@ -234,7 +240,7 @@ const BrokersList: React.FC = () => {
             )}
             <Metrics.LightText> of {replicas}</Metrics.LightText>
           </Metrics.Indicator>
-          <Metrics.Indicator label="Out Of Sync Replicas">
+          <Metrics.Indicator label={t('brokers.list.metrics.outOfSyncReplicas')}>
             {outOfSyncReplicasCount}
           </Metrics.Indicator>
         </Metrics.Section>
@@ -246,7 +252,7 @@ const BrokersList: React.FC = () => {
         onRowClick={({ original: { brokerId } }) =>
           navigate(clusterBrokerPath(clusterName, brokerId))
         }
-        emptyMessage="No clusters are online"
+        emptyMessage={t('brokers.list.empty')}
       />
     </>
   );
