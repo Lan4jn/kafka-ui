@@ -7,8 +7,10 @@ import * as S from 'widgets/ClusterConfigForm/ClusterConfigForm.styled';
 import SectionHeader from 'widgets/ClusterConfigForm/common/SectionHeader';
 import SSLForm from 'widgets/ClusterConfigForm/common/SSLForm';
 import Credentials from 'widgets/ClusterConfigForm/common/Credentials';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 const Metrics = () => {
+  const { t } = useTranslation();
   const { setValue, watch } = useFormContext();
   const visibleMetrics = !!watch('metrics');
   const toggleMetrics = () =>
@@ -27,22 +29,22 @@ const Metrics = () => {
   return (
     <>
       <SectionHeader
-        title="Metrics"
+        title={t('clusterConfig.metrics.title')}
         adding={!visibleMetrics}
-        addButtonText="Configure Metrics"
+        addButtonText={t('clusterConfig.metrics.addButtonText')}
         onClick={toggleMetrics}
       />
       {visibleMetrics && (
         <>
           <ControlledSelect
             name="metrics.type"
-            label="Metrics Type"
-            placeholder="Choose metrics type"
+            label={t('clusterConfig.metrics.fields.type')}
+            placeholder={t('clusterConfig.metrics.placeholders.type')}
             options={METRICS_OPTIONS}
           />
           <S.Port>
             <Input
-              label="Port *"
+              label={t('clusterConfig.metrics.fields.port')}
               name="metrics.port"
               type="number"
               positiveOnly
@@ -50,7 +52,10 @@ const Metrics = () => {
             />
           </S.Port>
           <Credentials prefix="metrics" />
-          <SSLForm prefix="metrics.keystore" title="Metrics Keystore" />
+          <SSLForm
+            prefix="metrics.keystore"
+            title={t('clusterConfig.metrics.keystore.title')}
+          />
         </>
       )}
     </>

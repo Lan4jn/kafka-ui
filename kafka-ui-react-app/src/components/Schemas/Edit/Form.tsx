@@ -32,10 +32,12 @@ import { showServerError } from 'lib/errorHandling';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormError } from 'components/common/Input/Input.styled';
 import { ErrorMessage } from '@hookform/error-message';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './Edit.styled';
 
 const Form: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -56,7 +58,10 @@ const Form: React.FC = () => {
       newSchema:
         schema?.schemaType === SchemaType.PROTOBUF
           ? yup.string().required()
-          : yup.string().required().isJsonObject('Schema syntax is not valid'),
+          : yup
+              .string()
+              .required()
+              .isJsonObject(t('schemas.edit.validation.invalidSchemaSyntax')),
     });
   const methods = useForm<NewSchemaSubjectRaw>({
     mode: 'onChange',
@@ -121,15 +126,15 @@ const Form: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <PageHeading
-        text={`${subject} Edit`}
-        backText="Schema Registry"
+        text={t('schemas.edit.title', { subject })}
+        backText={t('schemas.list.title')}
         backTo={clusterSchemasPath(clusterName)}
       />
       <S.EditWrapper>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <div>
-              <InputLabel>Type</InputLabel>
+              <InputLabel>{t('schemas.edit.fields.type')}</InputLabel>
               <Controller
                 control={control}
                 rules={{ required: true }}
@@ -151,7 +156,7 @@ const Form: React.FC = () => {
             </div>
 
             <div>
-              <InputLabel>Compatibility level</InputLabel>
+              <InputLabel>{t('schemas.edit.fields.compatibilityLevel')}</InputLabel>
               <Controller
                 control={control}
                 name="compatibilityLevel"
@@ -173,7 +178,7 @@ const Form: React.FC = () => {
           <S.EditorsWrapper>
             <div>
               <S.EditorContainer>
-                <h4>Latest schema</h4>
+                <h4>{t('schemas.edit.fields.latestSchema')}</h4>
                 <Editor
                   schemaType={schema?.schemaType}
                   isFixedHeight
@@ -187,7 +192,7 @@ const Form: React.FC = () => {
             </div>
             <div>
               <S.EditorContainer>
-                <h4>New schema</h4>
+                <h4>{t('schemas.edit.fields.newSchema')}</h4>
                 <Controller
                   control={control}
                   name="newSchema"
@@ -211,7 +216,7 @@ const Form: React.FC = () => {
                 type="submit"
                 disabled={!isDirty || isSubmitting || !!errors.newSchema}
               >
-                Submit
+                {t('schemas.edit.actions.submit')}
               </Button>
             </div>
           </S.EditorsWrapper>

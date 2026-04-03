@@ -18,6 +18,16 @@ import { act } from '@testing-library/react';
 
 import { versionPayload, versionEmptyPayload } from './fixtures';
 
+jest.mock('components/contexts/LocaleContext', () => ({
+  ...jest.requireActual('components/contexts/LocaleContext'),
+  useTranslation: () => ({
+    t: (key: string, params?: Record<string, string>) =>
+      params ? `${key}:${JSON.stringify(params)}` : key,
+    locale: 'en',
+    setLocale: jest.fn(),
+  }),
+}));
+
 const clusterName = 'testClusterName';
 const schemasAPILatestUrl = `/api/clusters/${clusterName}/schemas/${schemaVersion.subject}/latest`;
 const schemasAPIVersionsUrl = `/api/clusters/${clusterName}/schemas/${schemaVersion.subject}/versions`;
@@ -47,7 +57,9 @@ const renderComponent = (
   );
 
 describe('Details', () => {
-  afterEach(() => fetchMock.reset());
+  afterEach(() => {
+    fetchMock.reset();
+  });
 
   describe('fetch failed', () => {
     it('renders pageloader', async () => {
@@ -63,8 +75,12 @@ describe('Details', () => {
       expect(schemasAPIVersionsMock.called(schemasAPIVersionsUrl)).toBeTruthy();
       expect(screen.getByRole('progressbar')).toBeInTheDocument();
       expect(screen.queryByText(schemaVersion.subject)).not.toBeInTheDocument();
-      expect(screen.queryByText('Edit Schema')).not.toBeInTheDocument();
-      expect(screen.queryByText('Remove Schema')).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: 'schemas.details.actions.edit' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('schemas.details.actions.remove')
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -84,7 +100,26 @@ describe('Details', () => {
         });
         expect(schemasAPILatestMock.called()).toBeTruthy();
         expect(schemasAPIVersionsMock.called()).toBeTruthy();
-        expect(screen.getByText('Edit Schema')).toBeInTheDocument();
+        expect(
+          screen.getByRole('link', { name: 'schemas.list.title' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('button', {
+            name: 'schemas.details.actions.compareVersions',
+          })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('link', { name: 'schemas.details.actions.edit' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('heading', { name: 'schemas.details.oldVersions' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: 'schemas.list.table.version' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: 'schemas.list.table.type' })
+        ).toBeInTheDocument();
         expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
         expect(screen.getByRole('table')).toBeInTheDocument();
       });
@@ -106,7 +141,9 @@ describe('Details', () => {
           });
           expect(schemasAPILatestMock.called()).toBeTruthy();
           expect(schemasAPIVersionsMock.called()).toBeTruthy();
-          expect(screen.getByText('Edit Schema')).toBeInTheDocument();
+          expect(
+            screen.getByRole('link', { name: 'schemas.details.actions.edit' })
+          ).toBeInTheDocument();
           expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
           expect(screen.getByRole('table')).toBeInTheDocument();
         });

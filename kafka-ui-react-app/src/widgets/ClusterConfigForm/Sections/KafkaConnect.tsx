@@ -13,8 +13,10 @@ import {
 import SectionHeader from 'widgets/ClusterConfigForm/common/SectionHeader';
 import Credentials from 'widgets/ClusterConfigForm/common/Credentials';
 import SSLForm from 'widgets/ClusterConfigForm/common/SSLForm';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 const KafkaConnect = () => {
+  const { t } = useTranslation();
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -28,8 +30,8 @@ const KafkaConnect = () => {
   return (
     <>
       <SectionHeader
-        title="Kafka Connect"
-        addButtonText="Configure Kafka Connect"
+        title={t('clusterConfig.kafkaConnect.title')}
+        addButtonText={t('clusterConfig.kafkaConnect.addButtonText')}
         adding={!hasFields}
         onClick={toggleConfig}
       />
@@ -40,28 +42,28 @@ const KafkaConnect = () => {
               <FlexRow>
                 <FlexGrow1>
                   <Input
-                    label="Kafka Connect name *"
+                    label={t('clusterConfig.kafkaConnect.fields.name')}
                     name={`kafkaConnect.${index}.name`}
-                    placeholder="Name"
+                    placeholder={t('clusterConfig.kafkaConnect.placeholders.name')}
                     type="text"
-                    hint="Given name for the Kafka Connect cluster"
+                    hint={t('clusterConfig.kafkaConnect.hints.name')}
                     withError
                   />
                   <Input
-                    label="Kafka Connect URL *"
+                    label={t('clusterConfig.kafkaConnect.fields.url')}
                     name={`kafkaConnect.${index}.address`}
-                    placeholder="URl"
+                    placeholder={t('clusterConfig.kafkaConnect.placeholders.url')}
                     type="text"
-                    hint="Address of the Kafka Connect service endpoint"
+                    hint={t('clusterConfig.kafkaConnect.hints.url')}
                     withError
                   />
                   <Credentials
                     prefix={`kafkaConnect.${index}`}
-                    title="Is connect secured with auth?"
+                    title={t('clusterConfig.kafkaConnect.fields.isSecuredWithAuth')}
                   />
                   <SSLForm
                     prefix={`kafkaConnect.${index}.keystore`}
-                    title="Keystore"
+                    title={t('clusterConfig.common.keystore')}
                   />
                 </FlexGrow1>
                 <S.RemoveButton onClick={() => remove(index)}>
@@ -81,7 +83,7 @@ const KafkaConnect = () => {
             onClick={handleAppend}
           >
             <PlusIcon />
-            Add Kafka Connect
+            {t('clusterConfig.kafkaConnect.actions.add')}
           </Button>
         </S.GroupFieldWrapper>
       )}
