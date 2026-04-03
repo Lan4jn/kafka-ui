@@ -28,6 +28,7 @@ import { ConfirmContextProvider } from 'components/contexts/ConfirmContext';
 import ConfirmationModal from 'components/common/ConfirmationModal/ConfirmationModal';
 import { GlobalSettingsContext } from 'components/contexts/GlobalSettingsContext';
 import { UserInfoRolesAccessContext } from 'components/contexts/UserInfoRolesAccessContext';
+import { LocaleProvider } from 'components/contexts/LocaleContext';
 
 import { RolesType, modifyRolesData } from './permissions';
 
@@ -123,31 +124,41 @@ const customRender = (
     children,
   }) => (
     <TestQueryClientProvider>
-      <GlobalSettingsContext.Provider
-        value={globalSettings || { hasDynamicConfig: false }}
-      >
-        <ThemeProvider theme={theme}>
-          <TestUserInfoProvider data={userInfo}>
-            <ConfirmContextProvider>
-              <Provider store={store}>
-                <MemoryRouter initialEntries={initialEntries}>
-                  <div>
-                    {children}
-                    <ConfirmationModal />
-                  </div>
-                </MemoryRouter>
-              </Provider>
-            </ConfirmContextProvider>
-          </TestUserInfoProvider>
-        </ThemeProvider>
-      </GlobalSettingsContext.Provider>
+      <LocaleProvider>
+        <GlobalSettingsContext.Provider
+          value={globalSettings || { hasDynamicConfig: false }}
+        >
+          <ThemeProvider theme={theme}>
+            <TestUserInfoProvider data={userInfo}>
+              <ConfirmContextProvider>
+                <Provider store={store}>
+                  <MemoryRouter initialEntries={initialEntries}>
+                    <div>
+                      {children}
+                      <ConfirmationModal />
+                    </div>
+                  </MemoryRouter>
+                </Provider>
+              </ConfirmContextProvider>
+            </TestUserInfoProvider>
+          </ThemeProvider>
+        </GlobalSettingsContext.Provider>
+      </LocaleProvider>
     </TestQueryClientProvider>
   );
   return render(ui, { wrapper: AllTheProviders, ...renderOptions });
 };
 
+const TestQueryHookProviders: React.FC<PropsWithChildren<unknown>> = ({
+  children,
+}) => (
+  <TestQueryClientProvider>
+    <LocaleProvider>{children}</LocaleProvider>
+  </TestQueryClientProvider>
+);
+
 const customRenderHook = (hook: () => UseQueryResult<unknown, unknown>) =>
-  renderHook(hook, { wrapper: TestQueryClientProvider });
+  renderHook(hook, { wrapper: TestQueryHookProviders });
 
 export { customRender as render, customRenderHook as renderQueryHook };
 

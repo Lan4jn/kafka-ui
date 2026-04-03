@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeModeProvider } from 'components/contexts/ThemeModeContext';
+import { LocaleProvider } from 'components/contexts/LocaleContext';
 import App from 'components/App';
 import { store } from 'redux/store';
 import 'lib/constants';
@@ -16,7 +17,9 @@ root.render(
   <Provider store={store}>
     <BrowserRouter basename={window.basePath || '/'}>
       <ThemeModeProvider>
-        <App />
+        <LocaleProvider>
+          <App />
+        </LocaleProvider>
       </ThemeModeProvider>
     </BrowserRouter>
   </Provider>
