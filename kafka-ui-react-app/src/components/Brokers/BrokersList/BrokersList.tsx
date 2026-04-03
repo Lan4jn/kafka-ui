@@ -208,10 +208,10 @@ const BrokersList: React.FC = () => {
               onlinePartitionCount
             )}
             <Metrics.LightText>
-              {` of ${
-                (onlinePartitionCount || 0) + (offlinePartitionCount || 0)
-              }
-              `}
+              {t('common.metrics.currentOfTotal', {
+                current: '',
+                total: (onlinePartitionCount || 0) + (offlinePartitionCount || 0),
+              })}
             </Metrics.LightText>
           </Metrics.Indicator>
           <Metrics.Indicator
@@ -238,7 +238,12 @@ const BrokersList: React.FC = () => {
             ) : (
               <Metrics.RedText>{inSyncReplicasCount}</Metrics.RedText>
             )}
-            <Metrics.LightText> of {replicas}</Metrics.LightText>
+            <Metrics.LightText>
+              {t('common.metrics.currentOfTotal', {
+                current: '',
+                total: replicas,
+              })}
+            </Metrics.LightText>
           </Metrics.Indicator>
           <Metrics.Indicator label={t('brokers.list.metrics.outOfSyncReplicas')}>
             {outOfSyncReplicasCount}

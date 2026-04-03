@@ -101,7 +101,9 @@ describe('BrokersList Component', () => {
         renderComponent();
         const onlineWidgetDef = screen.getByText(testInSyncReplicasCount);
         const onlineWidget = screen.getByText(
-          `of ${testInSyncReplicasCount + testOutOfSyncReplicasCount}`
+          (_, element) =>
+            element?.textContent ===
+            ` / ${testInSyncReplicasCount + testOutOfSyncReplicasCount}`
         );
         expect(onlineWidgetDef).toBeInTheDocument();
         expect(onlineWidget).toBeInTheDocument();
@@ -115,10 +117,11 @@ describe('BrokersList Component', () => {
           },
         }));
         renderComponent();
-        const onlineWidget = screen.getByText(
-          `of ${testOutOfSyncReplicasCount}`
+        const onlineWidgets = screen.getAllByText(
+          (_, element) =>
+            element?.textContent === ` / ${testOutOfSyncReplicasCount}`
         );
-        expect(onlineWidget).toBeInTheDocument();
+        expect(onlineWidgets.length).toBeGreaterThan(0);
       });
       it(`shows right count when inSyncReplicasCount: ${testInSyncReplicasCount} outOfSyncReplicasCount: undefined`, async () => {
         (useClusterStats as jest.Mock).mockImplementation(() => ({
@@ -130,7 +133,9 @@ describe('BrokersList Component', () => {
         }));
         renderComponent();
         const onlineWidgetDef = screen.getByText(testInSyncReplicasCount);
-        const onlineWidget = screen.getByText(`of ${testInSyncReplicasCount}`);
+        const onlineWidget = screen.getByText(
+          (_, element) => element?.textContent === ` / ${testInSyncReplicasCount}`
+        );
         expect(onlineWidgetDef).toBeInTheDocument();
         expect(onlineWidget).toBeInTheDocument();
       });

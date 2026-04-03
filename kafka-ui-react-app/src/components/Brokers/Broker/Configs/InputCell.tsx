@@ -8,6 +8,7 @@ import { Action, BrokerConfig, ResourceType } from 'generated-sources';
 import { Button } from 'components/common/Button/Button';
 import Input from 'components/common/Input/Input';
 import { ActionButton } from 'components/common/ActionComponent';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './Configs.styled';
 
@@ -19,12 +20,13 @@ const InputCell: React.FC<InputCellProps> = ({ row, getValue, onUpdate }) => {
   const initialValue = `${getValue<string | number>()}`;
   const [isEdit, setIsEdit] = React.useState(false);
   const [value, setValue] = React.useState(initialValue);
+  const { t } = useTranslation();
 
   const confirm = useConfirm();
 
   const onSave = () => {
     if (value !== initialValue) {
-      confirm('Are you sure you want to change the value?', async () => {
+      confirm(t('brokers.configs.confirmChangeValue'), async () => {
         onUpdate(row?.original?.name, value);
       });
     }
@@ -51,7 +53,7 @@ const InputCell: React.FC<InputCellProps> = ({ row, getValue, onUpdate }) => {
           aria-label="confirmAction"
           onClick={onSave}
         >
-          <CheckmarkIcon /> Save
+          <CheckmarkIcon /> {t('brokers.configs.actions.save')}
         </Button>
         <Button
           buttonType="primary"
@@ -59,7 +61,7 @@ const InputCell: React.FC<InputCellProps> = ({ row, getValue, onUpdate }) => {
           aria-label="cancelAction"
           onClick={() => setIsEdit(false)}
         >
-          <CancelIcon /> Cancel
+          <CancelIcon /> {t('brokers.configs.actions.cancel')}
         </Button>
       </S.ButtonsWrapper>
     </S.ValueWrapper>
@@ -82,7 +84,7 @@ const InputCell: React.FC<InputCellProps> = ({ row, getValue, onUpdate }) => {
           action: Action.EDIT,
         }}
       >
-        <EditIcon /> Edit
+        <EditIcon /> {t('brokers.configs.actions.edit')}
       </ActionButton>
     </S.ValueWrapper>
   );

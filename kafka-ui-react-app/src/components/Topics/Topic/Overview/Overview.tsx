@@ -58,7 +58,7 @@ const Overview: React.FC = () => {
               leader={leader}
               outOfSync={!inSync}
               key={broker}
-              title={leader ? 'Leader' : ''}
+              title={leader ? t('topics.overview.replica.leaderTitle') : ''}
             >
               {broker}
             </S.Replica>
@@ -133,7 +133,12 @@ const Overview: React.FC = () => {
             ) : (
               data?.inSyncReplicas
             )}
-            <Metrics.LightText> of {data?.replicas}</Metrics.LightText>
+            <Metrics.LightText>
+              {t('common.metrics.currentOfTotal', {
+                current: '',
+                total: data?.replicas,
+              })}
+            </Metrics.LightText>
           </Metrics.Indicator>
           <Metrics.Indicator label={t('topics.overview.metrics.type')}>
             <Tag color="gray">

@@ -47,6 +47,21 @@ describe('Configs', () => {
     );
   });
 
+  it('shows localized source tooltip', async () => {
+    await userEvent.hover(
+      screen
+        .getByRole('columnheader', { name: '来源' })
+        .querySelector('svg') as Element
+    );
+    expect(
+      screen.getAllByText((_, element) =>
+        element?.textContent?.includes(
+          'DYNAMIC_TOPIC_CONFIG = 为特定主题配置的动态主题配置'
+        ) || false
+      ).length
+    ).toBeGreaterThan(0);
+  });
+
   it('updates textbox value', async () => {
     await userEvent.click(screen.getAllByLabelText('editAction')[0]);
 
@@ -67,8 +82,6 @@ describe('Configs', () => {
       screen.getByRole('button', { name: 'confirmAction' })
     );
 
-    expect(
-      screen.getByText('Are you sure you want to change the value?')
-    ).toBeInTheDocument();
+    expect(screen.getByText('确定要修改该值吗？')).toBeInTheDocument();
   });
 });

@@ -98,7 +98,15 @@ describe('Overview', () => {
 
   it('renders localized metric labels and table headers', () => {
     localStorage.setItem('locale', 'zh-CN');
-    renderComponent();
+    renderComponent({
+      ...externalTopicPayload,
+      partitions: [
+        {
+          ...externalTopicPayload.partitions[0],
+          replicas: [{ broker: 1, leader: true, inSync: true }],
+        },
+      ],
+    });
     expect(screen.getByText('分区')).toBeInTheDocument();
     expect(screen.getByText('副本因子')).toBeInTheDocument();
     expect(screen.getByText('同步副本')).toBeInTheDocument();
@@ -113,6 +121,10 @@ describe('Overview', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('columnheader', { name: '下一个偏移量' })
+    ).toBeInTheDocument();
+    expect(screen.getByTitle('主副本')).toBeInTheDocument();
+    expect(
+      screen.getByText((_, element) => element?.textContent === '1 / 1')
     ).toBeInTheDocument();
   });
 
