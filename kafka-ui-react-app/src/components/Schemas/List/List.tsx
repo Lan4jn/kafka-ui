@@ -25,10 +25,12 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Action, SchemaSubject, ResourceType } from 'generated-sources';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PER_PAGE } from 'lib/constants';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import GlobalSchemaSelector from './GlobalSchemaSelector/GlobalSchemaSelector';
 
 const List: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { isReadOnly } = React.useContext(ClusterContext);
   const { clusterName } = useAppParams<ClusterNameRoute>();
@@ -55,7 +57,7 @@ const List: React.FC = () => {
   const columns = React.useMemo<ColumnDef<SchemaSubject>[]>(
     () => [
       {
-        header: 'Subject',
+        header: t('schemas.list.table.subject'),
         accessorKey: 'subject',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue }) => (
@@ -65,17 +67,20 @@ const List: React.FC = () => {
           />
         ),
       },
-      { header: 'Id', accessorKey: 'id' },
-      { header: 'Type', accessorKey: 'schemaType' },
-      { header: 'Version', accessorKey: 'version' },
-      { header: 'Compatibility', accessorKey: 'compatibilityLevel' },
+      { header: t('schemas.list.table.id'), accessorKey: 'id' },
+      { header: t('schemas.list.table.type'), accessorKey: 'schemaType' },
+      { header: t('schemas.list.table.version'), accessorKey: 'version' },
+      {
+        header: t('schemas.list.table.compatibility'),
+        accessorKey: 'compatibilityLevel',
+      },
     ],
-    []
+    [t]
   );
 
   return (
     <>
-      <PageHeading text="Schema Registry">
+      <PageHeading text={t('schemas.list.title')}>
         {!isReadOnly && (
           <>
             <GlobalSchemaSelector />
@@ -88,20 +93,20 @@ const List: React.FC = () => {
                 action: Action.CREATE,
               }}
             >
-              <PlusIcon /> Create Schema
+              <PlusIcon /> {t('schemas.list.actions.create')}
             </ActionButton>
           </>
         )}
       </PageHeading>
       <ControlPanelWrapper hasInput>
-        <Search placeholder="Search by Schema Name" />
+        <Search placeholder={t('schemas.list.searchPlaceholder')} />
       </ControlPanelWrapper>
       {isFetched ? (
         <Table
           columns={columns}
           data={schemas}
           pageCount={totalPages}
-          emptyMessage="No schemas found"
+          emptyMessage={t('schemas.list.empty')}
           onRowClick={(row) =>
             navigate(clusterSchemaPath(clusterName, row.original.subject))
           }

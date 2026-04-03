@@ -10,10 +10,12 @@ import { ControlPanelWrapper } from 'components/common/ControlPanel/ControlPanel
 import PageLoader from 'components/common/PageLoader/PageLoader';
 import { Action, ConnectorState, ResourceType } from 'generated-sources';
 import { useConnectors } from 'lib/hooks/api/kafkaConnect';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import List from './List';
 
 const ListPage: React.FC = () => {
+  const { t } = useTranslation();
   const { isReadOnly } = React.useContext(ClusterContext);
   const { clusterName } = useAppParams<ClusterNameRoute>();
 
@@ -31,7 +33,7 @@ const ListPage: React.FC = () => {
 
   return (
     <>
-      <PageHeading text="Connectors">
+      <PageHeading text={t('connect.listPage.title')}>
         {!isReadOnly && (
           <ActionButton
             buttonType="primary"
@@ -42,29 +44,29 @@ const ListPage: React.FC = () => {
               action: Action.CREATE,
             }}
           >
-            Create Connector
+            {t('connect.listPage.actions.create')}
           </ActionButton>
         )}
       </PageHeading>
       <Metrics.Wrapper>
         <Metrics.Section>
           <Metrics.Indicator
-            label="Connectors"
-            title="Total number of connectors"
+            label={t('connect.listPage.metrics.connectors.label')}
+            title={t('connect.listPage.metrics.connectors.title')}
             fetching={isLoading}
           >
             {connectorsMetrics?.length || '-'}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label="Failed Connectors"
-            title="Number of failed connectors"
+            label={t('connect.listPage.metrics.failedConnectors.label')}
+            title={t('connect.listPage.metrics.failedConnectors.title')}
             fetching={isLoading}
           >
             {numberOfFailedConnectors ?? '-'}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label="Failed Tasks"
-            title="Number of failed tasks"
+            label={t('connect.listPage.metrics.failedTasks.label')}
+            title={t('connect.listPage.metrics.failedTasks.title')}
             fetching={isLoading}
           >
             {numberOfFailedTasks ?? '-'}
@@ -72,7 +74,7 @@ const ListPage: React.FC = () => {
         </Metrics.Section>
       </Metrics.Wrapper>
       <ControlPanelWrapper hasInput>
-        <Search placeholder="Search by Connect Name, Status or Type" />
+        <Search placeholder={t('connect.listPage.searchPlaceholder')} />
       </ControlPanelWrapper>
       <Suspense fallback={<PageLoader />}>
         <List />

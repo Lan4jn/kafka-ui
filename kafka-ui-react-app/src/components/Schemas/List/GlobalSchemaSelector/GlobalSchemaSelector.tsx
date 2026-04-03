@@ -14,10 +14,12 @@ import { useConfirm } from 'lib/hooks/useConfirm';
 import { useSearchParams } from 'react-router-dom';
 import { PER_PAGE } from 'lib/constants';
 import { ActionSelect } from 'components/common/ActionComponent';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './GlobalSchemaSelector.styled';
 
 const GlobalSchemaSelector: React.FC = () => {
+  const { t } = useTranslation();
   const { clusterName } = useAppParams<ClusterNameRoute>();
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
@@ -50,9 +52,9 @@ const GlobalSchemaSelector: React.FC = () => {
     const nextLevel = level as CompatibilityLevelCompatibilityEnum;
     confirm(
       <>
-        Are you sure you want to update the global compatibility level and set
-        it to <b>{nextLevel}</b>? This may affect the compatibility levels of
-        the schemas.
+        {t('schemas.globalCompatibility.confirm.prefix')}
+        <b>{nextLevel}</b>
+        {t('schemas.globalCompatibility.confirm.suffix')}
       </>,
       async () => {
         try {
@@ -82,7 +84,7 @@ const GlobalSchemaSelector: React.FC = () => {
 
   return (
     <S.Wrapper>
-      <div>Global Compatibility Level: </div>
+      <div>{t('schemas.globalCompatibility.label')}</div>
       <ActionSelect
         selectSize="M"
         defaultValue={currentCompatibilityLevel}

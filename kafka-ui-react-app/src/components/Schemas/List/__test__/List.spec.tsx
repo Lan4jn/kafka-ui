@@ -50,6 +50,7 @@ const renderComponent = (
 describe('List', () => {
   afterEach(() => {
     fetchMock.reset();
+    localStorage.clear();
   });
 
   describe('fetch error', () => {
@@ -87,6 +88,40 @@ describe('List', () => {
       });
       it('renders empty table', () => {
         expect(screen.getByText('No schemas found')).toBeInTheDocument();
+      });
+
+      it('renders localized copy in Chinese', async () => {
+        localStorage.setItem('locale', 'zh-CN');
+        fetchMock.reset();
+
+        const fetchSchemasMock = fetchMock.getOnce(
+          schemasAPIUrl,
+          schemasEmptyPayload
+        );
+        const fetchCompabilityMock = fetchMock.getOnce(
+          schemasAPICompabilityUrl,
+          200
+        );
+
+        await act(() => {
+          renderComponent();
+        });
+
+        expect(fetchSchemasMock.called()).toBeTruthy();
+        expect(fetchCompabilityMock.called()).toBeTruthy();
+
+        expect(
+          screen.getAllByRole('heading', { name: 'Schema 注册表' }).length
+        ).toBeGreaterThan(0);
+        expect(
+          screen.getByRole('link', { name: '创建 Schema' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByPlaceholderText('按 Schema 名称搜索')
+        ).toBeInTheDocument();
+        expect(screen.getByText('主题')).toBeInTheDocument();
+        expect(screen.getByText('兼容性')).toBeInTheDocument();
+        expect(screen.getByText('未找到 Schema')).toBeInTheDocument();
       });
     });
     describe('responded with schemas', () => {

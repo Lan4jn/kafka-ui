@@ -24,6 +24,7 @@ import { showServerError } from 'lib/errorHandling';
 import { schemasApiClient } from 'lib/api';
 import yup from 'lib/yupExtended';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './New.styled';
 
@@ -43,22 +44,28 @@ const schemaCreate = async (
   });
 };
 
-const validationSchema = yup.object().shape({
-  subject: yup
-    .string()
-    .required('Subject is required.')
-    .matches(
-      SCHEMA_NAME_VALIDATION_PATTERN,
-      'Only alphanumeric, _, -, and . allowed'
-    ),
-  schema: yup.string().required('Schema is required.'),
-  schemaType: yup.string().required('Schema Type is required.'),
-});
-
 const New: React.FC = () => {
+  const { t } = useTranslation();
   const { clusterName } = useAppParams<ClusterNameRoute>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const validationSchema = React.useMemo(
+    () =>
+      yup.object().shape({
+        subject: yup
+          .string()
+          .required(t('schemas.new.validation.subjectRequired'))
+          .matches(
+            SCHEMA_NAME_VALIDATION_PATTERN,
+            t('schemas.new.validation.subjectPattern')
+          ),
+        schema: yup.string().required(t('schemas.new.validation.schemaRequired')),
+        schemaType: yup
+          .string()
+          .required(t('schemas.new.validation.schemaTypeRequired')),
+      }),
+    [t]
+  );
   const methods = useForm<NewSchemaSubjectRaw>({
     mode: 'onChange',
     defaultValues: {
@@ -93,16 +100,16 @@ const New: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <PageHeading
-        text="Create"
-        backText="Schema Registry"
+        text={t('schemas.new.title')}
+        backText={t('schemas.list.title')}
         backTo={clusterSchemasPath(clusterName)}
       />
       <S.Form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <InputLabel>Subject *</InputLabel>
+          <InputLabel>{t('schemas.new.fields.subject')}</InputLabel>
           <Input
             inputSize="M"
-            placeholder="Schema Name"
+            placeholder={t('schemas.new.placeholders.subject')}
             autoFocus
             name="subject"
             autoComplete="off"
@@ -114,10 +121,10 @@ const New: React.FC = () => {
         </div>
 
         <div>
-          <InputLabel>Schema *</InputLabel>
+          <InputLabel>{t('schemas.new.fields.schema')}</InputLabel>
           <Textarea
             {...register('schema', {
-              required: 'Schema is required.',
+              required: t('schemas.new.validation.schemaRequired'),
             })}
             disabled={isSubmitting}
           />
@@ -127,7 +134,7 @@ const New: React.FC = () => {
         </div>
 
         <div>
-          <InputLabel>Schema Type *</InputLabel>
+          <InputLabel>{t('schemas.new.fields.schemaType')}</InputLabel>
           <Controller
             control={control}
             name="schemaType"
@@ -155,7 +162,7 @@ const New: React.FC = () => {
           type="submit"
           disabled={!isValid || isSubmitting || !isDirty}
         >
-          Submit
+          {t('schemas.new.actions.submit')}
         </Button>
       </S.Form>
     </FormProvider>

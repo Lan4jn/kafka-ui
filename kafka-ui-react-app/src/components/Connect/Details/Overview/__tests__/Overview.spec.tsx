@@ -11,6 +11,10 @@ jest.mock('lib/hooks/api/kafkaConnect', () => ({
 }));
 
 describe('Overview', () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   it('is empty when no connector', () => {
     (useConnector as jest.Mock).mockImplementation(() => ({
       data: undefined,
@@ -52,6 +56,19 @@ describe('Overview', () => {
       expect(screen.getByText(2)).toBeInTheDocument();
       expect(screen.getByText('Tasks Failed')).toBeInTheDocument();
       expect(screen.getByText(1)).toBeInTheDocument();
+    });
+
+    it('renders localized metric labels in Chinese', () => {
+      localStorage.setItem('locale', 'zh-CN');
+
+      render(<Overview />);
+
+      expect(screen.getByText('Worker')).toBeInTheDocument();
+      expect(screen.getByText('类型')).toBeInTheDocument();
+      expect(screen.getByText('类')).toBeInTheDocument();
+      expect(screen.getByText('状态')).toBeInTheDocument();
+      expect(screen.getByText('运行中的任务')).toBeInTheDocument();
+      expect(screen.getByText('失败的任务')).toBeInTheDocument();
     });
   });
 });

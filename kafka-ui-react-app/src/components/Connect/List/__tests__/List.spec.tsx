@@ -42,6 +42,10 @@ const renderComponent = (contextValue: ContextProps = initialValue) =>
   );
 
 describe('Connectors List', () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   describe('when the connectors are loaded', () => {
     beforeEach(() => {
       (useConnectors as jest.Mock).mockImplementation(() => ({
@@ -76,6 +80,19 @@ describe('Connectors List', () => {
         )
       );
     });
+
+    it('renders localized table headers in Chinese', async () => {
+      localStorage.setItem('locale', 'zh-CN');
+      renderComponent();
+
+      expect(screen.getByText('名称')).toBeInTheDocument();
+      expect(screen.getByText('Connect')).toBeInTheDocument();
+      expect(screen.getByText('类型')).toBeInTheDocument();
+      expect(screen.getByText('插件')).toBeInTheDocument();
+      expect(screen.getByText('主题')).toBeInTheDocument();
+      expect(screen.getByText('状态')).toBeInTheDocument();
+      expect(screen.getByText('运行中的任务')).toBeInTheDocument();
+    });
   });
 
   describe('when table is empty', () => {
@@ -86,10 +103,11 @@ describe('Connectors List', () => {
     });
 
     it('renders empty table', async () => {
+      localStorage.setItem('locale', 'zh-CN');
       renderComponent();
       expect(screen.getByRole('table')).toBeInTheDocument();
       expect(
-        screen.getByRole('row', { name: 'No connectors found' })
+        screen.getByRole('row', { name: '未找到 Connectors' })
       ).toBeInTheDocument();
     });
   });

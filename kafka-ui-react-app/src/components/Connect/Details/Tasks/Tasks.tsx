@@ -5,6 +5,7 @@ import { RouterParamsClusterConnectConnector } from 'lib/paths';
 import { ColumnDef, Row } from '@tanstack/react-table';
 import { Task } from 'generated-sources';
 import Table, { TagCell } from 'components/common/NewTable';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import ActionsCellTasks from './ActionsCellTasks';
 
@@ -15,16 +16,21 @@ const ExpandedTaskRow: React.FC<{ row: Row<Task> }> = ({ row }) => {
 const MAX_LENGTH = 100;
 
 const Tasks: React.FC = () => {
+  const { t } = useTranslation();
   const routerProps = useAppParams<RouterParamsClusterConnectConnector>();
   const { data = [] } = useConnectorTasks(routerProps);
 
   const columns = React.useMemo<ColumnDef<Task>[]>(
     () => [
-      { header: 'ID', accessorKey: 'status.id' },
-      { header: 'Worker', accessorKey: 'status.workerId' },
-      { header: 'State', accessorKey: 'status.state', cell: TagCell },
+      { header: t('connect.tasks.table.id'), accessorKey: 'status.id' },
+      { header: t('connect.tasks.table.worker'), accessorKey: 'status.workerId' },
       {
-        header: 'Trace',
+        header: t('connect.tasks.table.state'),
+        accessorKey: 'status.state',
+        cell: TagCell,
+      },
+      {
+        header: t('connect.tasks.table.trace'),
         accessorKey: 'status.trace',
         enableSorting: false,
         cell: ({ getValue }) => {
@@ -41,14 +47,14 @@ const Tasks: React.FC = () => {
         cell: ActionsCellTasks,
       },
     ],
-    []
+    [t]
   );
 
   return (
     <Table
       columns={columns}
       data={data}
-      emptyMessage="No tasks found"
+      emptyMessage={t('connect.tasks.empty')}
       enableSorting
       getRowCanExpand={(row) => row.original.status.trace?.length > 0}
       renderSubComponent={ExpandedTaskRow}
