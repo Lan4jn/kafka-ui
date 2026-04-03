@@ -93,6 +93,8 @@ describe('Details', () => {
   };
 
   beforeEach(async () => {
+    localStorage.clear();
+    localStorage.setItem('locale', 'en');
     (useTopicDetails as jest.Mock).mockImplementation(() => ({
       data: topic,
     }));
@@ -186,21 +188,23 @@ describe('Details', () => {
     });
 
     it('shows a confirmation popup on deleting topic messages', async () => {
+      localStorage.setItem('locale', 'zh-CN');
       renderComponent();
-      const clearMessagesButton = screen.getAllByText(/Clear messages/i)[0];
+      const clearMessagesButton = screen.getAllByText('清空消息')[0];
       await userEvent.click(clearMessagesButton);
 
-      expect(
-        screen.getByText(/Are you sure want to clear topic messages?/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText('确定要清空主题消息吗？')).toBeInTheDocument();
     });
 
     it('shows a confirmation popup on recreating topic', async () => {
       renderComponent();
       const recreateTopicButton = screen.getByText(/Recreate topic/i);
       await userEvent.click(recreateTopicButton);
+      const expectedConfirmation = `Are you sure want to recreate ${topic.name} topic?`;
       expect(
-        screen.getByText(/Are you sure want to recreate topic?/i)
+        screen.getByText(
+          (_, element) => element?.textContent === expectedConfirmation
+        )
       ).toBeInTheDocument();
     });
 
@@ -220,8 +224,11 @@ describe('Details', () => {
       await userEvent.click(recreateTopicButton);
       const cancelBtn = screen.getByRole('button', { name: /cancel/i });
       await userEvent.click(cancelBtn);
+      const expectedConfirmation = `Are you sure want to recreate ${topic.name} topic?`;
       expect(
-        screen.queryByText(/Are you sure want to recreate topic?/i)
+        screen.queryByText(
+          (_, element) => element?.textContent === expectedConfirmation
+        )
       ).not.toBeInTheDocument();
     });
   });

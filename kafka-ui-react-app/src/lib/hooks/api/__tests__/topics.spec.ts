@@ -7,8 +7,10 @@ import {
 import * as hooks from 'lib/hooks/api/topics';
 import fetchMock from 'fetch-mock';
 import { externalTopicPayload, topicConfigPayload } from 'lib/fixtures/topics';
+import { translateMessage } from 'lib/i18n';
 import { TopicFormData, TopicFormDataRaw } from 'redux/interfaces';
 import { CreateTopicMessage } from 'generated-sources';
+import { showSuccessAlert } from 'lib/errorHandling';
 
 const clusterName = 'test-cluster';
 const topicName = 'test-topic';
@@ -21,10 +23,16 @@ const topicParams = { clusterName, topicName };
 jest.mock('lib/errorHandling', () => ({
   ...jest.requireActual('lib/errorHandling'),
   showServerError: jest.fn(),
+  showSuccessAlert: jest.fn(),
 }));
 
 describe('Topics hooks', () => {
-  beforeEach(() => fetchMock.restore());
+  beforeEach(() => {
+    fetchMock.restore();
+    localStorage.clear();
+    localStorage.setItem('locale', 'en');
+    jest.clearAllMocks();
+  });
   it('handles useTopics', async () => {
     const mock = fetchMock.getOnce(topicsPath, []);
     const { result } = renderQueryHook(() => hooks.useTopics({ clusterName }));
@@ -184,6 +192,32 @@ describe('Topics hooks', () => {
       });
       await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
       expect(mock.calls()).toHaveLength(1);
+    });
+    it('useClearTopicMessages shows localized success notification', async () => {
+      localStorage.setItem('locale', 'zh-CN');
+      const mock = fetchMock.deleteOnce(`${topicPath}/messages`, {});
+      const { result } = renderHook(
+        () => hooks.useClearTopicMessages(clusterName),
+        {
+          wrapper: TestQueryClientProvider,
+        }
+      );
+      await act(() => {
+        result.current.mutateAsync(topicName);
+      });
+      await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
+      expect(mock.calls()).toHaveLength(1);
+      const expectedMessage = translateMessage(
+        'topics.notifications.clearSuccess',
+        {
+          topicName,
+        },
+        'zh-CN'
+      );
+      expect(showSuccessAlert).toHaveBeenCalledWith({
+        id: `message-${topicName}-${clusterName}-undefined`,
+        message: expectedMessage,
+      });
     });
     it('useCancelTopicAnalysis', async () => {
       const mock = fetchMock.deleteOnce(`${topicPath}/analysis`, {});

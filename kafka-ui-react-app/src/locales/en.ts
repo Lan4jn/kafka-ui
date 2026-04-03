@@ -11,4 +11,13 @@ export const en: Record<string, string> = {
   'nav.dashboard': 'Dashboard',
   'confirmation.title': 'Confirmation',
   'errors.accessDenied': 'Access denied',
+  'topics.actions.clearMessages': 'Clear messages',
+  'topics.actions.purgeSelectedTopics':
+    'Purge messages of selected topics',
+  'topics.confirmations.clearMessages':
+    'Are you sure you want to clear topic messages?',
+  'topics.confirmations.purgeSelectedTopics':
+    'Are you sure you want to purge messages of selected topics?',
+  'topics.notifications.clearSuccess':
+    'Topic {topicName} messages were successfully cleared.',
 };

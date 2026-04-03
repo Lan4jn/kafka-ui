@@ -2,20 +2,11 @@ import React from 'react';
 import type { PropsWithChildren } from 'react';
 
 import type { AppLocale, TranslationParams } from 'locales/types';
-import { en } from 'locales/en';
-import { zhCN } from 'locales/zh-CN';
 import {
   detectBrowserLocale,
-  interpolateMessage,
   normalizeLocale,
+  translateMessage,
 } from 'lib/i18n';
-
-type TranslationDict = Record<string, string>;
-
-const dictionaries: Record<AppLocale, TranslationDict> = {
-  en,
-  'zh-CN': zhCN,
-};
 
 export interface LocaleContextValue {
   locale: AppLocale;
@@ -42,20 +33,8 @@ export const LocaleProvider: React.FC<PropsWithChildren<unknown>> = ({
   }, []);
 
   const t = React.useCallback(
-    (key: string, params?: TranslationParams): string => {
-      const message =
-        dictionaries[locale]?.[key] ?? dictionaries.en[key];
-
-      if (typeof message === 'string') {
-        return interpolateMessage(message, params);
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn(`[i18n] Missing translation key: "${key}"`);
-      }
-
-      return key;
-    },
+    (key: string, params?: TranslationParams): string =>
+      translateMessage(key, params, locale),
     [locale]
   );
 
@@ -80,4 +59,3 @@ export const useTranslation = (): LocaleContextValue => {
   }
   return ctx;
 };
-

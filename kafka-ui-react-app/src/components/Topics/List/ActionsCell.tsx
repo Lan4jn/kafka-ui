@@ -2,6 +2,7 @@ import React from 'react';
 import { Action, CleanUpPolicy, Topic, ResourceType } from 'generated-sources';
 import { CellContext } from '@tanstack/react-table';
 import ClusterContext from 'components/contexts/ClusterContext';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { ClusterNameRoute } from 'lib/paths';
 import useAppParams from 'lib/hooks/useAppParams';
 import { Dropdown, DropdownItemHint } from 'components/common/Dropdown';
@@ -14,6 +15,7 @@ import { ActionDropdownItem } from 'components/common/ActionComponent';
 
 const ActionsCell: React.FC<CellContext<Topic, unknown>> = ({ row }) => {
   const { name, internal, cleanUpPolicy } = row.original;
+  const { t } = useTranslation();
 
   const { isReadOnly, isTopicDeletionAllowed } =
     React.useContext(ClusterContext);
@@ -36,7 +38,7 @@ const ActionsCell: React.FC<CellContext<Topic, unknown>> = ({ row }) => {
       <ActionDropdownItem
         disabled={isCleanupDisabled}
         onClick={clearTopicMessagesHandler}
-        confirm="Are you sure want to clear topic messages?"
+        confirm={t('topics.confirmations.clearMessages')}
         danger
         permission={{
           resource: ResourceType.TOPIC,
@@ -44,7 +46,7 @@ const ActionsCell: React.FC<CellContext<Topic, unknown>> = ({ row }) => {
           value: name,
         }}
       >
-        Clear Messages
+        {t('topics.actions.clearMessages')}
         <DropdownItemHint>
           Clearing messages is only allowed for topics
           <br />

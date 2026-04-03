@@ -11,4 +11,9 @@ export const zhCN: Record<string, string> = {
   'nav.dashboard': '仪表盘',
   'confirmation.title': '确认',
   'errors.accessDenied': '无权限访问',
+  'topics.actions.clearMessages': '清空消息',
+  'topics.actions.purgeSelectedTopics': '清空所选主题消息',
+  'topics.confirmations.clearMessages': '确定要清空主题消息吗？',
+  'topics.confirmations.purgeSelectedTopics': '确定要清空所选主题的消息吗？',
+  'topics.notifications.clearSuccess': '已成功清空主题 {topicName} 的消息。',
 };

@@ -10,6 +10,7 @@ import {
   RouteParamsClusterTopic,
 } from 'lib/paths';
 import ClusterContext from 'components/contexts/ClusterContext';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import PageHeading from 'components/common/PageHeading/PageHeading';
 import {
   ActionButton,
@@ -48,6 +49,7 @@ const Topic: React.FC = () => {
     setTrue: openSidebar,
   } = useBoolean(false);
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   const deleteTopic = useDeleteTopic(clusterName);
@@ -111,7 +113,7 @@ const Topic: React.FC = () => {
 
           <ActionDropdownItem
             onClick={clearTopicMessagesHandler}
-            confirm="Are you sure want to clear topic messages?"
+            confirm={t('topics.confirmations.clearMessages')}
             disabled={!canCleanup}
             danger
             permission={{
@@ -120,7 +122,7 @@ const Topic: React.FC = () => {
               value: topicName,
             }}
           >
-            Clear messages
+            {t('topics.actions.clearMessages')}
             <DropdownItemHint>
               Clearing messages is only allowed for topics
               <br />
