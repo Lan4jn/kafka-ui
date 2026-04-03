@@ -81,7 +81,7 @@ const KafkaCluster: React.FC = () => {
                 />
               </div>
               <S.BootstrapServerActions
-                aria-label="deleteProperty"
+                aria-label={t('clusterConfig.actions.removeFromConfig')}
                 onClick={() => remove(index)}
               >
                 <CloseCircleIcon aria-hidden />

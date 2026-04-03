@@ -67,7 +67,9 @@ const KafkaConnect = () => {
                   />
                 </FlexGrow1>
                 <S.RemoveButton onClick={() => remove(index)}>
-                  <IconButtonWrapper aria-label="deleteProperty">
+                  <IconButtonWrapper
+                    aria-label={t('clusterConfig.actions.removeFromConfig')}
+                  >
                     <CloseCircleIcon aria-hidden />
                   </IconButtonWrapper>
                 </S.RemoveButton>
