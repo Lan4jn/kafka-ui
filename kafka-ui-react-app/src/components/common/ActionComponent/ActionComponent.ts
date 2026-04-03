@@ -1,5 +1,6 @@
 import { Placement } from '@floating-ui/react';
 import { Action, ResourceType } from 'generated-sources';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
 export interface ActionComponentProps {
   permission: {
@@ -12,5 +13,9 @@ export interface ActionComponentProps {
 }
 
 export function getDefaultActionMessage() {
-  return "You don't have a required permission to perform this action";
+  return translateMessage(
+    'actionComponent.defaultMessage',
+    undefined,
+    getCurrentLocale()
+  );
 }

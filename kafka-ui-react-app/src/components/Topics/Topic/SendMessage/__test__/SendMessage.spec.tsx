@@ -71,6 +71,7 @@ const renderAndSubmitData = async (error: string[] = []) => {
 
 describe('SendMessage', () => {
   beforeEach(() => {
+    localStorage.clear();
     (useTopicDetails as jest.Mock).mockImplementation(() => ({
       data: externalTopicPayload,
     }));
@@ -106,5 +107,22 @@ describe('SendMessage', () => {
       await renderComponent();
       expect(screen.getAllByRole('textbox')[0].nodeValue).toBeNull();
     });
+  });
+
+  it('renders localized form copy in Chinese', async () => {
+    localStorage.setItem('locale', 'zh-CN');
+
+    await renderComponent();
+
+    expect(screen.getByText('分区')).toBeInTheDocument();
+    expect(screen.getByText('Key Serde')).toBeInTheDocument();
+    expect(screen.getByText('Value Serde')).toBeInTheDocument();
+    expect(screen.getByText('保留内容')).toBeInTheDocument();
+    expect(screen.getByText('键')).toBeInTheDocument();
+    expect(screen.getByText('值')).toBeInTheDocument();
+    expect(screen.getByText('消息头')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: '发送消息' })
+    ).toBeInTheDocument();
   });
 });

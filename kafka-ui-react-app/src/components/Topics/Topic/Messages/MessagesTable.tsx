@@ -13,11 +13,13 @@ import { Button } from 'components/common/Button/Button';
 import { useSearchParams } from 'react-router-dom';
 import { MESSAGES_PER_PAGE } from 'lib/constants';
 import * as S from 'components/common/NewTable/Table.styled';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import PreviewModal from './PreviewModal';
 import Message, { PreviewFilter } from './Message';
 
 const MessagesTable: React.FC = () => {
+  const { t } = useTranslation();
   const [previewFor, setPreviewFor] = useState<string | null>(null);
 
   const [keyFilters, setKeyFilters] = useState<PreviewFilter[]>([]);
@@ -68,21 +70,27 @@ const MessagesTable: React.FC = () => {
         <thead>
           <tr>
             <TableHeaderCell> </TableHeaderCell>
-            <TableHeaderCell title="Offset" />
-            <TableHeaderCell title="Partition" />
-            <TableHeaderCell title="Timestamp" />
+            <TableHeaderCell title={t('topics.messages.table.offset')} />
+            <TableHeaderCell title={t('topics.messages.table.partition')} />
+            <TableHeaderCell title={t('topics.messages.table.timestamp')} />
             <TableHeaderCell
-              title="Key"
-              previewText={`Preview ${
-                keyFilters.length ? `(${keyFilters.length} selected)` : ''
+              title={t('topics.messages.table.key')}
+              previewText={`${t('topics.messages.preview')} ${
+                keyFilters.length
+                  ? t('topics.messages.previewSelected', {
+                      count: keyFilters.length,
+                    })
+                  : ''
               }`}
               onPreview={() => setPreviewFor('key')}
             />
             <TableHeaderCell
-              title="Value"
-              previewText={`Preview ${
+              title={t('topics.messages.table.value')}
+              previewText={`${t('topics.messages.preview')} ${
                 contentFilters.length
-                  ? `(${contentFilters.length} selected)`
+                  ? t('topics.messages.previewSelected', {
+                      count: contentFilters.length,
+                    })
                   : ''
               }`}
               onPreview={() => setPreviewFor('content')}
@@ -113,7 +121,7 @@ const MessagesTable: React.FC = () => {
           )}
           {messages.length === 0 && !isFetching && (
             <tr>
-              <td colSpan={10}>No messages found</td>
+              <td colSpan={10}>{t('topics.messages.table.empty')}</td>
             </tr>
           )}
         </tbody>
@@ -126,7 +134,7 @@ const MessagesTable: React.FC = () => {
             disabled={isPrevPageButtonDisabled}
             onClick={handlePrevPage}
           >
-            ← Back
+            {t('topics.messages.pagination.back')}
           </Button>
           <Button
             buttonType="secondary"
@@ -134,7 +142,7 @@ const MessagesTable: React.FC = () => {
             disabled={isNextPageButtonDisabled}
             onClick={handleNextPage}
           >
-            Next →
+            {t('topics.messages.pagination.next')}
           </Button>
         </S.Pages>
       </S.Pagination>

@@ -15,6 +15,10 @@ const clusterName = 'local';
 const brokerId = 1;
 
 describe('BrokerLogdir Component', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   const renderComponent = async (payload?: BrokerLogdirs[]) => {
     (useBrokerLogDirs as jest.Mock).mockImplementation(() => ({
       data: payload,
@@ -59,5 +63,17 @@ describe('BrokerLogdir Component', () => {
         name: '/opt/kafka/data-1/logs NONE 0 0',
       })
     ).toBeInTheDocument();
+  });
+
+  it('renders localized headers and empty state in Chinese', async () => {
+    localStorage.setItem('locale', 'zh-CN');
+
+    await renderComponent([]);
+
+    expect(screen.getByText('名称')).toBeInTheDocument();
+    expect(screen.getByText('错误')).toBeInTheDocument();
+    expect(screen.getByText('主题数')).toBeInTheDocument();
+    expect(screen.getByText('分区数')).toBeInTheDocument();
+    expect(screen.getByText('日志目录数据不可用')).toBeInTheDocument();
   });
 });

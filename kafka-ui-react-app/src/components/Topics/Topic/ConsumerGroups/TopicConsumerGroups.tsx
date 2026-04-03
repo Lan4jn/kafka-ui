@@ -6,10 +6,12 @@ import { useTopicConsumerGroups } from 'lib/hooks/api/topics';
 import { ColumnDef } from '@tanstack/react-table';
 import Table, { LinkCell, TagCell } from 'components/common/NewTable';
 import Search from 'components/common/Search/Search';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './TopicConsumerGroups.styled';
 
 const TopicConsumerGroups: React.FC = () => {
+  const { t } = useTranslation();
   const [keyword, setKeyword] = React.useState('');
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
 
@@ -29,7 +31,7 @@ const TopicConsumerGroups: React.FC = () => {
   const columns = React.useMemo<ColumnDef<ConsumerGroup>[]>(
     () => [
       {
-        header: 'Consumer Group ID',
+        header: t('topics.consumerGroups.table.groupId'),
         accessorKey: 'groupId',
         enableSorting: false,
         // eslint-disable-next-line react/no-unstable-nested-components
@@ -43,17 +45,17 @@ const TopicConsumerGroups: React.FC = () => {
         ),
       },
       {
-        header: 'Active Consumers',
+        header: t('topics.consumerGroups.table.activeConsumers'),
         accessorKey: 'members',
         enableSorting: false,
       },
       {
-        header: 'Consumer Lag',
+        header: t('consumerGroups.list.table.consumerLag'),
         accessorKey: 'consumerLag',
         enableSorting: false,
       },
       {
-        header: 'Coordinator',
+        header: t('topics.consumerGroups.table.coordinator'),
         accessorKey: 'coordinator',
         enableSorting: false,
         cell: ({ getValue }) => {
@@ -65,20 +67,20 @@ const TopicConsumerGroups: React.FC = () => {
         },
       },
       {
-        header: 'State',
+        header: t('consumerGroups.list.table.state'),
         accessorKey: 'state',
         enableSorting: false,
         cell: TagCell,
       },
     ],
-    []
+    [clusterName, t]
   );
   return (
     <>
       <S.SearchWrapper>
         <Search
           onChange={setKeyword}
-          placeholder="Search by Consumer Name"
+          placeholder={t('topics.consumerGroups.searchPlaceholder')}
           value={keyword}
         />
       </S.SearchWrapper>
@@ -86,7 +88,7 @@ const TopicConsumerGroups: React.FC = () => {
         columns={columns}
         data={consumerGroups}
         enableSorting
-        emptyMessage="No active consumer groups"
+        emptyMessage={t('consumerGroups.list.table.empty')}
       />
     </>
   );

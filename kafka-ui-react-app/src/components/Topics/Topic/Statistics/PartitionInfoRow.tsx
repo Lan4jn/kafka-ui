@@ -8,12 +8,14 @@ import {
 } from 'components/common/PropertiesList/PropertiesList.styled';
 import { TopicAnalysisStats } from 'generated-sources';
 import { formatTimestamp } from 'lib/dateTimeHelpers';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './Statistics.styles';
 
 const PartitionInfoRow: React.FC<{ row: Row<TopicAnalysisStats> }> = ({
   row,
 }) => {
+  const { t } = useTranslation();
   const {
     totalMsgs,
     minTimestamp,
@@ -28,69 +30,69 @@ const PartitionInfoRow: React.FC<{ row: Row<TopicAnalysisStats> }> = ({
   return (
     <S.PartitionInfo>
       <div>
-        <Heading level={4}>Partition stats</Heading>
+        <Heading level={4}>{t('topics.statistics.partitionInfo.partitionStats')}</Heading>
         <List>
-          <Label>Total message</Label>
+          <Label>{t('topics.statistics.partitionInfo.totalMessages')}</Label>
           <span>{totalMsgs}</span>
-          <Label>Total size</Label>
+          <Label>{t('topics.statistics.size.totalSize')}</Label>
           <BytesFormatted value={(keySize?.sum || 0) + (valueSize?.sum || 0)} />
-          <Label>Min. timestamp</Label>
+          <Label>{t('topics.statistics.partitionInfo.minTimestamp')}</Label>
           <span>{formatTimestamp(minTimestamp)}</span>
-          <Label>Max. timestamp</Label>
+          <Label>{t('topics.statistics.partitionInfo.maxTimestamp')}</Label>
           <span>{formatTimestamp(maxTimestamp)}</span>
-          <Label>Null keys amount</Label>
+          <Label>{t('topics.statistics.partitionInfo.nullKeys')}</Label>
           <span>{nullKeys}</span>
-          <Label>Null values amount</Label>
+          <Label>{t('topics.statistics.partitionInfo.nullValues')}</Label>
           <span>{nullValues}</span>
-          <Label>Approx. unique keys amount</Label>
+          <Label>{t('topics.statistics.partitionInfo.uniqueKeys')}</Label>
           <span>{approxUniqKeys}</span>
-          <Label>Approx. unique values amount</Label>
+          <Label>{t('topics.statistics.partitionInfo.uniqueValues')}</Label>
           <span>{approxUniqValues}</span>
         </List>
       </div>
       <div>
-        <Heading level={4}>Keys sizes</Heading>
+        <Heading level={4}>{t('topics.statistics.partitionInfo.keySizes')}</Heading>
         <List>
-          <Label>Total keys size</Label>
+          <Label>{t('topics.statistics.partitionInfo.totalKeySize')}</Label>
           <BytesFormatted value={keySize?.sum} />
-          <Label>Min key size</Label>
+          <Label>{t('topics.statistics.partitionInfo.minKeySize')}</Label>
           <BytesFormatted value={keySize?.min} />
-          <Label>Max key size</Label>
+          <Label>{t('topics.statistics.partitionInfo.maxKeySize')}</Label>
           <BytesFormatted value={keySize?.max} />
-          <Label>Avg key size</Label>
+          <Label>{t('topics.statistics.partitionInfo.avgKeySize')}</Label>
           <BytesFormatted value={keySize?.avg} />
-          <Label>Percentile 50</Label>
+          <Label>{t('topics.statistics.size.percentile50')}</Label>
           <BytesFormatted value={keySize?.prctl50} />
-          <Label>Percentile 75</Label>
+          <Label>{t('topics.statistics.size.percentile75')}</Label>
           <BytesFormatted value={keySize?.prctl75} />
-          <Label>Percentile 95</Label>
+          <Label>{t('topics.statistics.size.percentile95')}</Label>
           <BytesFormatted value={keySize?.prctl95} />
-          <Label>Percentile 99</Label>
+          <Label>{t('topics.statistics.size.percentile99')}</Label>
           <BytesFormatted value={keySize?.prctl99} />
-          <Label>Percentile 999</Label>
+          <Label>{t('topics.statistics.size.percentile999')}</Label>
           <BytesFormatted value={keySize?.prctl999} />
         </List>
       </div>
       <div>
-        <Heading level={4}>Values sizes</Heading>
+        <Heading level={4}>{t('topics.statistics.partitionInfo.valueSizes')}</Heading>
         <List>
-          <Label>Total keys size</Label>
+          <Label>{t('topics.statistics.partitionInfo.totalValueSize')}</Label>
           <BytesFormatted value={valueSize?.sum} />
-          <Label>Min key size</Label>
+          <Label>{t('topics.statistics.partitionInfo.minValueSize')}</Label>
           <BytesFormatted value={valueSize?.min} />
-          <Label>Max key size</Label>
+          <Label>{t('topics.statistics.partitionInfo.maxValueSize')}</Label>
           <BytesFormatted value={valueSize?.max} />
-          <Label>Avg key size</Label>
+          <Label>{t('topics.statistics.partitionInfo.avgValueSize')}</Label>
           <BytesFormatted value={valueSize?.avg} />
-          <Label>Percentile 50</Label>
+          <Label>{t('topics.statistics.size.percentile50')}</Label>
           <BytesFormatted value={valueSize?.prctl50} />
-          <Label>Percentile 75</Label>
+          <Label>{t('topics.statistics.size.percentile75')}</Label>
           <BytesFormatted value={valueSize?.prctl75} />
-          <Label>Percentile 95</Label>
+          <Label>{t('topics.statistics.size.percentile95')}</Label>
           <BytesFormatted value={valueSize?.prctl95} />
-          <Label>Percentile 99</Label>
+          <Label>{t('topics.statistics.size.percentile99')}</Label>
           <BytesFormatted value={valueSize?.prctl99} />
-          <Label>Percentile 999</Label>
+          <Label>{t('topics.statistics.size.percentile999')}</Label>
           <BytesFormatted value={valueSize?.prctl999} />
         </List>
       </div>

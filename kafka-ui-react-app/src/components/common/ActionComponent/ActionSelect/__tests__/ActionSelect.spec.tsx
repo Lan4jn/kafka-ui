@@ -70,4 +70,16 @@ describe('ActionSelect', () => {
 
     await tooltipIsShowing(list, tooltipText);
   });
+
+  it('should render localized default tooltip text', async () => {
+    localStorage.setItem('locale', 'zh-CN');
+    const localizedTooltipText = '你没有执行此操作所需的权限';
+
+    render(<ActionSelect permission={invalidPermission} />, {
+      userInfo: userInfoRbacEnabled,
+    });
+    const list = screen.getByRole('listbox');
+
+    await tooltipIsShowing(list, localizedTooltipText);
+  });
 });

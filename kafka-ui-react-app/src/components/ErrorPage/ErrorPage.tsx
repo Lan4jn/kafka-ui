@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'components/common/Button/Button';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './ErrorPage.styled';
 
@@ -11,15 +12,16 @@ interface Props {
 
 const ErrorPage: React.FC<Props> = ({
   status = 404,
-  text = 'Page is not found',
-  btnText = 'Go Back to Dashboard',
+  text,
+  btnText,
 }) => {
+  const { t } = useTranslation();
   return (
     <S.Wrapper>
       <S.Status>{status}</S.Status>
-      <S.Text>{text}</S.Text>
+      <S.Text>{text || t('errorPage.text')}</S.Text>
       <Button buttonType="primary" buttonSize="M" to="/">
-        {btnText}
+        {btnText || t('errorPage.button')}
       </Button>
     </S.Wrapper>
   );

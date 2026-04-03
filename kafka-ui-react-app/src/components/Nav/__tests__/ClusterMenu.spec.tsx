@@ -14,9 +14,9 @@ describe('ClusterMenu', () => {
   const getMenuItems = () => screen.getAllByRole('menuitem');
   const getMenuItem = () => screen.getByRole('menuitem');
   const getBrokers = () => screen.getByTitle('Brokers');
-  const getTopics = () => screen.getByTitle('Brokers');
-  const getConsumers = () => screen.getByTitle('Brokers');
-  const getKafkaConnect = () => screen.getByTitle('Kafka Connect');
+  const getTopics = () => screen.getByTitle('Topics');
+  const getConsumers = () => screen.getByTitle('Consumers');
+  const getKafkaConnect = () => screen.getByTitle('Connectors');
   const getCluster = () => screen.getByText(onlineClusterPayload.name);
 
   it('renders cluster menu with default set of features', async () => {

@@ -3,10 +3,12 @@ import { Dropdown, DropdownItem } from 'components/common/Dropdown';
 import UserIcon from 'components/common/Icons/UserIcon';
 import DropdownArrowIcon from 'components/common/Icons/DropdownArrowIcon';
 import { useUserInfo } from 'lib/hooks/useUserInfo';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './UserInfo.styled';
 
 const UserInfo = () => {
+  const { t } = useTranslation();
   const { username } = useUserInfo();
 
   return username ? (
@@ -20,7 +22,7 @@ const UserInfo = () => {
       }
     >
       <DropdownItem href={`${window.basePath}/logout`}>
-        <S.LogoutLink>Log out</S.LogoutLink>
+        <S.LogoutLink as="span">{t('navbar.userInfo.logout')}</S.LogoutLink>
       </DropdownItem>
     </Dropdown>
   ) : null;

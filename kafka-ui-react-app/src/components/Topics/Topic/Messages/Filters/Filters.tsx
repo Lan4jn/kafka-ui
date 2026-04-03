@@ -39,6 +39,7 @@ import { useTopicDetails } from 'lib/hooks/api/topics';
 import { InputLabel } from 'components/common/Input/InputLabel.styled';
 import { getSerdeOptions } from 'components/Topics/Topic/SendMessage/utils';
 import { useSerdes } from 'lib/hooks/api/topicMessages';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './Filters.styled';
 import {
@@ -93,6 +94,7 @@ const Filters: React.FC<FiltersProps> = ({
   setMessageType,
   messageEventType,
 }) => {
+  const { t } = useTranslation();
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -449,7 +451,7 @@ const Filters: React.FC<FiltersProps> = ({
       <div>
         <S.FilterInputs>
           <div>
-            <InputLabel>Seek Type</InputLabel>
+            <InputLabel>{t('topics.messages.filters.seekType')}</InputLabel>
             <S.SeekTypeSelectorWrapper>
               <S.SeekTypeSelect
                 id="selectSeekType"
@@ -467,7 +469,7 @@ const Filters: React.FC<FiltersProps> = ({
                   type="text"
                   inputSize="M"
                   value={offset}
-                  placeholder="Offset"
+                  placeholder={t('topics.messages.filters.offsetPlaceholder')}
                   onChange={({ target: { value } }) => setOffset(value)}
                   disabled={isTailing}
                 />
@@ -478,14 +480,16 @@ const Filters: React.FC<FiltersProps> = ({
                   showTimeInput
                   timeInputLabel="Time:"
                   dateFormat="MMM d, yyyy HH:mm"
-                  placeholderText="Select timestamp"
+                  placeholderText={t(
+                    'topics.messages.filters.timestampPlaceholder'
+                  )}
                   disabled={isTailing}
                 />
               )}
             </S.SeekTypeSelectorWrapper>
           </div>
           <div>
-            <InputLabel>Partitions</InputLabel>
+            <InputLabel>{t('consumerGroups.resetOffsets.fields.partitions')}</InputLabel>
             <MultiSelect
               options={partitions.map((p) => ({
                 label: `Partition #${p.partition.toString()}`,
@@ -494,12 +498,14 @@ const Filters: React.FC<FiltersProps> = ({
               filterOptions={filterOptions}
               value={selectedPartitions}
               onChange={setSelectedPartitions}
-              labelledBy="Select partitions"
+              labelledBy={t(
+                'consumerGroups.resetOffsets.placeholders.partitions'
+              )}
               disabled={isTailing}
             />
           </div>
           <div>
-            <InputLabel>Key Serde</InputLabel>
+            <InputLabel>{t('topics.sendMessage.fields.keySerde')}</InputLabel>
             <Select
               id="selectKeySerdeOptions"
               aria-labelledby="selectKeySerdeOptions"
@@ -512,7 +518,7 @@ const Filters: React.FC<FiltersProps> = ({
             />
           </div>
           <div>
-            <InputLabel>Value Serde</InputLabel>
+            <InputLabel>{t('topics.sendMessage.fields.valueSerde')}</InputLabel>
             <Select
               id="selectValueSerdeOptions"
               aria-labelledby="selectValueSerdeOptions"
@@ -524,7 +530,9 @@ const Filters: React.FC<FiltersProps> = ({
               disabled={isTailing}
             />
           </div>
-          <S.ClearAll onClick={handleClearAllFilters}>Clear all</S.ClearAll>
+          <S.ClearAll onClick={handleClearAllFilters}>
+            {t('topics.messages.filters.clearAll')}
+          </S.ClearAll>
           <Button
             type="submit"
             buttonType="secondary"
@@ -535,7 +543,9 @@ const Filters: React.FC<FiltersProps> = ({
             }
             style={{ fontWeight: 500 }}
           >
-            {isFetching ? 'Cancel' : 'Submit'}
+            {isFetching
+              ? t('topics.messages.filters.cancel')
+              : t('topics.messages.filters.submit')}
           </Button>
         </S.FilterInputs>
         <Select
@@ -548,11 +558,14 @@ const Filters: React.FC<FiltersProps> = ({
         />
       </div>
       <S.ActiveSmartFilterWrapper>
-        <Search placeholder="Search" disabled={isTailing} />
+        <Search
+          placeholder={t('topics.messages.filters.search')}
+          disabled={isTailing}
+        />
 
         <Button buttonType="secondary" buttonSize="M" onClick={toggle}>
           <PlusIcon />
-          Add Filters
+          {t('topics.messages.filters.addFilters')}
         </Button>
         {activeFilter.name && (
           <S.ActiveSmartFilter data-testid="activeSmartFilter">
@@ -602,37 +615,45 @@ const Filters: React.FC<FiltersProps> = ({
         </S.Message>
         <S.MessageLoading isLive={isTailing}>
           <S.MessageLoadingSpinner isFetching={isFetching} />
-          Loading messages.
+          {t('topics.messages.filters.loading')}
           <S.StopLoading
             onClick={() => {
               handleSSECancel();
               setIsTailing(false);
             }}
           >
-            Stop loading
+            {t('topics.messages.filters.stopLoading')}
           </S.StopLoading>
         </S.MessageLoading>
-        <S.Metric title="Elapsed Time">
+        <S.Metric title={t('topics.messages.filters.metrics.elapsedTime')}>
           <S.MetricsIcon>
             <ClockIcon />
           </S.MetricsIcon>
           <span>{Math.max(elapsedMs || 0, 0)} ms</span>
         </S.Metric>
-        <S.Metric title="Bytes Consumed">
+        <S.Metric title={t('topics.messages.filters.metrics.bytesConsumed')}>
           <S.MetricsIcon>
             <ArrowDownIcon />
           </S.MetricsIcon>
           <BytesFormatted value={bytesConsumed} />
         </S.Metric>
-        <S.Metric title="Messages Consumed">
+        <S.Metric title={t('topics.messages.filters.metrics.messagesConsumed')}>
           <S.MetricsIcon>
             <FileIcon />
           </S.MetricsIcon>
-          <span>{messagesConsumed} messages consumed</span>
+          <span>
+            {t('topics.messages.filters.metrics.messagesConsumedValue', {
+              count: messagesConsumed,
+            })}
+          </span>
         </S.Metric>
         {!!filterApplyErrors && (
-          <S.Metric title="Errors">
-            <span>{filterApplyErrors} errors</span>
+          <S.Metric title={t('topics.messages.filters.metrics.errors')}>
+            <span>
+              {t('topics.messages.filters.metrics.errorsValue', {
+                count: filterApplyErrors,
+              })}
+            </span>
           </S.Metric>
         )}
       </S.FiltersMetrics>

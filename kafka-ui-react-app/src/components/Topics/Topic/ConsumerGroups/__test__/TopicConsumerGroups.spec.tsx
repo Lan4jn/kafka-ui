@@ -31,12 +31,16 @@ describe('TopicConsumerGroups', () => {
 
   it('renders empty table if consumer groups payload is empty', async () => {
     await renderComponent([]);
-    expect(screen.getByText('No active consumer groups')).toBeInTheDocument();
+    expect(
+      screen.getByText('No active consumer groups found')
+    ).toBeInTheDocument();
   });
 
   it('renders empty table if consumer groups payload is undefined', async () => {
     await renderComponent();
-    expect(screen.getByText('No active consumer groups')).toBeInTheDocument();
+    expect(
+      screen.getByText('No active consumer groups found')
+    ).toBeInTheDocument();
   });
 
   it('renders table of consumer groups', async () => {

@@ -18,6 +18,7 @@ import { useAppDispatch } from 'lib/hooks/redux';
 import { resetLoaderById } from 'redux/reducers/loader/loaderSlice';
 import useAppParams from 'lib/hooks/useAppParams';
 import PageHeading from 'components/common/PageHeading/PageHeading';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './Diff.styled';
 import { BackButton } from './Diff.styled';
@@ -28,6 +29,7 @@ export interface DiffProps {
 }
 
 const Diff: React.FC<DiffProps> = ({ versions, areVersionsFetched }) => {
+  const { t } = useTranslation();
   const { clusterName, subject } = useAppParams<ClusterSubjectParam>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,8 +76,8 @@ const Diff: React.FC<DiffProps> = ({ versions, areVersionsFetched }) => {
   return (
     <>
       <PageHeading
-        text={`${subject} compare versions`}
-        backText="Schema Registry"
+        text={t('schemas.diff.title', { subject })}
+        backText={t('schemas.list.title')}
         backTo={clusterSchemasPath(clusterName)}
       />
       <BackButton
@@ -83,7 +85,7 @@ const Diff: React.FC<DiffProps> = ({ versions, areVersionsFetched }) => {
         buttonSize="S"
         onClick={() => navigate(-1)}
       >
-        Back
+        {t('schemas.diff.actions.back')}
       </BackButton>
       <S.Section>
         {areVersionsFetched ? (
@@ -123,7 +125,9 @@ const Diff: React.FC<DiffProps> = ({ versions, areVersionsFetched }) => {
                         disabled={isSubmitting}
                         options={versions.map((type) => ({
                           value: type.version,
-                          label: `Version ${type.version}`,
+                          label: t('schemas.diff.versionLabel', {
+                            version: type.version,
+                          }),
                         }))}
                       />
                     )}
@@ -166,7 +170,9 @@ const Diff: React.FC<DiffProps> = ({ versions, areVersionsFetched }) => {
                         disabled={isSubmitting}
                         options={versions.map((type) => ({
                           value: type.version,
-                          label: `Version ${type.version}`,
+                          label: t('schemas.diff.versionLabel', {
+                            version: type.version,
+                          }),
                         }))}
                       />
                     )}

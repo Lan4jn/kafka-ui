@@ -11,6 +11,7 @@ import {
 import Navbar from 'components/common/Navigation/Navbar.styled';
 import PageHeading from 'components/common/PageHeading/PageHeading';
 import PageLoader from 'components/common/PageLoader/PageLoader';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import Overview from './Overview/Overview';
 import Tasks from './Tasks/Tasks';
@@ -18,6 +19,7 @@ import Config from './Config/Config';
 import Actions from './Actions/Actions';
 
 const DetailsPage: React.FC = () => {
+  const { t } = useTranslation();
   const { clusterName, connectName, connectorName } =
     useAppParams<RouterParamsClusterConnectConnector>();
 
@@ -26,7 +28,7 @@ const DetailsPage: React.FC = () => {
       <PageHeading
         text={connectorName}
         backTo={clusterConnectorsPath(clusterName)}
-        backText="Connectors"
+        backText={t('connect.listPage.title')}
       >
         <Actions />
       </PageHeading>
@@ -41,7 +43,7 @@ const DetailsPage: React.FC = () => {
           className={({ isActive }) => (isActive ? 'is-active' : '')}
           end
         >
-          Tasks
+          {t('connectors.details.tabs.tasks')}
         </NavLink>
         <NavLink
           to={clusterConnectConnectorConfigPath(
@@ -51,7 +53,7 @@ const DetailsPage: React.FC = () => {
           )}
           className={({ isActive }) => (isActive ? 'is-active' : '')}
         >
-          Config
+          {t('connectors.details.tabs.config')}
         </NavLink>
       </Navbar>
       <Suspense fallback={<PageLoader />}>
