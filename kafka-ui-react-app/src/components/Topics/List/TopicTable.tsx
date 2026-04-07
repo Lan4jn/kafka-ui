@@ -2,12 +2,14 @@ import React from 'react';
 import { SortOrder, Topic, TopicColumnsToSort } from 'generated-sources';
 import { ColumnDef } from '@tanstack/react-table';
 import Table, { SizeCell } from 'components/common/NewTable';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import useAppParams from 'lib/hooks/useAppParams';
 import { ClusterName } from 'redux/interfaces';
 import { useSearchParams } from 'react-router-dom';
 import ClusterContext from 'components/contexts/ClusterContext';
 import { useTopics } from 'lib/hooks/api/topics';
 import { PER_PAGE } from 'lib/constants';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import { TopicTitleCell } from './TopicTitleCell';
 import ActionsCell from './ActionsCell';
@@ -42,7 +44,11 @@ const TopicTable: React.FC = () => {
       },
       {
         id: TopicColumnsToSort.TOTAL_PARTITIONS,
-        header: 'Partitions',
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
+            Partitions
+          </GlossaryTerm>
+        ),
         accessorKey: 'partitionCount',
       },
       {
@@ -61,7 +67,11 @@ const TopicTable: React.FC = () => {
         },
       },
       {
-        header: 'Replication Factor',
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.REPLICATION_FACTOR}>
+            Replication Factor
+          </GlossaryTerm>
+        ),
         accessorKey: 'replicationFactor',
         enableSorting: false,
       },

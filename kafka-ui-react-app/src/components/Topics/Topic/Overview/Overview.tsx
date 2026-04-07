@@ -8,6 +8,8 @@ import { RouteParamsClusterTopic } from 'lib/paths';
 import useAppParams from 'lib/hooks/useAppParams';
 import { useTopicDetails } from 'lib/hooks/api/topics';
 import { ColumnDef } from '@tanstack/react-table';
+import GlossaryTerm from 'components/common/GlossaryTerm';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import * as S from './Overview.styled';
 import ActionsCell from './ActionsCell';
@@ -37,7 +39,11 @@ const Overview: React.FC = () => {
   const columns = React.useMemo<ColumnDef<Partition>[]>(
     () => [
       {
-        header: 'Partition ID',
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
+            Partition ID
+          </GlossaryTerm>
+        ),
         enableSorting: false,
         accessorKey: 'partition',
       },
@@ -64,11 +70,23 @@ const Overview: React.FC = () => {
         },
       },
       {
-        header: 'First Offset',
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
+            First Offset
+          </GlossaryTerm>
+        ),
         enableSorting: false,
         accessorKey: 'offsetMin',
       },
-      { header: 'Next Offset', enableSorting: false, accessorKey: 'offsetMax' },
+      {
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
+            Next Offset
+          </GlossaryTerm>
+        ),
+        enableSorting: false,
+        accessorKey: 'offsetMax',
+      },
       {
         header: 'Message Count',
         enableSorting: false,
@@ -87,10 +105,22 @@ const Overview: React.FC = () => {
     <>
       <Metrics.Wrapper>
         <Metrics.Section>
-          <Metrics.Indicator label="Partitions">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
+                Partitions
+              </GlossaryTerm>
+            }
+          >
             {data?.partitionCount}
           </Metrics.Indicator>
-          <Metrics.Indicator label="Replication Factor">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.REPLICATION_FACTOR}>
+                Replication Factor
+              </GlossaryTerm>
+            }
+          >
             {data?.replicationFactor}
           </Metrics.Indicator>
           <Metrics.Indicator
@@ -112,7 +142,11 @@ const Overview: React.FC = () => {
             )}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label="In Sync Replicas"
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.ISR}>
+                In Sync Replicas
+              </GlossaryTerm>
+            }
             isAlert
             alertType={
               data?.inSyncReplicas === data?.replicas ? 'success' : 'error'
@@ -130,10 +164,23 @@ const Overview: React.FC = () => {
           <Metrics.Indicator label="Type">
             <Tag color="gray">{data?.internal ? 'Internal' : 'External'}</Tag>
           </Metrics.Indicator>
-          <Metrics.Indicator label="Segment Size" title="">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.SEGMENT}>
+                Segment Size
+              </GlossaryTerm>
+            }
+            title=""
+          >
             <BytesFormatted value={data?.segmentSize} />
           </Metrics.Indicator>
-          <Metrics.Indicator label="Segment Count">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.SEGMENT}>
+                Segment Count
+              </GlossaryTerm>
+            }
+          >
             {data?.segmentCount}
           </Metrics.Indicator>
           <Metrics.Indicator label="Clean Up Policy">

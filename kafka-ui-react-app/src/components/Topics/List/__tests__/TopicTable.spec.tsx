@@ -12,6 +12,7 @@ import {
   useTopics,
 } from 'lib/hooks/api/topics';
 import TopicTable from 'components/Topics/List/TopicTable';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import { clusterTopicsPath } from 'lib/paths';
 
 const clusterName = 'test-cluster';
@@ -108,6 +109,25 @@ describe('TopicTable Components', () => {
       ).toBeInTheDocument();
 
       expect(screen.getAllByRole('checkbox').length).toEqual(3);
+    });
+
+    it('shows glossary tooltip on Partitions and Replication Factor headers', async () => {
+      renderComponent({ topics: topicsPayload, pageCount: 1 });
+
+      const partitionsLabel = screen.getByText('Partitions');
+      const replicationLabel = screen.getByText('Replication Factor');
+
+      await userEvent.hover(partitionsLabel);
+      const partitionsTooltip = await screen.findAllByText(
+        GLOSSARY_TERMS.PARTITION
+      );
+      expect(partitionsTooltip.length).toBeGreaterThan(0);
+
+      await userEvent.hover(replicationLabel);
+      const replicationTooltip = await screen.findAllByText(
+        GLOSSARY_TERMS.REPLICATION_FACTOR
+      );
+      expect(replicationTooltip.length).toBeGreaterThan(0);
     });
     describe('Selectable rows', () => {
       it('renders selectable rows', () => {
