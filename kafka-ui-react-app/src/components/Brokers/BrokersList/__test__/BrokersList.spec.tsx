@@ -8,6 +8,7 @@ import { useBrokers } from 'lib/hooks/api/brokers';
 import { useClusterStats } from 'lib/hooks/api/clusters';
 import { brokersPayload } from 'lib/fixtures/brokers';
 import { clusterStatsPayload } from 'lib/fixtures/clusters';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 const mockedUsedNavigate = jest.fn();
 
@@ -52,6 +53,11 @@ describe('BrokersList Component', () => {
       });
       it('renders', async () => {
         renderComponent();
+        expect(screen.queryByText(GLOSSARY_TERMS.ISR)).not.toBeInTheDocument();
+
+        await userEvent.hover(screen.getByText('同步副本'));
+
+        expect(screen.getByText(GLOSSARY_TERMS.ISR)).toBeInTheDocument();
         expect(
           screen.getByRole('heading', { name: 'Broker 列表' })
         ).toBeInTheDocument();

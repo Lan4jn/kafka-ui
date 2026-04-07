@@ -6,6 +6,8 @@ import { RouterParamsClusterConnectConnector } from 'lib/paths';
 import useAppParams from 'lib/hooks/useAppParams';
 import { useConnector, useConnectorTasks } from 'lib/hooks/api/kafkaConnect';
 import { useTranslation } from 'components/contexts/LocaleContext';
+import GlossaryTerm from 'components/common/GlossaryTerm';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import getTaskMetrics from './getTaskMetrics';
 
@@ -34,7 +36,13 @@ const Overview: React.FC = () => {
           {connector.type}
         </Metrics.Indicator>
         {connector.config['connector.class'] && (
-          <Metrics.Indicator label={t('connect.overview.metrics.class')}>
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.CONNECTOR}>
+                {t('connect.overview.metrics.class')}
+              </GlossaryTerm>
+            }
+          >
             {connector.config['connector.class']}
           </Metrics.Indicator>
         )}

@@ -11,8 +11,10 @@ import CheckMarkRoundIcon from 'components/common/Icons/CheckMarkRoundIcon';
 import { ColumnDef } from '@tanstack/react-table';
 import { clusterBrokerPath } from 'lib/paths';
 import Tooltip from 'components/common/Tooltip/Tooltip';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import ColoredCell from 'components/common/NewTable/ColoredCell';
 import { useTranslation } from 'components/contexts/LocaleContext';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import SkewHeader from './SkewHeader/SkewHeader';
 import * as S from './BrokersList.styled';
@@ -72,7 +74,11 @@ const BrokersList: React.FC = () => {
   const columns = React.useMemo<ColumnDef<(typeof rows)[number]>[]>(
     () => [
       {
-        header: t('brokers.list.table.brokerId'),
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.BROKER}>
+            {t('brokers.list.table.brokerId')}
+          </GlossaryTerm>
+        ),
         accessorKey: 'brokerId',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue }) => (
@@ -180,7 +186,13 @@ const BrokersList: React.FC = () => {
       <PageHeading text={t('brokers.list.title')} />
       <Metrics.Wrapper>
         <Metrics.Section title={t('brokers.list.metrics.uptime')}>
-          <Metrics.Indicator label={t('brokers.list.metrics.brokerCount')}>
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.BROKER}>
+                {t('brokers.list.metrics.brokerCount')}
+              </GlossaryTerm>
+            }
+          >
             {brokerCount}
           </Metrics.Indicator>
           <Metrics.Indicator
@@ -199,7 +211,13 @@ const BrokersList: React.FC = () => {
             {version}
           </Metrics.Indicator>
         </Metrics.Section>
-        <Metrics.Section title={t('brokers.list.metrics.partitions')}>
+        <Metrics.Section
+          title={
+            <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
+              {t('brokers.list.metrics.partitions')}
+            </GlossaryTerm>
+          }
+        >
           <Metrics.Indicator
             label={t('brokers.list.metrics.online')}
             isAlert
@@ -233,7 +251,11 @@ const BrokersList: React.FC = () => {
             )}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label={t('brokers.list.metrics.inSyncReplicas')}
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.ISR}>
+                {t('brokers.list.metrics.inSyncReplicas')}
+              </GlossaryTerm>
+            }
             isAlert
             alertType={areAllInSync ? 'success' : 'error'}
           >

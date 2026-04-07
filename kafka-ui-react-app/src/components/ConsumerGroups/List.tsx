@@ -16,7 +16,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CONSUMER_GROUP_STATE_TOOLTIPS, PER_PAGE } from 'lib/constants';
 import { useConsumerGroups } from 'lib/hooks/api/consumers';
 import Tooltip from 'components/common/Tooltip/Tooltip';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import { useTranslation } from 'components/contexts/LocaleContext';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 const List = () => {
   const { clusterName } = useAppParams<ClusterNameRoute>();
@@ -61,7 +63,11 @@ const List = () => {
       },
       {
         id: ConsumerGroupOrdering.MESSAGES_BEHIND,
-        header: t('consumerGroups.list.table.consumerLag'),
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.CONSUMER_LAG}>
+            {t('consumerGroups.list.table.consumerLag')}
+          </GlossaryTerm>
+        ),
         accessorKey: 'consumerLag',
         cell: (args) => {
           return args.getValue() || t('common.na');
