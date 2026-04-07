@@ -57,7 +57,7 @@ describe('BrokersList Component', () => {
 
         await userEvent.hover(screen.getByText('同步副本'));
 
-        expect(screen.getByText(GLOSSARY_TERMS.ISR)).toBeInTheDocument();
+        expect(await screen.findByText(GLOSSARY_TERMS.ISR)).toBeInTheDocument();
         expect(
           screen.getByRole('heading', { name: 'Broker 列表' })
         ).toBeInTheDocument();

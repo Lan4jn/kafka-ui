@@ -74,7 +74,9 @@ describe('Overview', () => {
 
       await userEvent.hover(screen.getByText('类'));
 
-      expect(screen.getByText(GLOSSARY_TERMS.CONNECTOR)).toBeInTheDocument();
+      expect(
+        await screen.findByText(GLOSSARY_TERMS.CONNECTOR)
+      ).toBeInTheDocument();
       expect(screen.getByText('状态')).toBeInTheDocument();
       expect(screen.getByText('运行中的任务')).toBeInTheDocument();
       expect(screen.getByText('失败的任务')).toBeInTheDocument();

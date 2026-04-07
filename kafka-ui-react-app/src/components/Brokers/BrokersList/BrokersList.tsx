@@ -74,7 +74,8 @@ const BrokersList: React.FC = () => {
   const columns = React.useMemo<ColumnDef<(typeof rows)[number]>[]>(
     () => [
       {
-        header: (
+        // eslint-disable-next-line react/no-unstable-nested-components
+        header: () => (
           <GlossaryTerm english={GLOSSARY_TERMS.BROKER}>
             {t('brokers.list.table.brokerId')}
           </GlossaryTerm>

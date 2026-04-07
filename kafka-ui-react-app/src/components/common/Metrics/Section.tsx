@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from 'react';
 import * as S from './Metrics.styled';
 
 interface Props {
-  title?: string;
+  title?: React.ReactNode;
 }
 
 const Section: React.FC<PropsWithChildren<Props>> = ({ title, children }) => (

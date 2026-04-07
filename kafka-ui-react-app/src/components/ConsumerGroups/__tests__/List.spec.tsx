@@ -15,6 +15,10 @@ jest.mock('lib/hooks/api/consumers', () => ({
 describe('ConsumerGroups List glossary tooltip', () => {
   const clusterName = 'cluster1';
 
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   beforeEach(() => {
     localStorage.setItem('locale', 'zh-CN');
     (useConsumerGroups as jest.Mock).mockReturnValue({
@@ -43,6 +47,8 @@ describe('ConsumerGroups List glossary tooltip', () => {
 
     await userEvent.hover(screen.getByText('消费积压'));
 
-    expect(screen.getByText(GLOSSARY_TERMS.CONSUMER_LAG)).toBeInTheDocument();
+    expect(
+      await screen.findByText(GLOSSARY_TERMS.CONSUMER_LAG)
+    ).toBeInTheDocument();
   });
 });

@@ -63,7 +63,8 @@ const List = () => {
       },
       {
         id: ConsumerGroupOrdering.MESSAGES_BEHIND,
-        header: (
+        // eslint-disable-next-line react/no-unstable-nested-components
+        header: () => (
           <GlossaryTerm english={GLOSSARY_TERMS.CONSUMER_LAG}>
             {t('consumerGroups.list.table.consumerLag')}
           </GlossaryTerm>
