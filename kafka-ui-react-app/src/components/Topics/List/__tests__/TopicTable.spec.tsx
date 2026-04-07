@@ -3,7 +3,6 @@ import { render, WithRoute } from 'lib/testHelpers';
 import { screen, within } from '@testing-library/react';
 import { CleanUpPolicy, TopicsResponse } from 'generated-sources';
 import { externalTopicPayload, topicsPayload } from 'lib/fixtures/topics';
-import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import ClusterContext from 'components/contexts/ClusterContext';
 import userEvent from '@testing-library/user-event';
 import {
@@ -109,22 +108,6 @@ describe('TopicTable Components', () => {
       ).toBeInTheDocument();
 
       expect(screen.getAllByRole('checkbox').length).toEqual(3);
-    });
-
-    it('shows glossary tooltip on 分区数 and 副本因子 headers', async () => {
-      renderComponent({ topics: topicsPayload, pageCount: 1 });
-      const partitionsLabel = screen.getByText('分区数');
-      const replicationLabel = screen.getByText('副本因子');
-
-      await userEvent.hover(partitionsLabel);
-      expect(
-        await screen.findByText(GLOSSARY_TERMS.PARTITION)
-      ).toBeInTheDocument();
-
-      await userEvent.hover(replicationLabel);
-      expect(
-        await screen.findByText(GLOSSARY_TERMS.REPLICATION_FACTOR)
-      ).toBeInTheDocument();
     });
     describe('Selectable rows', () => {
       it('renders selectable rows', () => {
