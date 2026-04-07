@@ -15,6 +15,7 @@ import TopicTable from 'components/Topics/List/TopicTable';
 import { clusterTopicsPath } from 'lib/paths';
 import { en } from 'locales/en';
 import { useUserInfo } from 'lib/hooks/useUserInfo';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 const clusterName = 'test-cluster';
 
@@ -127,6 +128,19 @@ describe('TopicTable Components', () => {
       ).toBeInTheDocument();
       expect(
         screen.getByRole('columnheader', { name: '大小' })
+      ).toBeInTheDocument();
+    });
+
+    it('shows glossary tooltip on partitions and replication factor headers', async () => {
+      localStorage.setItem('locale', 'zh-CN');
+      renderComponent({ topics: topicsPayload, pageCount: 1 });
+
+      await userEvent.hover(screen.getByText('分区数'));
+      expect(await screen.findByText(GLOSSARY_TERMS.PARTITION)).toBeInTheDocument();
+
+      await userEvent.hover(screen.getByText('副本因子'));
+      expect(
+        await screen.findByText(GLOSSARY_TERMS.REPLICATION_FACTOR)
       ).toBeInTheDocument();
     });
 

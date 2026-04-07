@@ -7,12 +7,14 @@ import { useClusters } from 'lib/hooks/api/clusters';
 import { Cluster, ResourceType, ServerStatus } from 'generated-sources';
 import { ColumnDef } from '@tanstack/react-table';
 import Table, { SizeCell } from 'components/common/NewTable';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import useBoolean from 'lib/hooks/useBoolean';
 import { clusterNewConfigPath } from 'lib/paths';
 import { GlobalSettingsContext } from 'components/contexts/GlobalSettingsContext';
 import { ActionCanButton } from 'components/common/ActionComponent';
 import { useGetUserInfo } from 'lib/hooks/api/roles';
 import { useTranslation } from 'components/contexts/LocaleContext';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import * as S from './Dashboard.styled';
 import ClusterName from './ClusterName';
@@ -46,7 +48,11 @@ const Dashboard: React.FC = () => {
       },
       { header: t('dashboard.table.version'), accessorKey: 'version' },
       {
-        header: t('dashboard.table.brokersCount'),
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.BROKER}>
+            {t('dashboard.table.brokersCount')}
+          </GlossaryTerm>
+        ),
         accessorKey: 'brokerCount',
       },
       {

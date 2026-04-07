@@ -1,9 +1,11 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { render } from 'lib/testHelpers';
 import { useClusters } from 'lib/hooks/api/clusters';
 import { useGetUserInfo } from 'lib/hooks/api/roles';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import {
   offlineClusterPayload,
   onlineClusterPayload,
@@ -86,5 +88,14 @@ describe('Dashboard', () => {
     });
 
     expect(screen.getByText('未找到集群')).toBeInTheDocument();
+  });
+
+  it('shows glossary tooltip for broker term in brokers column header', async () => {
+    renderComponent({
+      data: [onlineClusterPayload, offlineClusterPayload],
+    });
+
+    await userEvent.hover(screen.getByText('Broker 数量'));
+    expect(await screen.findByText(GLOSSARY_TERMS.BROKER)).toBeInTheDocument();
   });
 });

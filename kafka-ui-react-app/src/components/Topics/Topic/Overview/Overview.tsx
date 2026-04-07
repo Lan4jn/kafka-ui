@@ -2,6 +2,7 @@ import React from 'react';
 import type { Partition, Replica } from 'generated-sources';
 import BytesFormatted from 'components/common/BytesFormatted/BytesFormatted';
 import Table from 'components/common/NewTable';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import * as Metrics from 'components/common/Metrics';
 import { Tag } from 'components/common/Tag/Tag.styled';
 import { RouteParamsClusterTopic } from 'lib/paths';
@@ -9,6 +10,7 @@ import useAppParams from 'lib/hooks/useAppParams';
 import { useTopicDetails } from 'lib/hooks/api/topics';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'components/contexts/LocaleContext';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import * as S from './Overview.styled';
 import ActionsCell from './ActionsCell';
@@ -39,7 +41,11 @@ const Overview: React.FC = () => {
   const columns = React.useMemo<ColumnDef<Partition>[]>(
     () => [
       {
-        header: t('topics.overview.table.partitionId'),
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
+            {t('topics.overview.table.partitionId')}
+          </GlossaryTerm>
+        ),
         enableSorting: false,
         accessorKey: 'partition',
       },
@@ -66,12 +72,20 @@ const Overview: React.FC = () => {
         },
       },
       {
-        header: t('topics.overview.table.firstOffset'),
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
+            {t('topics.overview.table.firstOffset')}
+          </GlossaryTerm>
+        ),
         enableSorting: false,
         accessorKey: 'offsetMin',
       },
       {
-        header: t('topics.overview.table.nextOffset'),
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
+            {t('topics.overview.table.nextOffset')}
+          </GlossaryTerm>
+        ),
         enableSorting: false,
         accessorKey: 'offsetMax',
       },
@@ -93,11 +107,21 @@ const Overview: React.FC = () => {
     <>
       <Metrics.Wrapper>
         <Metrics.Section>
-          <Metrics.Indicator label={t('topics.overview.metrics.partitions')}>
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
+                {t('topics.overview.metrics.partitions')}
+              </GlossaryTerm>
+            }
+          >
             {data?.partitionCount}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label={t('topics.overview.metrics.replicationFactor')}
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.REPLICATION_FACTOR}>
+                {t('topics.overview.metrics.replicationFactor')}
+              </GlossaryTerm>
+            }
           >
             {data?.replicationFactor}
           </Metrics.Indicator>
@@ -120,7 +144,11 @@ const Overview: React.FC = () => {
             )}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label={t('topics.overview.metrics.inSyncReplicas')}
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.ISR}>
+                {t('topics.overview.metrics.inSyncReplicas')}
+              </GlossaryTerm>
+            }
             isAlert
             alertType={
               data?.inSyncReplicas === data?.replicas ? 'success' : 'error'
@@ -148,12 +176,22 @@ const Overview: React.FC = () => {
             </Tag>
           </Metrics.Indicator>
           <Metrics.Indicator
-            label={t('topics.overview.metrics.segmentSize')}
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.SEGMENT}>
+                {t('topics.overview.metrics.segmentSize')}
+              </GlossaryTerm>
+            }
             title=""
           >
             <BytesFormatted value={data?.segmentSize} />
           </Metrics.Indicator>
-          <Metrics.Indicator label={t('topics.overview.metrics.segmentCount')}>
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.SEGMENT}>
+                {t('topics.overview.metrics.segmentCount')}
+              </GlossaryTerm>
+            }
+          >
             {data?.segmentCount}
           </Metrics.Indicator>
           <Metrics.Indicator label={t('topics.overview.metrics.cleanupPolicy')}>
