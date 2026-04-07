@@ -1,1 +1,3 @@
-export { default } from './GlossaryTerm';
+import GlossaryTerm from './GlossaryTerm';
+
+export default GlossaryTerm;
