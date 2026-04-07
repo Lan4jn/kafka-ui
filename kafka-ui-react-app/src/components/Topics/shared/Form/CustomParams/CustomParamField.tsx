@@ -11,6 +11,7 @@ import IconButtonWrapper from 'components/common/Icons/IconButtonWrapper';
 import CloseCircleIcon from 'components/common/Icons/CloseCircleIcon';
 import * as C from 'components/Topics/shared/Form/TopicForm.styled';
 import { ConfigSource } from 'generated-sources';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './CustomParams.styled';
 
@@ -33,6 +34,7 @@ const CustomParamField: React.FC<Props> = ({
   existingFields,
   setExistingFields,
 }) => {
+  const { t } = useTranslation();
   const {
     formState: { errors },
     setValue,
@@ -73,15 +75,17 @@ const CustomParamField: React.FC<Props> = ({
   return (
     <C.Column>
       <div>
-        <InputLabel>Custom Parameter *</InputLabel>
+        <InputLabel>{t('topics.form.customParams.fields.name')}</InputLabel>
         <Controller
           control={control}
-          rules={{ required: 'Custom Parameter is required.' }}
+          rules={{
+            required: t('topics.form.customParams.validation.nameRequired'),
+          }}
           name={`customParams.${index}.name`}
           render={({ field: { value, name, onChange } }) => (
             <Select
               name={name}
-              placeholder="Select"
+              placeholder={t('topics.form.customParams.placeholders.select')}
               disabled={isDisabled}
               minWidth="270px"
               onChange={onChange}
@@ -98,13 +102,13 @@ const CustomParamField: React.FC<Props> = ({
         </FormError>
       </div>
       <div>
-        <InputLabel>Value *</InputLabel>
+        <InputLabel>{t('topics.form.customParams.fields.value')}</InputLabel>
         <Input
           name={`customParams.${index}.value` as const}
           hookFormOptions={{
-            required: 'Value is required.',
+            required: t('topics.form.customParams.validation.valueRequired'),
           }}
-          placeholder="Value"
+          placeholder={t('topics.form.customParams.placeholders.value')}
           defaultValue={field.value}
           autoComplete="off"
           disabled={isDisabled}
@@ -123,7 +127,7 @@ const CustomParamField: React.FC<Props> = ({
           onKeyDown={(e: React.KeyboardEvent) =>
             e.code === 'Space' && remove(index)
           }
-          title={`Delete customParam field ${index}`}
+          title={t('topics.form.customParams.actions.remove', { index })}
         >
           <CloseCircleIcon aria-hidden />
         </IconButtonWrapper>

@@ -37,22 +37,27 @@ const renderComponent = (path: string) => {
 const createTopicMock = jest.fn();
 describe('New', () => {
   beforeEach(() => {
+    localStorage.setItem('locale', 'en');
     (useCreateTopic as jest.Mock).mockImplementation(() => ({
       createResource: createTopicMock,
     }));
   });
   it('checks header for create new', async () => {
+    localStorage.setItem('locale', 'zh-CN');
     await act(() => {
       renderComponent(clusterTopicNewPath(clusterName));
     });
-    expect(screen.getByRole('heading', { name: 'Create' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '创建' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '主题' })).toBeInTheDocument();
   });
 
   it('checks header for copy', async () => {
+    localStorage.setItem('locale', 'zh-CN');
     await act(() => {
       renderComponent(`${clusterTopicCopyPath(clusterName)}?name=test`);
     });
-    expect(screen.getByRole('heading', { name: 'Copy' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '复制' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '主题' })).toBeInTheDocument();
   });
   it('validates form', async () => {
     renderComponent(clusterTopicNewPath(clusterName));

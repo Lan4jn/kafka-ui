@@ -9,6 +9,7 @@ import { topicFormValidationSchema } from 'lib/yupExtended';
 import PageHeading from 'components/common/PageHeading/PageHeading';
 import useAppParams from 'lib/hooks/useAppParams';
 import { useCreateTopic } from 'lib/hooks/api/topics';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 enum Filters {
   NAME = 'name',
@@ -20,6 +21,7 @@ enum Filters {
 
 const New: React.FC = () => {
   const { clusterName } = useAppParams<ClusterNameRoute>();
+  const { t } = useTranslation();
   const methods = useForm<TopicFormData>({
     mode: 'onChange',
     resolver: yupResolver(topicFormValidationSchema),
@@ -50,8 +52,10 @@ const New: React.FC = () => {
   return (
     <>
       <PageHeading
-        text={search ? 'Copy' : 'Create'}
-        backText="Topics"
+        text={
+          search ? t('topics.new.title.copy') : t('topics.new.title.create')
+        }
+        backText={t('topics.new.backToList')}
         backTo={clusterTopicsPath(clusterName)}
       />
       <FormProvider {...methods}>

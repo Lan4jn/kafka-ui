@@ -2,13 +2,14 @@ import React from 'react';
 import type { Partition, Replica } from 'generated-sources';
 import BytesFormatted from 'components/common/BytesFormatted/BytesFormatted';
 import Table from 'components/common/NewTable';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import * as Metrics from 'components/common/Metrics';
 import { Tag } from 'components/common/Tag/Tag.styled';
 import { RouteParamsClusterTopic } from 'lib/paths';
 import useAppParams from 'lib/hooks/useAppParams';
 import { useTopicDetails } from 'lib/hooks/api/topics';
 import { ColumnDef } from '@tanstack/react-table';
-import GlossaryTerm from 'components/common/GlossaryTerm';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import * as S from './Overview.styled';
@@ -17,6 +18,7 @@ import ActionsCell from './ActionsCell';
 const Overview: React.FC = () => {
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
   const { data } = useTopicDetails({ clusterName, topicName });
+  const { t } = useTranslation();
 
   const messageCount = React.useMemo(
     () =>
@@ -41,14 +43,14 @@ const Overview: React.FC = () => {
       {
         header: (
           <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
-            Partition ID
+            {t('topics.overview.table.partitionId')}
           </GlossaryTerm>
         ),
         enableSorting: false,
         accessorKey: 'partition',
       },
       {
-        header: 'Replicas',
+        header: t('topics.overview.table.replicas'),
         enableSorting: false,
 
         accessorKey: 'replicas',
@@ -62,7 +64,7 @@ const Overview: React.FC = () => {
               leader={leader}
               outOfSync={!inSync}
               key={broker}
-              title={leader ? 'Leader' : ''}
+              title={leader ? t('topics.overview.replica.leaderTitle') : ''}
             >
               {broker}
             </S.Replica>
@@ -72,7 +74,7 @@ const Overview: React.FC = () => {
       {
         header: (
           <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
-            First Offset
+            {t('topics.overview.table.firstOffset')}
           </GlossaryTerm>
         ),
         enableSorting: false,
@@ -81,14 +83,14 @@ const Overview: React.FC = () => {
       {
         header: (
           <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
-            Next Offset
+            {t('topics.overview.table.nextOffset')}
           </GlossaryTerm>
         ),
         enableSorting: false,
         accessorKey: 'offsetMax',
       },
       {
-        header: 'Message Count',
+        header: t('topics.overview.table.messageCount'),
         enableSorting: false,
         accessorKey: `messageCount`,
       },
@@ -99,7 +101,7 @@ const Overview: React.FC = () => {
         cell: ActionsCell,
       },
     ],
-    []
+    [t]
   );
   return (
     <>
@@ -108,7 +110,7 @@ const Overview: React.FC = () => {
           <Metrics.Indicator
             label={
               <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
-                Partitions
+                {t('topics.overview.metrics.partitions')}
               </GlossaryTerm>
             }
           >
@@ -117,15 +119,15 @@ const Overview: React.FC = () => {
           <Metrics.Indicator
             label={
               <GlossaryTerm english={GLOSSARY_TERMS.REPLICATION_FACTOR}>
-                Replication Factor
+                {t('topics.overview.metrics.replicationFactor')}
               </GlossaryTerm>
             }
           >
             {data?.replicationFactor}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label="URP"
-            title="Under replicated partitions"
+            label={t('topics.overview.metrics.urp')}
+            title={t('topics.overview.metrics.urpTitle')}
             isAlert
             alertType={
               data?.underReplicatedPartitions === 0 ? 'success' : 'error'
@@ -144,7 +146,7 @@ const Overview: React.FC = () => {
           <Metrics.Indicator
             label={
               <GlossaryTerm english={GLOSSARY_TERMS.ISR}>
-                In Sync Replicas
+                {t('topics.overview.metrics.inSyncReplicas')}
               </GlossaryTerm>
             }
             isAlert
@@ -159,15 +161,24 @@ const Overview: React.FC = () => {
             ) : (
               data?.inSyncReplicas
             )}
-            <Metrics.LightText> of {data?.replicas}</Metrics.LightText>
+            <Metrics.LightText>
+              {t('common.metrics.currentOfTotal', {
+                current: '',
+                total: data?.replicas,
+              })}
+            </Metrics.LightText>
           </Metrics.Indicator>
-          <Metrics.Indicator label="Type">
-            <Tag color="gray">{data?.internal ? 'Internal' : 'External'}</Tag>
+          <Metrics.Indicator label={t('topics.overview.metrics.type')}>
+            <Tag color="gray">
+              {data?.internal
+                ? t('topics.overview.type.internal')
+                : t('topics.overview.type.external')}
+            </Tag>
           </Metrics.Indicator>
           <Metrics.Indicator
             label={
               <GlossaryTerm english={GLOSSARY_TERMS.SEGMENT}>
-                Segment Size
+                {t('topics.overview.metrics.segmentSize')}
               </GlossaryTerm>
             }
             title=""
@@ -177,16 +188,19 @@ const Overview: React.FC = () => {
           <Metrics.Indicator
             label={
               <GlossaryTerm english={GLOSSARY_TERMS.SEGMENT}>
-                Segment Count
+                {t('topics.overview.metrics.segmentCount')}
               </GlossaryTerm>
             }
           >
             {data?.segmentCount}
           </Metrics.Indicator>
-          <Metrics.Indicator label="Clean Up Policy">
-            <Tag color="gray">{data?.cleanUpPolicy || 'Unknown'}</Tag>
+          <Metrics.Indicator label={t('topics.overview.metrics.cleanupPolicy')}>
+            <Tag color="gray">
+              {data?.cleanUpPolicy ||
+                t('topics.overview.cleanupPolicy.unknown')}
+            </Tag>
           </Metrics.Indicator>
-          <Metrics.Indicator label="Message Count">
+          <Metrics.Indicator label={t('topics.overview.metrics.messageCount')}>
             {messageCount}
           </Metrics.Indicator>
         </Metrics.Section>
@@ -195,7 +209,7 @@ const Overview: React.FC = () => {
         columns={columns}
         data={newData}
         enableSorting
-        emptyMessage="No Partitions found "
+        emptyMessage={t('topics.overview.table.empty')}
       />
     </>
   );

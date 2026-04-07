@@ -27,6 +27,7 @@ describe('ACLList Component', () => {
   describe('ACLList', () => {
     describe('when the acls are loaded', () => {
       beforeEach(() => {
+        localStorage.setItem('locale', 'zh-CN');
         (useAcls as jest.Mock).mockImplementation(() => ({
           data: aclPayload,
         }));
@@ -37,6 +38,18 @@ describe('ACLList Component', () => {
 
       it('renders ACLList with records', async () => {
         renderComponent();
+        expect(
+          screen.getByRole('heading', { name: '访问控制列表' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: '主体' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: '资源' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: '模式' })
+        ).toBeInTheDocument();
         expect(screen.getByRole('table')).toBeInTheDocument();
         expect(screen.getAllByRole('row').length).toEqual(4);
       });
@@ -54,6 +67,7 @@ describe('ACLList Component', () => {
 
     describe('when it has no acls', () => {
       beforeEach(() => {
+        localStorage.setItem('locale', 'zh-CN');
         (useAcls as jest.Mock).mockImplementation(() => ({
           data: [],
         }));
@@ -66,7 +80,7 @@ describe('ACLList Component', () => {
         renderComponent();
         expect(screen.getByRole('table')).toBeInTheDocument();
         expect(
-          screen.getByRole('row', { name: 'No ACL items found' })
+          screen.getByRole('row', { name: '未找到 ACL 条目' })
         ).toBeInTheDocument();
       });
     });

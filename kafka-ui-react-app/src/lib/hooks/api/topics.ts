@@ -2,7 +2,6 @@ import {
   topicsApiClient as api,
   messagesApiClient as messagesApi,
   consumerGroupsApiClient,
-  messagesApiClient,
 } from 'lib/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -21,6 +20,7 @@ import {
   TopicUpdate,
 } from 'generated-sources';
 import { showServerError, showSuccessAlert } from 'lib/errorHandling';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
 export const topicKeys = {
   all: (clusterName: ClusterName) =>
@@ -237,7 +237,7 @@ export function useClearTopicMessages(
   const client = useQueryClient();
   return useMutation(
     async (topicName: Topic['name']) => {
-      await messagesApiClient.deleteTopicMessages({
+      await messagesApi.deleteTopicMessages({
         clusterName,
         partitions,
         topicName,
@@ -249,7 +249,11 @@ export function useClearTopicMessages(
       onSuccess: (topicName) => {
         showSuccessAlert({
           id: `message-${topicName}-${clusterName}-${partitions}`,
-          message: `${topicName} messages have been successfully cleared!`,
+          message: translateMessage(
+            'topics.notifications.clearSuccess',
+            { topicName },
+            getCurrentLocale()
+          ),
         });
         client.invalidateQueries(topicKeys.all(clusterName));
       },

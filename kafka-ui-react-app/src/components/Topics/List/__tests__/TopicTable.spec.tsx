@@ -14,6 +14,9 @@ import {
 import TopicTable from 'components/Topics/List/TopicTable';
 import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import { clusterTopicsPath } from 'lib/paths';
+import { en } from 'locales/en';
+import { useUserInfo } from 'lib/hooks/useUserInfo';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 const clusterName = 'test-cluster';
 
@@ -31,13 +34,19 @@ jest.mock('lib/hooks/api/topics', () => ({
   useTopics: jest.fn(),
   useClearTopicMessages: jest.fn(),
 }));
+jest.mock('lib/hooks/useUserInfo', () => ({
+  useUserInfo: jest.fn(),
+}));
 
 const deleteTopicMock = jest.fn();
 const recreateTopicMock = jest.fn();
 const clearTopicMessages = jest.fn();
+const defaultRoles = new Map();
 
 describe('TopicTable Components', () => {
   beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('locale', 'en');
     (useDeleteTopic as jest.Mock).mockImplementation(() => ({
       mutateAsync: deleteTopicMock,
     }));
@@ -47,7 +56,26 @@ describe('TopicTable Components', () => {
     (useRecreateTopic as jest.Mock).mockImplementation(() => ({
       mutateAsync: recreateTopicMock,
     }));
+    (useUserInfo as jest.Mock).mockReturnValue({
+      roles: defaultRoles,
+      rbacFlag: false,
+    });
   });
+
+  const getComponent = (isReadOnly = false, isTopicDeletionAllowed = true) => (
+    <ClusterContext.Provider
+      value={{
+        isReadOnly,
+        hasKafkaConnectConfigured: true,
+        hasSchemaRegistryConfigured: true,
+        isTopicDeletionAllowed,
+      }}
+    >
+      <WithRoute path={clusterTopicsPath()}>
+        <TopicTable />
+      </WithRoute>
+    </ClusterContext.Provider>
+  );
 
   const renderComponent = (
     currentData: TopicsResponse | undefined = undefined,
@@ -58,41 +86,65 @@ describe('TopicTable Components', () => {
       data: currentData,
     }));
 
-    return render(
-      <ClusterContext.Provider
-        value={{
-          isReadOnly,
-          hasKafkaConnectConfigured: true,
-          hasSchemaRegistryConfigured: true,
-          isTopicDeletionAllowed,
-        }}
-      >
-        <WithRoute path={clusterTopicsPath()}>
-          <TopicTable />
-        </WithRoute>
-      </ClusterContext.Provider>,
-      {
-        initialEntries: [clusterTopicsPath(clusterName)],
-      }
-    );
+    return render(getComponent(isReadOnly, isTopicDeletionAllowed), {
+      initialEntries: [clusterTopicsPath(clusterName)],
+    });
   };
 
   describe('without data', () => {
-    it('renders empty table when payload is undefined', () => {
+    it('renders localized empty table when payload is undefined', () => {
+      localStorage.setItem('locale', 'zh-CN');
       renderComponent();
       expect(
-        screen.getByRole('row', { name: 'No topics found' })
+        screen.getByRole('row', { name: '未找到主题' })
       ).toBeInTheDocument();
     });
 
-    it('renders empty table when payload is empty', () => {
+    it('renders localized empty table when payload is empty', () => {
+      localStorage.setItem('locale', 'zh-CN');
       renderComponent({ topics: [] });
       expect(
-        screen.getByRole('row', { name: 'No topics found' })
+        screen.getByRole('row', { name: '未找到主题' })
       ).toBeInTheDocument();
     });
   });
   describe('with topics', () => {
+    it('renders localized table headers', () => {
+      localStorage.setItem('locale', 'zh-CN');
+      renderComponent({ topics: topicsPayload, pageCount: 1 });
+      expect(
+        screen.getByRole('columnheader', { name: '主题名称' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '分区数' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '未同步副本' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '副本因子' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '消息数' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('columnheader', { name: '大小' })
+      ).toBeInTheDocument();
+    });
+
+    it('shows glossary tooltip on partitions and replication factor headers', async () => {
+      localStorage.setItem('locale', 'zh-CN');
+      renderComponent({ topics: topicsPayload, pageCount: 1 });
+
+      await userEvent.hover(screen.getByText('分区数'));
+      expect(await screen.findByText(GLOSSARY_TERMS.PARTITION)).toBeInTheDocument();
+
+      await userEvent.hover(screen.getByText('副本因子'));
+      expect(
+        await screen.findByText(GLOSSARY_TERMS.REPLICATION_FACTOR)
+      ).toBeInTheDocument();
+    });
+
     it('renders correct rows', () => {
       renderComponent({ topics: topicsPayload, pageCount: 1 });
       expect(
@@ -143,15 +195,18 @@ describe('TopicTable Components', () => {
         expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
       });
       describe('Batch actions bar', () => {
+        let payload: TopicsResponse;
+        let view: ReturnType<typeof renderComponent>;
+
         beforeEach(() => {
-          const payload = {
+          payload = {
             topics: [
               externalTopicPayload,
               { ...externalTopicPayload, name: 'test-topic' },
             ],
             totalPages: 1,
           };
-          renderComponent(payload);
+          view = renderComponent(payload);
           expect(screen.getAllByRole('checkbox').length).toEqual(3);
           expect(screen.getAllByRole('checkbox')[1]).toBeEnabled();
           expect(screen.getAllByRole('checkbox')[2]).toBeEnabled();
@@ -164,8 +219,24 @@ describe('TopicTable Components', () => {
             expect(getButtonByName('Delete selected topics')).toBeEnabled();
             expect(getButtonByName('Copy selected topic')).toBeEnabled();
             expect(
-              getButtonByName('Purge messages of selected topics')
+              getButtonByName(en['topics.actions.purgeSelectedTopics'])
             ).toBeEnabled();
+          });
+          it('recomputes permitted actions when rbacFlag changes', async () => {
+            expect(
+              getButtonByName(en['topics.actions.purgeSelectedTopics'])
+            ).toBeEnabled();
+
+            (useUserInfo as jest.Mock).mockReturnValue({
+              roles: defaultRoles,
+              rbacFlag: true,
+            });
+
+            view.rerender(getComponent(payload));
+
+            expect(
+              getButtonByName(en['topics.actions.purgeSelectedTopics'])
+            ).toBeDisabled();
           });
         });
         describe('when more then one topics are selected', () => {
@@ -177,7 +248,7 @@ describe('TopicTable Components', () => {
             expect(getButtonByName('Delete selected topics')).toBeEnabled();
             expect(getButtonByName('Copy selected topic')).toBeDisabled();
             expect(
-              getButtonByName('Purge messages of selected topics')
+              getButtonByName(en['topics.actions.purgeSelectedTopics'])
             ).toBeEnabled();
           });
           it('handels delete button click', async () => {
@@ -197,12 +268,12 @@ describe('TopicTable Components', () => {
             expect(screen.getAllByRole('checkbox')[2]).not.toBeChecked();
           });
           it('handels purge messages button click', async () => {
-            const button = getButtonByName('Purge messages of selected topics');
+            const button = getButtonByName(
+              en['topics.actions.purgeSelectedTopics']
+            );
             await userEvent.click(button);
             expect(
-              screen.getByText(
-                'Are you sure you want to purge messages of selected topics?'
-              )
+              screen.getByText(en['topics.confirmations.purgeSelectedTopics'])
             ).toBeInTheDocument();
             const confirmBtn = getButtonByName('Confirm');
             expect(confirmBtn).toBeInTheDocument();
@@ -259,6 +330,7 @@ describe('TopicTable Components', () => {
       });
       describe('and clear messages action', () => {
         it('is visible for topic with CleanUpPolicy.DELETE', async () => {
+          localStorage.setItem('locale', 'zh-CN');
           renderComponent({
             topics: [
               {
@@ -269,7 +341,7 @@ describe('TopicTable Components', () => {
           });
           await expectDropdownExists();
           const actionBtn = screen.getAllByRole('menuitem');
-          expect(actionBtn[0]).toHaveTextContent('Clear Messages');
+          expect(actionBtn[0]).toHaveTextContent('清空消息');
           expect(actionBtn[0]).not.toHaveAttribute('aria-disabled');
         });
         it('is disabled for topic without CleanUpPolicy.DELETE', async () => {
@@ -283,10 +355,13 @@ describe('TopicTable Components', () => {
           });
           await expectDropdownExists();
           const actionBtn = screen.getAllByRole('menuitem');
-          expect(actionBtn[0]).toHaveTextContent('Clear Messages');
+          expect(actionBtn[0]).toHaveTextContent(
+            en['topics.actions.clearMessages']
+          );
           expect(actionBtn[0]).toHaveAttribute('aria-disabled');
         });
         it('works as expected', async () => {
+          localStorage.setItem('locale', 'zh-CN');
           renderComponent({
             topics: [
               {
@@ -296,13 +371,11 @@ describe('TopicTable Components', () => {
             ],
           });
           await expectDropdownExists();
-          await userEvent.click(screen.getByText('Clear Messages'));
+          await userEvent.click(screen.getByText('清空消息'));
           expect(
-            screen.getByText('Are you sure want to clear topic messages?')
+            screen.getByText('确定要清空主题消息吗？')
           ).toBeInTheDocument();
-          await userEvent.click(
-            screen.getByRole('button', { name: 'Confirm' })
-          );
+          await userEvent.click(screen.getByRole('button', { name: '确认' }));
           expect(clearTopicMessages).toHaveBeenCalled();
         });
       });
@@ -326,7 +399,9 @@ describe('TopicTable Components', () => {
           renderComponent({ topics: [topicsPayload[1]] });
           await expectDropdownExists();
           await userEvent.click(screen.getByText('Remove Topic'));
-          expect(screen.getByText('Confirm the action')).toBeInTheDocument();
+          expect(
+            screen.getByText(en['confirmation.title'])
+          ).toBeInTheDocument();
           await userEvent.click(
             screen.getByRole('button', { name: 'Confirm' })
           );
@@ -338,7 +413,9 @@ describe('TopicTable Components', () => {
           renderComponent({ topics: [topicsPayload[1]] });
           await expectDropdownExists();
           await userEvent.click(screen.getByText('Recreate Topic'));
-          expect(screen.getByText('Confirm the action')).toBeInTheDocument();
+          expect(
+            screen.getByText(en['confirmation.title'])
+          ).toBeInTheDocument();
           await userEvent.click(
             screen.getByRole('button', { name: 'Confirm' })
           );

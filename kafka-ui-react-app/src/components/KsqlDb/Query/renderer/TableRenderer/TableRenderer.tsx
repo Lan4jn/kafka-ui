@@ -3,6 +3,7 @@ import { KsqlTableResponse } from 'generated-sources';
 import TableHeaderCell from 'components/common/table/TableHeaderCell/TableHeaderCell';
 import { nanoid } from '@reduxjs/toolkit';
 import { TableTitle } from 'components/common/table/TableTitle/TableTitle.styled';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './TableRenderer.styled';
 
@@ -29,6 +30,7 @@ function hasJsonStructure(str: string | Record<string, unknown>): boolean {
 }
 
 const TableRenderer: React.FC<TableRendererProps> = ({ table }) => {
+  const { t } = useTranslation();
   const rows = React.useMemo(() => {
     return (table.values || []).map((row) => {
       return {
@@ -61,7 +63,7 @@ const TableRenderer: React.FC<TableRendererProps> = ({ table }) => {
         <tbody>
           {ths.length === 0 ? (
             <tr>
-              <td colSpan={ths.length}>No tables or streams found</td>
+              <td colSpan={ths.length}>{t('ksqlDb.query.table.empty')}</td>
             </tr>
           ) : (
             rows.map((row) => (

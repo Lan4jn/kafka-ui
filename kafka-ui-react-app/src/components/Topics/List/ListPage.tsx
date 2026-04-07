@@ -11,10 +11,12 @@ import Switch from 'components/common/Switch/Switch';
 import PlusIcon from 'components/common/Icons/PlusIcon';
 import PageLoader from 'components/common/PageLoader/PageLoader';
 import TopicTable from 'components/Topics/List/TopicTable';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { Action, ResourceType } from 'generated-sources';
 
 const ListPage: React.FC = () => {
   const { isReadOnly } = React.useContext(ClusterContext);
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Set the search params to the url based on the localStorage value
@@ -46,7 +48,7 @@ const ListPage: React.FC = () => {
 
   return (
     <>
-      <PageHeading text="Topics">
+      <PageHeading text={t('topics.list.title')}>
         {!isReadOnly && (
           <ActionButton
             buttonType="primary"
@@ -57,19 +59,19 @@ const ListPage: React.FC = () => {
               action: Action.CREATE,
             }}
           >
-            <PlusIcon /> Add a Topic
+            <PlusIcon /> {t('topics.list.actions.add')}
           </ActionButton>
         )}
       </PageHeading>
       <ControlPanelWrapper hasInput>
-        <Search placeholder="Search by Topic Name" />
+        <Search placeholder={t('topics.list.searchPlaceholder')} />
         <label>
           <Switch
             name="ShowInternalTopics"
             checked={!searchParams.has('hideInternal')}
             onChange={handleSwitch}
           />
-          Show Internal Topics
+          {t('topics.list.filters.showInternal')}
         </label>
       </ControlPanelWrapper>
       <Suspense fallback={<PageLoader />}>

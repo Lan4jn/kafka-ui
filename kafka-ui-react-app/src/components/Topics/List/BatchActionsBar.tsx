@@ -14,6 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ActionCanButton } from 'components/common/ActionComponent';
 import { isPermitted } from 'lib/permissions';
 import { useUserInfo } from 'lib/hooks/useUserInfo';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 interface BatchActionsbarProps {
   rows: Row<Topic>[];
@@ -25,6 +26,7 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
   resetRowSelection,
 }) => {
   const { clusterName } = useAppParams<{ clusterName: ClusterName }>();
+  const { t } = useTranslation();
   const confirm = useConfirm();
   const deleteTopic = useDeleteTopic(clusterName);
   const selectedTopics = rows.map(({ original }) => original.name);
@@ -48,23 +50,20 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
   };
 
   const purgeTopicsHandler = () => {
-    confirm(
-      'Are you sure you want to purge messages of selected topics?',
-      async () => {
-        try {
-          await Promise.all(
-            selectedTopics.map((topicName) =>
-              clearTopicMessagesHandler(topicName)
-            )
-          );
-          resetRowSelection();
-        } catch (e) {
-          // do nothing;
-        } finally {
-          client.invalidateQueries(topicKeys.all(clusterName));
-        }
+    confirm(t('topics.confirmations.purgeSelectedTopics'), async () => {
+      try {
+        await Promise.all(
+          selectedTopics.map((topicName) =>
+            clearTopicMessagesHandler(topicName)
+          )
+        );
+        resetRowSelection();
+      } catch (e) {
+        // do nothing;
+      } finally {
+        client.invalidateQueries(topicKeys.all(clusterName));
       }
-    );
+    });
   };
 
   type Tuple = [string, string];
@@ -105,7 +104,7 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
         rbacFlag,
       })
     );
-  }, [selectedTopics, clusterName, roles]);
+  }, [selectedTopics, clusterName, roles, rbacFlag]);
 
   const canCopySelectedTopic = useMemo(() => {
     return selectedTopics.every((value) =>
@@ -118,7 +117,7 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
         rbacFlag,
       })
     );
-  }, [selectedTopics, clusterName, roles]);
+  }, [selectedTopics, clusterName, roles, rbacFlag]);
 
   const canPurgeSelectedTopics = useMemo(() => {
     return selectedTopics.every((value) =>
@@ -131,7 +130,7 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
         rbacFlag,
       })
     );
-  }, [selectedTopics, clusterName, roles]);
+  }, [selectedTopics, clusterName, roles, rbacFlag]);
 
   return (
     <>
@@ -160,7 +159,7 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
         disabled={!selectedTopics.length}
         canDoAction={canPurgeSelectedTopics}
       >
-        Purge messages of selected topics
+        {t('topics.actions.purgeSelectedTopics')}
       </ActionCanButton>
     </>
   );

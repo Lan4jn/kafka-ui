@@ -6,6 +6,7 @@ import { InputLabel } from 'components/common/Input/InputLabel.styled';
 import IconButtonWrapper from 'components/common/Icons/IconButtonWrapper';
 import EditIcon from 'components/common/Icons/EditIcon';
 import CancelIcon from 'components/common/Icons/CancelIcon';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './PreviewModal.styled';
 import { PreviewFilter } from './Message';
@@ -21,6 +22,7 @@ const PreviewModal: React.FC<InfoModalProps> = ({
   toggleIsOpen,
   setFilters,
 }) => {
+  const { t } = useTranslation();
   const [field, setField] = React.useState('');
   const [path, setPath] = React.useState('');
   const [errors, setErrors] = React.useState<string[]>([]);
@@ -77,39 +79,55 @@ const PreviewModal: React.FC<InfoModalProps> = ({
             {' '}
             {item.field} : {item.path}
           </S.Field>
-          <IconButtonWrapper role="button" onClick={() => setEditIndex(index)}>
+          <IconButtonWrapper
+            role="button"
+            aria-label={t('topics.messages.previewModal.actions.edit')}
+            onClick={() => setEditIndex(index)}
+          >
             <EditIcon />
           </IconButtonWrapper>
           {'  '}
-          <IconButtonWrapper role="button" onClick={() => handleRemove(item)}>
+          <IconButtonWrapper
+            role="button"
+            aria-label={t('topics.messages.previewModal.actions.cancel')}
+            onClick={() => handleRemove(item)}
+          >
             <CancelIcon />
           </IconButtonWrapper>
         </S.EditForm>
       ))}
       <div>
-        <InputLabel htmlFor="previewFormField">Field</InputLabel>
+        <InputLabel htmlFor="previewFormField">
+          {t('topics.messages.previewModal.fields.field')}
+        </InputLabel>
         <Input
           type="text"
           id="previewFormField"
           min="1"
           value={field}
-          placeholder="Field"
+          placeholder={t('topics.messages.previewModal.placeholders.field')}
           onChange={({ target }) => setField(target?.value)}
         />
-        <FormError>{errors.includes('field') && 'Field is required'}</FormError>
+        <FormError>
+          {errors.includes('field') &&
+            t('topics.messages.previewModal.validation.fieldRequired')}
+        </FormError>
       </div>
       <div>
-        <InputLabel htmlFor="previewFormJsonPath">Json path</InputLabel>
+        <InputLabel htmlFor="previewFormJsonPath">
+          {t('topics.messages.previewModal.fields.path')}
+        </InputLabel>
         <Input
           type="text"
           id="previewFormJsonPath"
           min="1"
           value={path}
-          placeholder="Json Path"
+          placeholder={t('topics.messages.previewModal.placeholders.path')}
           onChange={({ target }) => setPath(target?.value)}
         />
         <FormError>
-          {errors.includes('path') && 'Json path is required'}
+          {errors.includes('path') &&
+            t('topics.messages.previewModal.validation.pathRequired')}
         </FormError>
       </div>
       <S.ButtonWrapper>
@@ -119,7 +137,7 @@ const PreviewModal: React.FC<InfoModalProps> = ({
           type="button"
           onClick={toggleIsOpen}
         >
-          Close
+          {t('topics.messages.previewModal.actions.close')}
         </Button>
         <Button
           buttonSize="M"
@@ -127,7 +145,7 @@ const PreviewModal: React.FC<InfoModalProps> = ({
           type="button"
           onClick={handleOk}
         >
-          Save
+          {t('topics.messages.previewModal.actions.save')}
         </Button>
       </S.ButtonWrapper>
     </S.PreviewModal>

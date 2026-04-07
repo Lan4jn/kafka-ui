@@ -7,6 +7,7 @@ import useAppParams from 'lib/hooks/useAppParams';
 import { ClusterName } from 'redux/interfaces';
 import { useSearchParams } from 'react-router-dom';
 import ClusterContext from 'components/contexts/ClusterContext';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { useTopics } from 'lib/hooks/api/topics';
 import { PER_PAGE } from 'lib/constants';
 import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
@@ -19,6 +20,7 @@ const TopicTable: React.FC = () => {
   const { clusterName } = useAppParams<{ clusterName: ClusterName }>();
   const [searchParams] = useSearchParams();
   const { isReadOnly } = React.useContext(ClusterContext);
+  const { t } = useTranslation();
   const { data } = useTopics({
     clusterName,
     page: Number(searchParams.get('page') || 1),
@@ -38,7 +40,7 @@ const TopicTable: React.FC = () => {
     () => [
       {
         id: TopicColumnsToSort.NAME,
-        header: 'Topic Name',
+        header: t('topics.list.table.name'),
         accessorKey: 'name',
         cell: TopicTitleCell,
       },
@@ -46,14 +48,14 @@ const TopicTable: React.FC = () => {
         id: TopicColumnsToSort.TOTAL_PARTITIONS,
         header: (
           <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
-            Partitions
+            {t('topics.list.table.partitions')}
           </GlossaryTerm>
         ),
         accessorKey: 'partitionCount',
       },
       {
         id: TopicColumnsToSort.OUT_OF_SYNC_REPLICAS,
-        header: 'Out of sync replicas',
+        header: t('topics.list.table.outOfSyncReplicas'),
         accessorKey: 'partitions',
         cell: ({ getValue }) => {
           const partitions = getValue<Topic['partitions']>();
@@ -69,14 +71,14 @@ const TopicTable: React.FC = () => {
       {
         header: (
           <GlossaryTerm english={GLOSSARY_TERMS.REPLICATION_FACTOR}>
-            Replication Factor
+            {t('topics.list.table.replicationFactor')}
           </GlossaryTerm>
         ),
         accessorKey: 'replicationFactor',
         enableSorting: false,
       },
       {
-        header: 'Number of messages',
+        header: t('topics.list.table.messages'),
         accessorKey: 'partitions',
         enableSorting: false,
         cell: ({ getValue }) => {
@@ -91,7 +93,7 @@ const TopicTable: React.FC = () => {
       },
       {
         id: TopicColumnsToSort.SIZE,
-        header: 'Size',
+        header: t('topics.list.table.size'),
         accessorKey: 'segmentSize',
         cell: SizeCell,
       },
@@ -101,7 +103,7 @@ const TopicTable: React.FC = () => {
         cell: ActionsCell,
       },
     ],
-    []
+    [t]
   );
 
   return (
@@ -115,7 +117,7 @@ const TopicTable: React.FC = () => {
       enableRowSelection={
         !isReadOnly ? (row) => !row.original.internal : undefined
       }
-      emptyMessage="No topics found"
+      emptyMessage={t('topics.list.empty')}
     />
   );
 };

@@ -5,17 +5,19 @@ import { useBrokerLogDirs } from 'lib/hooks/api/brokers';
 import Table from 'components/common/NewTable';
 import { ColumnDef } from '@tanstack/react-table';
 import { BrokersLogdirs } from 'generated-sources';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 const BrokerLogdir: React.FC = () => {
+  const { t } = useTranslation();
   const { clusterName, brokerId } = useAppParams<ClusterBrokerParam>();
   const { data } = useBrokerLogDirs(clusterName, Number(brokerId));
 
   const columns = React.useMemo<ColumnDef<BrokersLogdirs>[]>(
     () => [
-      { header: 'Name', accessorKey: 'name' },
-      { header: 'Error', accessorKey: 'error' },
+      { header: t('brokers.logdirs.table.name'), accessorKey: 'name' },
+      { header: t('brokers.logdirs.table.error'), accessorKey: 'error' },
       {
-        header: 'Topics',
+        header: t('brokers.logdirs.table.topics'),
         accessorKey: 'topics',
         cell: ({ getValue }) =>
           getValue<BrokersLogdirs['topics']>()?.length || 0,
@@ -23,7 +25,7 @@ const BrokerLogdir: React.FC = () => {
       },
       {
         id: 'partitions',
-        header: 'Partitions',
+        header: t('brokers.logdirs.table.partitions'),
         accessorKey: 'topics',
         cell: ({ getValue }) => {
           const topics = getValue<BrokersLogdirs['topics']>();
@@ -38,14 +40,14 @@ const BrokerLogdir: React.FC = () => {
         enableSorting: false,
       },
     ],
-    []
+    [t]
   );
 
   return (
     <Table
       data={data || []}
       columns={columns}
-      emptyMessage="Log dir data not available"
+      emptyMessage={t('brokers.logdirs.empty')}
       enableSorting
     />
   );

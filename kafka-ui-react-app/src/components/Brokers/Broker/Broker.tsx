@@ -21,10 +21,12 @@ import Navbar from 'components/common/Navigation/Navbar.styled';
 import PageLoader from 'components/common/PageLoader/PageLoader';
 import { ActionNavLink } from 'components/common/ActionComponent';
 import { Action, ResourceType } from 'generated-sources';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import Configs from './Configs/Configs';
 
 const Broker: React.FC = () => {
+  const { t } = useTranslation();
   const { clusterName, brokerId } = useAppParams<ClusterBrokerParam>();
 
   const { data: clusterStats } = useClusterStats(clusterName);
@@ -39,23 +41,27 @@ const Broker: React.FC = () => {
   return (
     <>
       <PageHeading
-        text={`Broker ${brokerId}`}
+        text={t('brokers.details.title', { brokerId })}
         backTo={clusterBrokersPath(clusterName)}
-        backText="Brokers"
+        backText={t('brokers.list.title')}
       />
       <Metrics.Wrapper>
         <Metrics.Section>
-          <Metrics.Indicator label="Segment Size">
+          <Metrics.Indicator label={t('brokers.details.metrics.segmentSize')}>
             <BytesFormatted
               value={brokerDiskUsage?.segmentSize}
               precision={2}
             />
           </Metrics.Indicator>
-          <Metrics.Indicator label="Segment Count">
+          <Metrics.Indicator label={t('brokers.details.metrics.segmentCount')}>
             {brokerDiskUsage?.segmentCount}
           </Metrics.Indicator>
-          <Metrics.Indicator label="Port">{brokerItem?.port}</Metrics.Indicator>
-          <Metrics.Indicator label="Host">{brokerItem?.host}</Metrics.Indicator>
+          <Metrics.Indicator label={t('brokers.list.table.port')}>
+            {brokerItem?.port}
+          </Metrics.Indicator>
+          <Metrics.Indicator label={t('brokers.list.table.host')}>
+            {brokerItem?.host}
+          </Metrics.Indicator>
         </Metrics.Section>
       </Metrics.Wrapper>
 
@@ -65,13 +71,13 @@ const Broker: React.FC = () => {
           className={({ isActive }) => (isActive ? 'is-active' : '')}
           end
         >
-          Log directories
+          {t('brokers.logdirs.title')}
         </NavLink>
         <NavLink
           to={clusterBrokerConfigsPath(clusterName, brokerId)}
           className={({ isActive }) => (isActive ? 'is-active' : '')}
         >
-          Configs
+          {t('brokers.details.tabs.configs')}
         </NavLink>
         <ActionNavLink
           to={clusterBrokerMetricsPath(clusterName, brokerId)}
@@ -81,7 +87,7 @@ const Broker: React.FC = () => {
             action: Action.VIEW,
           }}
         >
-          Metrics
+          {t('brokers.details.tabs.metrics')}
         </ActionNavLink>
       </Navbar>
       <Suspense fallback={<PageLoader />}>

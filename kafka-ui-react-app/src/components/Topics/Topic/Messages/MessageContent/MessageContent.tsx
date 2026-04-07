@@ -3,6 +3,7 @@ import EditorViewer from 'components/common/EditorViewer/EditorViewer';
 import BytesFormatted from 'components/common/BytesFormatted/BytesFormatted';
 import { SchemaType, TopicMessageTimestampTypeEnum } from 'generated-sources';
 import { formatTimestamp } from 'lib/dateTimeHelpers';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './MessageContent.styled';
 
@@ -31,6 +32,7 @@ const MessageContent: React.FC<MessageContentProps> = ({
   keySerde,
   valueSerde,
 }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = React.useState<Tab>('content');
   const activeTabContent = () => {
     switch (activeTab) {
@@ -74,21 +76,21 @@ const MessageContent: React.FC<MessageContentProps> = ({
                 $active={activeTab === 'key'}
                 onClick={handleKeyTabClick}
               >
-                Key
+                {t('topics.messages.table.key')}
               </S.Tab>
               <S.Tab
                 $active={activeTab === 'content'}
                 type="button"
                 onClick={handleContentTabClick}
               >
-                Value
+                {t('topics.messages.table.value')}
               </S.Tab>
               <S.Tab
                 $active={activeTab === 'headers'}
                 type="button"
                 onClick={handleHeadersTabClick}
               >
-                Headers
+                {t('topics.sendMessage.fields.headers')}
               </S.Tab>
             </S.Tabs>
             <EditorViewer
@@ -99,29 +101,41 @@ const MessageContent: React.FC<MessageContentProps> = ({
           </S.ContentBox>
           <S.MetadataWrapper>
             <S.Metadata>
-              <S.MetadataLabel>Timestamp</S.MetadataLabel>
+              <S.MetadataLabel>
+                {t('topics.messages.table.timestamp')}
+              </S.MetadataLabel>
               <span>
                 <S.MetadataValue>{formatTimestamp(timestamp)}</S.MetadataValue>
-                <S.MetadataMeta>Timestamp type: {timestampType}</S.MetadataMeta>
-              </span>
-            </S.Metadata>
-
-            <S.Metadata>
-              <S.MetadataLabel>Key Serde</S.MetadataLabel>
-              <span>
-                <S.MetadataValue>{keySerde}</S.MetadataValue>
                 <S.MetadataMeta>
-                  Size: <BytesFormatted value={keySize} />
+                  {t('topics.messages.details.timestampType', {
+                    type: timestampType,
+                  })}
                 </S.MetadataMeta>
               </span>
             </S.Metadata>
 
             <S.Metadata>
-              <S.MetadataLabel>Value Serde</S.MetadataLabel>
+              <S.MetadataLabel>
+                {t('topics.sendMessage.fields.keySerde')}
+              </S.MetadataLabel>
+              <span>
+                <S.MetadataValue>{keySerde}</S.MetadataValue>
+                <S.MetadataMeta>
+                  {t('topics.messages.details.size')}:{' '}
+                  <BytesFormatted value={keySize} />
+                </S.MetadataMeta>
+              </span>
+            </S.Metadata>
+
+            <S.Metadata>
+              <S.MetadataLabel>
+                {t('topics.sendMessage.fields.valueSerde')}
+              </S.MetadataLabel>
               <span>
                 <S.MetadataValue>{valueSerde}</S.MetadataValue>
                 <S.MetadataMeta>
-                  Size: <BytesFormatted value={contentSize} />
+                  {t('topics.messages.details.size')}:{' '}
+                  <BytesFormatted value={contentSize} />
                 </S.MetadataMeta>
               </span>
             </S.Metadata>

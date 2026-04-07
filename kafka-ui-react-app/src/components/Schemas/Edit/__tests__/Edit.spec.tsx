@@ -16,6 +16,15 @@ import { RootState } from 'redux/interfaces';
 import fetchMock from 'fetch-mock';
 import { act } from '@testing-library/react';
 
+jest.mock('components/contexts/LocaleContext', () => ({
+  ...jest.requireActual('components/contexts/LocaleContext'),
+  useTranslation: () => ({
+    t: (key: string) => key,
+    locale: 'en',
+    setLocale: jest.fn(),
+  }),
+}));
+
 const clusterName = 'testClusterName';
 const schemasAPILatestUrl = `/api/clusters/${clusterName}/schemas/${schemaVersion.subject}/latest`;
 
@@ -40,7 +49,9 @@ const renderComponent = (
   );
 
 describe('Edit', () => {
-  afterEach(() => fetchMock.reset());
+  afterEach(() => {
+    fetchMock.reset();
+  });
 
   describe('fetch success', () => {
     describe('has schema versions', () => {
@@ -50,7 +61,27 @@ describe('Edit', () => {
           renderComponent();
         });
         expect(fetchMock.called(schemasAPILatestUrl)).toBeTruthy();
-        expect(screen.getByText('Submit')).toBeInTheDocument();
+        expect(
+          screen.getByRole('link', { name: 'schemas.list.title' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText('schemas.edit.fields.type')
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText('schemas.edit.fields.compatibilityLevel')
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('heading', {
+            name: 'schemas.edit.fields.latestSchema',
+          })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('heading', { name: 'schemas.edit.fields.newSchema' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('button', { name: 'schemas.edit.actions.submit' })
+        ).toBeInTheDocument();
+        expect(screen.getAllByRole('listbox')).toHaveLength(2);
         expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
       });
     });
@@ -64,7 +95,9 @@ describe('Edit', () => {
           renderComponent();
         });
         expect(fetchMock.called(schemasAPILatestUrl)).toBeTruthy();
-        expect(screen.getByText('Submit')).toBeInTheDocument();
+        expect(
+          screen.getByRole('button', { name: 'schemas.edit.actions.submit' })
+        ).toBeInTheDocument();
         expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
       });
     });

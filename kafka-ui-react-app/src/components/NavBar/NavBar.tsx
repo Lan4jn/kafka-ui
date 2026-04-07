@@ -7,7 +7,9 @@ import DiscordIcon from 'components/common/Icons/DiscordIcon';
 import AutoIcon from 'components/common/Icons/AutoIcon';
 import SunIcon from 'components/common/Icons/SunIcon';
 import MoonIcon from 'components/common/Icons/MoonIcon';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { ThemeModeContext } from 'components/contexts/ThemeModeContext';
+import type { AppLocale } from 'locales/types';
 
 import UserInfo from './UserInfo/UserInfo';
 import * as S from './NavBar.styled';
@@ -18,38 +20,44 @@ interface Props {
 
 export type ThemeDropDownValue = 'auto_theme' | 'light_theme' | 'dark_theme';
 
-const options = [
-  {
-    label: (
-      <>
-        <AutoIcon />
-        <div>Auto theme</div>
-      </>
-    ),
-    value: 'auto_theme',
-  },
-  {
-    label: (
-      <>
-        <SunIcon />
-        <div>Light theme</div>
-      </>
-    ),
-    value: 'light_theme',
-  },
-  {
-    label: (
-      <>
-        <MoonIcon />
-        <div>Dark theme</div>
-      </>
-    ),
-    value: 'dark_theme',
-  },
-];
-
 const NavBar: React.FC<Props> = ({ onBurgerClick }) => {
   const { themeMode, setThemeMode } = useContext(ThemeModeContext);
+  const { locale, setLocale, t } = useTranslation();
+
+  const localeOptions = [
+    { label: 'English', value: 'en' },
+    { label: '简体中文', value: 'zh-CN' },
+  ];
+
+  const options = [
+    {
+      label: (
+        <>
+          <AutoIcon />
+          <div>{t('navbar.theme.auto')}</div>
+        </>
+      ),
+      value: 'auto_theme',
+    },
+    {
+      label: (
+        <>
+          <SunIcon />
+          <div>{t('navbar.theme.light')}</div>
+        </>
+      ),
+      value: 'light_theme',
+    },
+    {
+      label: (
+        <>
+          <MoonIcon />
+          <div>{t('navbar.theme.dark')}</div>
+        </>
+      ),
+      value: 'dark_theme',
+    },
+  ];
 
   return (
     <S.Navbar role="navigation" aria-label="Page Header">
@@ -69,7 +77,7 @@ const NavBar: React.FC<Props> = ({ onBurgerClick }) => {
 
           <S.Hyperlink to="/">
             <Logo />
-            UI for Apache Kafka
+            {t('navbar.title')}
           </S.Hyperlink>
 
           <S.NavbarItem>
@@ -78,6 +86,11 @@ const NavBar: React.FC<Props> = ({ onBurgerClick }) => {
         </S.NavbarBrand>
       </S.NavbarBrand>
       <S.NavbarSocial>
+        <Select
+          options={localeOptions}
+          value={locale}
+          onChange={(value) => setLocale(value as AppLocale)}
+        />
         <Select
           options={options}
           value={themeMode}

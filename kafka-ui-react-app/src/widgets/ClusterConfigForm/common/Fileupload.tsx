@@ -7,11 +7,13 @@ import Input from 'components/common/Input/Input';
 import { Button } from 'components/common/Button/Button';
 import * as S from 'widgets/ClusterConfigForm/ClusterConfigForm.styled';
 import { useAppConfigFilesUpload } from 'lib/hooks/api/appConfig';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 const Fileupload: React.FC<{ name: string; label: string }> = ({
   name,
   label,
 }) => {
+  const { t } = useTranslation();
   const upload = useAppConfigFilesUpload();
 
   const id = React.useId();
@@ -45,13 +47,13 @@ const Fileupload: React.FC<{ name: string; label: string }> = ({
             <Input name={name} disabled />
           </S.FlexGrow1>
           <Button buttonType="secondary" buttonSize="L" onClick={onReset}>
-            Reset
+            {t('clusterConfig.actions.reset')}
           </Button>
         </S.FlexRow>
       ) : (
         <S.FileUploadInputWrapper>
           {upload.isLoading ? (
-            <p>Uploading...</p>
+            <p>{t('clusterConfig.fileUpload.uploading')}</p>
           ) : (
             <input type="file" onChange={handleFileChange} />
           )}

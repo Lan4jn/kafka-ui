@@ -1,6 +1,7 @@
 import React from 'react';
 import { MILLISECONDS_IN_DAY } from 'lib/constants';
 import styled from 'styled-components';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import TimeToRetainBtn from './TimeToRetainBtn';
 
@@ -15,34 +16,38 @@ const TimeToRetainBtnsWrapper = styled.div`
   padding-top: 8px;
 `;
 
-const TimeToRetainBtns: React.FC<Props> = ({ name }) => (
-  <TimeToRetainBtnsWrapper>
-    <TimeToRetainBtn
-      text="12 hours"
-      inputName={name}
-      value={MILLISECONDS_IN_DAY / 2}
-    />
-    <TimeToRetainBtn
-      text="1 day"
-      inputName={name}
-      value={MILLISECONDS_IN_DAY}
-    />
-    <TimeToRetainBtn
-      text="2 days"
-      inputName={name}
-      value={MILLISECONDS_IN_DAY * 2}
-    />
-    <TimeToRetainBtn
-      text="7 days"
-      inputName={name}
-      value={MILLISECONDS_IN_DAY * 7}
-    />
-    <TimeToRetainBtn
-      text="4 weeks"
-      inputName={name}
-      value={MILLISECONDS_IN_DAY * 7 * 4}
-    />
-  </TimeToRetainBtnsWrapper>
-);
+const TimeToRetainBtns: React.FC<Props> = ({ name }) => {
+  const { t } = useTranslation();
+
+  return (
+    <TimeToRetainBtnsWrapper>
+      <TimeToRetainBtn
+        text={t('topics.form.retentionPresets.hours12')}
+        inputName={name}
+        value={MILLISECONDS_IN_DAY / 2}
+      />
+      <TimeToRetainBtn
+        text={t('topics.form.retentionPresets.day1')}
+        inputName={name}
+        value={MILLISECONDS_IN_DAY}
+      />
+      <TimeToRetainBtn
+        text={t('topics.form.retentionPresets.days2')}
+        inputName={name}
+        value={MILLISECONDS_IN_DAY * 2}
+      />
+      <TimeToRetainBtn
+        text={t('topics.form.retentionPresets.days7')}
+        inputName={name}
+        value={MILLISECONDS_IN_DAY * 7}
+      />
+      <TimeToRetainBtn
+        text={t('topics.form.retentionPresets.weeks4')}
+        inputName={name}
+        value={MILLISECONDS_IN_DAY * 7 * 4}
+      />
+    </TimeToRetainBtnsWrapper>
+  );
+};
 
 export default TimeToRetainBtns;

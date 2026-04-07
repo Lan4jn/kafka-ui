@@ -163,4 +163,22 @@ describe('Diff', () => {
       expect(screen.queryByRole('Back')).not.toBeInTheDocument();
     });
   });
+
+  describe('localized controls', () => {
+    beforeEach(() => {
+      localStorage.setItem('locale', 'zh-CN');
+      setupComponent({
+        areVersionsFetched: true,
+        versions,
+      });
+    });
+
+    it('renders localized heading, button and version labels', () => {
+      expect(
+        screen.getByRole('heading', { name: `${defaultSubject} 比较版本` })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: '返回' })).toBeInTheDocument();
+      expect(screen.getAllByText('版本 3').length).toEqual(2);
+    });
+  });
 });

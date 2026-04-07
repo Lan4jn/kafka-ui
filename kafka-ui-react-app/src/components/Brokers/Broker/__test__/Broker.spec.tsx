@@ -39,6 +39,7 @@ jest.mock('lib/hooks/api/clusters', () => ({
 
 describe('Broker Component', () => {
   beforeEach(() => {
+    localStorage.clear();
     (useBrokers as jest.Mock).mockImplementation(() => ({
       data: brokersPayload,
     }));
@@ -78,6 +79,23 @@ describe('Broker Component', () => {
 
     expect(screen.getByText('Host')).toBeInTheDocument();
     expect(screen.getByText(brokerInfo?.host || '')).toBeInTheDocument();
+  });
+
+  it('renders localized broker details copy in Chinese', async () => {
+    localStorage.setItem('locale', 'zh-CN');
+
+    await renderComponent();
+
+    expect(
+      screen.getByRole('link', { name: 'Broker 列表' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Segment 大小')).toBeInTheDocument();
+    expect(screen.getByText('Segment 数量')).toBeInTheDocument();
+    expect(screen.getByText('端口')).toBeInTheDocument();
+    expect(screen.getByText('主机')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '日志目录' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '配置' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '指标' })).toBeInTheDocument();
   });
 
   it('renders Broker Logdir', async () => {

@@ -30,37 +30,35 @@ const expectByRoleAndNameToBeInDocument = (
 };
 
 describe('TopicForm', () => {
+  beforeEach(() => {
+    localStorage.setItem('locale', 'zh-CN');
+  });
+
   it('renders', async () => {
     await act(async () => {
       renderComponent();
     });
 
-    expectByRoleAndNameToBeInDocument('textbox', 'Topic Name *');
+    expectByRoleAndNameToBeInDocument('textbox', '主题名称 *');
 
-    expectByRoleAndNameToBeInDocument('spinbutton', 'Number of Partitions *');
-    expectByRoleAndNameToBeInDocument('spinbutton', 'Replication Factor');
+    expectByRoleAndNameToBeInDocument('spinbutton', '分区数 *');
+    expectByRoleAndNameToBeInDocument('spinbutton', '副本因子');
 
-    expectByRoleAndNameToBeInDocument('spinbutton', 'Min In Sync Replicas');
-    expectByRoleAndNameToBeInDocument('listbox', 'Cleanup policy');
+    expectByRoleAndNameToBeInDocument('spinbutton', '最小同步副本数');
+    expectByRoleAndNameToBeInDocument('listbox', '清理策略');
 
-    expectByRoleAndNameToBeInDocument(
-      'spinbutton',
-      'Time to retain data (in ms)'
-    );
-    expectByRoleAndNameToBeInDocument('button', '12 hours');
-    expectByRoleAndNameToBeInDocument('button', '2 days');
-    expectByRoleAndNameToBeInDocument('button', '7 days');
-    expectByRoleAndNameToBeInDocument('button', '4 weeks');
+    expectByRoleAndNameToBeInDocument('spinbutton', '数据保留时长（毫秒）');
+    expectByRoleAndNameToBeInDocument('button', '12 小时');
+    expectByRoleAndNameToBeInDocument('button', '2 天');
+    expectByRoleAndNameToBeInDocument('button', '7 天');
+    expectByRoleAndNameToBeInDocument('button', '4 周');
 
-    expectByRoleAndNameToBeInDocument('listbox', 'Max size on disk in GB');
-    expectByRoleAndNameToBeInDocument(
-      'spinbutton',
-      'Maximum message size in bytes'
-    );
+    expectByRoleAndNameToBeInDocument('listbox', '磁盘最大大小（GB）');
+    expectByRoleAndNameToBeInDocument('spinbutton', '最大消息大小（字节）');
 
-    expectByRoleAndNameToBeInDocument('heading', 'Custom parameters');
+    expectByRoleAndNameToBeInDocument('heading', '自定义参数');
 
-    expectByRoleAndNameToBeInDocument('button', 'Create topic');
+    expectByRoleAndNameToBeInDocument('button', '创建主题');
   });
 
   it('submits', async () => {
@@ -71,11 +69,8 @@ describe('TopicForm', () => {
       });
     });
 
-    await userEvent.type(
-      screen.getByPlaceholderText('Topic Name'),
-      'topicName'
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Create topic' }));
+    await userEvent.type(screen.getByPlaceholderText('主题名称'), 'topicName');
+    await userEvent.click(screen.getByRole('button', { name: '创建主题' }));
 
     expect(onSubmit).toBeCalledTimes(1);
   });

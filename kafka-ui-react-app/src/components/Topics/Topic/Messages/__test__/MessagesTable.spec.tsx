@@ -21,6 +21,10 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('MessagesTable', () => {
+  beforeEach(() => {
+    localStorage.setItem('locale', 'zh-CN');
+  });
+
   const searchParams = new URLSearchParams({
     filterQueryType: 'STRING_CONTAINS',
     attempt: '0',
@@ -73,27 +77,27 @@ describe('MessagesTable', () => {
 
     it('should check preview buttons', async () => {
       const previewButtons = await screen.findAllByRole('button', {
-        name: 'Preview',
+        name: '预览',
       });
       expect(previewButtons).toHaveLength(2);
     });
 
     it('should show preview modal with validation', async () => {
-      await userEvent.click(screen.getAllByText('Preview')[0]);
-      expect(screen.getByPlaceholderText('Field')).toHaveValue('');
-      expect(screen.getByPlaceholderText('Json Path')).toHaveValue('');
+      await userEvent.click(screen.getAllByText('预览')[0]);
+      expect(screen.getByPlaceholderText('字段名')).toHaveValue('');
+      expect(screen.getByPlaceholderText('JSON 路径')).toHaveValue('');
     });
 
     it('should check the if no elements is rendered in the table', () => {
-      expect(screen.getByText(/No messages found/i)).toBeInTheDocument();
+      expect(screen.getByText('未找到消息')).toBeInTheDocument();
     });
   });
 
   describe('Custom Setup with different props value', () => {
     it('should check if next button and previous is disabled isLive Param', () => {
       renderComponent(searchParams, { ...contextValue, isLive: true });
-      expect(screen.queryByText(/next/i)).toBeDisabled();
-      expect(screen.queryByText(/back/i)).toBeDisabled();
+      expect(screen.queryByText('下一页')).toBeDisabled();
+      expect(screen.queryByText('返回')).toBeDisabled();
     });
 
     it('should check the display of the loader element', () => {
@@ -113,7 +117,7 @@ describe('MessagesTable', () => {
     });
 
     it('should check the rendering of the messages', () => {
-      expect(screen.queryByText(/No messages found/i)).not.toBeInTheDocument();
+      expect(screen.queryByText('未找到消息')).not.toBeInTheDocument();
       expect(
         screen.getByText(mockTopicsMessages[0].content as string)
       ).toBeInTheDocument();

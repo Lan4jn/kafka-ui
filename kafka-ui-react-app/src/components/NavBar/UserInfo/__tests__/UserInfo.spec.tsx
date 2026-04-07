@@ -10,6 +10,10 @@ jest.mock('lib/hooks/useUserInfo', () => ({
 }));
 
 describe('UserInfo', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   const renderComponent = () => render(<UserInfo />);
 
   it('should render the userInfo with correct data', () => {
@@ -49,6 +53,21 @@ describe('UserInfo', () => {
 
     const logout = screen.getByText('Log out');
     expect(logout).toBeInTheDocument();
+  });
+
+  it('renders localized logout copy in Chinese', async () => {
+    const username = 'someName';
+    localStorage.setItem('locale', 'zh-CN');
+    Object.defineProperty(window, 'basePath', {
+      value: '',
+      writable: true,
+    });
+    (useUserInfo as jest.Mock).mockImplementation(() => ({ username }));
+
+    renderComponent();
+    await userEvent.click(screen.getByText(username));
+
+    expect(screen.getByText('退出登录')).toBeInTheDocument();
   });
 
   it('should not render anything if the username does not exists', () => {

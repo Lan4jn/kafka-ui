@@ -9,10 +9,12 @@ import {
   ConsumerGroupOffsetsReset,
   ConsumerGroupOffsetsResetType,
 } from 'generated-sources';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import Form from './Form';
 
 const ResetOffsets: React.FC = () => {
+  const { t } = useTranslation();
   const routerParams = useAppParams<ClusterGroupParam>();
 
   const { consumerGroupID } = routerParams;
@@ -40,7 +42,7 @@ const ResetOffsets: React.FC = () => {
       <PageHeading
         text={consumerGroupID}
         backTo={clusterConsumerGroupsPath(routerParams.clusterName)}
-        backText="Consumers"
+        backText={t('consumerGroups.list.title')}
       />
       <Form
         defaultValues={defaultValues}

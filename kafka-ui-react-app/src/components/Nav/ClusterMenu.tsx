@@ -9,6 +9,7 @@ import {
   clusterKsqlDbPath,
   clusterACLPath,
 } from 'lib/paths';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import ClusterMenuItem from './ClusterMenuItem';
 import ClusterTab from './ClusterTab/ClusterTab';
@@ -23,6 +24,7 @@ const ClusterMenu: React.FC<Props> = ({
   cluster: { name, status, features },
   singleMode,
 }) => {
+  const { t } = useTranslation();
   const hasFeatureConfigured = (key: ClusterFeaturesEnum) =>
     features?.includes(key);
   const [isOpen, setIsOpen] = React.useState(!!singleMode);
@@ -37,30 +39,42 @@ const ClusterMenu: React.FC<Props> = ({
       />
       {isOpen && (
         <S.List>
-          <ClusterMenuItem to={clusterBrokersPath(name)} title="Brokers" />
-          <ClusterMenuItem to={clusterTopicsPath(name)} title="Topics" />
+          <ClusterMenuItem
+            to={clusterBrokersPath(name)}
+            title={t('brokers.list.title')}
+          />
+          <ClusterMenuItem
+            to={clusterTopicsPath(name)}
+            title={t('topics.list.title')}
+          />
           <ClusterMenuItem
             to={clusterConsumerGroupsPath(name)}
-            title="Consumers"
+            title={t('consumerGroups.list.title')}
           />
           {hasFeatureConfigured(ClusterFeaturesEnum.SCHEMA_REGISTRY) && (
             <ClusterMenuItem
               to={clusterSchemasPath(name)}
-              title="Schema Registry"
+              title={t('schemas.list.title')}
             />
           )}
           {hasFeatureConfigured(ClusterFeaturesEnum.KAFKA_CONNECT) && (
             <ClusterMenuItem
               to={clusterConnectorsPath(name)}
-              title="Kafka Connect"
+              title={t('connect.listPage.title')}
             />
           )}
           {hasFeatureConfigured(ClusterFeaturesEnum.KSQL_DB) && (
-            <ClusterMenuItem to={clusterKsqlDbPath(name)} title="KSQL DB" />
+            <ClusterMenuItem
+              to={clusterKsqlDbPath(name)}
+              title={t('ksqlDb.title')}
+            />
           )}
           {(hasFeatureConfigured(ClusterFeaturesEnum.KAFKA_ACL_VIEW) ||
             hasFeatureConfigured(ClusterFeaturesEnum.KAFKA_ACL_EDIT)) && (
-            <ClusterMenuItem to={clusterACLPath(name)} title="ACL" />
+            <ClusterMenuItem
+              to={clusterACLPath(name)}
+              title={t('acl.list.title')}
+            />
           )}
         </S.List>
       )}

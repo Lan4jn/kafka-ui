@@ -10,16 +10,7 @@ import { AddMessageFilters } from 'components/Topics/Topic/Messages/Filters/AddF
 import Editor from 'components/common/Editor/Editor';
 import { yupResolver } from '@hookform/resolvers/yup';
 import yup from 'lib/yupExtended';
-
-const validationSchema = yup.object().shape({
-  saveFilter: yup.boolean(),
-  code: yup.string().required(),
-  name: yup.string().when('saveFilter', {
-    is: (value: boolean | undefined) => typeof value === 'undefined' || value,
-    then: (schema) => schema.required(),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-});
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 export interface AddEditFilterContainerProps {
   cancelBtnHandler: () => void;
@@ -38,6 +29,26 @@ const AddEditFilterContainer: React.FC<AddEditFilterContainerProps> = ({
   submitCallback,
   isAdd,
 }) => {
+  const { t } = useTranslation();
+  const validationSchema = React.useMemo(
+    () =>
+      yup.object().shape({
+        saveFilter: yup.boolean(),
+        code: yup
+          .string()
+          .required(t('topics.messages.filters.form.validation.codeRequired')),
+        name: yup.string().when('saveFilter', {
+          is: (value: boolean | undefined) =>
+            typeof value === 'undefined' || value,
+          then: (schema) =>
+            schema.required(
+              t('topics.messages.filters.form.validation.nameRequired')
+            ),
+          otherwise: (schema) => schema.notRequired(),
+        }),
+      }),
+    [t]
+  );
   const methods = useForm<AddMessageFilters>({
     mode: 'onChange',
     resolver: yupResolver(validationSchema),
@@ -63,9 +74,12 @@ const AddEditFilterContainer: React.FC<AddEditFilterContainerProps> = ({
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} aria-label="Filters submit Form">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        aria-label={t('topics.messages.filters.form.ariaLabel')}
+      >
         <div>
-          <InputLabel>Filter code</InputLabel>
+          <InputLabel>{t('topics.messages.filters.form.code')}</InputLabel>
           <Controller
             control={control}
             name="code"
@@ -91,14 +105,16 @@ const AddEditFilterContainer: React.FC<AddEditFilterContainerProps> = ({
         {isAdd && (
           <InputLabel>
             <input {...methods.register('saveFilter')} type="checkbox" />
-            Save this filter
+            {t('topics.messages.filters.form.saveFilter')}
           </InputLabel>
         )}
         <div>
-          <InputLabel>Display name</InputLabel>
+          <InputLabel>
+            {t('topics.messages.filters.form.displayName')}
+          </InputLabel>
           <Input
             inputSize="M"
-            placeholder="Enter Name"
+            placeholder={t('topics.messages.filters.form.placeholders.name')}
             autoComplete="off"
             name="name"
             defaultValue={inputDisplayNameDefaultValue}
@@ -116,7 +132,7 @@ const AddEditFilterContainer: React.FC<AddEditFilterContainerProps> = ({
             type="button"
             onClick={cancelBtnHandler}
           >
-            Cancel
+            {t('topics.messages.filters.cancel')}
           </Button>
           <Button
             buttonSize="M"

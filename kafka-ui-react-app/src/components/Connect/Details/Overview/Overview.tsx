@@ -5,10 +5,14 @@ import getTagColor from 'components/common/Tag/getTagColor';
 import { RouterParamsClusterConnectConnector } from 'lib/paths';
 import useAppParams from 'lib/hooks/useAppParams';
 import { useConnector, useConnectorTasks } from 'lib/hooks/api/kafkaConnect';
+import { useTranslation } from 'components/contexts/LocaleContext';
+import GlossaryTerm from 'components/common/GlossaryTerm';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import getTaskMetrics from './getTaskMetrics';
 
 const Overview: React.FC = () => {
+  const { t } = useTranslation();
   const routerProps = useAppParams<RouterParamsClusterConnectConnector>();
 
   const { data: connector } = useConnector(routerProps);
@@ -24,24 +28,34 @@ const Overview: React.FC = () => {
     <Metrics.Wrapper>
       <Metrics.Section>
         {connector.status?.workerId && (
-          <Metrics.Indicator label="Worker">
+          <Metrics.Indicator label={t('connect.overview.metrics.worker')}>
             {connector.status.workerId}
           </Metrics.Indicator>
         )}
-        <Metrics.Indicator label="Type">{connector.type}</Metrics.Indicator>
+        <Metrics.Indicator label={t('connect.overview.metrics.type')}>
+          {connector.type}
+        </Metrics.Indicator>
         {connector.config['connector.class'] && (
-          <Metrics.Indicator label="Class">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.CONNECTOR}>
+                {t('connect.overview.metrics.class')}
+              </GlossaryTerm>
+            }
+          >
             {connector.config['connector.class']}
           </Metrics.Indicator>
         )}
-        <Metrics.Indicator label="State">
+        <Metrics.Indicator label={t('connect.overview.metrics.state')}>
           <C.Tag color={getTagColor(connector.status.state)}>
             {connector.status.state}
           </C.Tag>
         </Metrics.Indicator>
-        <Metrics.Indicator label="Tasks Running">{running}</Metrics.Indicator>
+        <Metrics.Indicator label={t('connect.overview.metrics.tasksRunning')}>
+          {running}
+        </Metrics.Indicator>
         <Metrics.Indicator
-          label="Tasks Failed"
+          label={t('connect.overview.metrics.tasksFailed')}
           isAlert
           alertType={failed > 0 ? 'error' : 'success'}
         >

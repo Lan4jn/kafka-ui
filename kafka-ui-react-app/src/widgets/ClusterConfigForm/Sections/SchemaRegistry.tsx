@@ -4,8 +4,10 @@ import { useFormContext } from 'react-hook-form';
 import SectionHeader from 'widgets/ClusterConfigForm/common/SectionHeader';
 import SSLForm from 'widgets/ClusterConfigForm/common/SSLForm';
 import Credentials from 'widgets/ClusterConfigForm/common/Credentials';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 const SchemaRegistry = () => {
+  const { t } = useTranslation();
   const { setValue, watch } = useFormContext();
   const schemaRegistry = watch('schemaRegistry');
   const toggleConfig = () => {
@@ -18,25 +20,28 @@ const SchemaRegistry = () => {
   return (
     <>
       <SectionHeader
-        title="Schema Registry"
+        title={t('clusterConfig.schemaRegistry.title')}
         adding={!schemaRegistry}
-        addButtonText="Configure Schema Registry"
+        addButtonText={t('clusterConfig.schemaRegistry.addButtonText')}
         onClick={toggleConfig}
       />
       {schemaRegistry && (
         <>
           <Input
-            label="URL *"
+            label={t('clusterConfig.common.url')}
             name="schemaRegistry.url"
             type="text"
-            placeholder="http://localhost:8081"
+            placeholder={t('clusterConfig.schemaRegistry.placeholders.url')}
             withError
           />
           <Credentials
             prefix="schemaRegistry"
-            title="Is Schema Registry secured with auth?"
+            title={t('clusterConfig.schemaRegistry.fields.isSecuredWithAuth')}
           />
-          <SSLForm prefix="schemaRegistry.keystore" title="Keystore" />
+          <SSLForm
+            prefix="schemaRegistry.keystore"
+            title={t('clusterConfig.common.keystore')}
+          />
         </>
       )}
     </>

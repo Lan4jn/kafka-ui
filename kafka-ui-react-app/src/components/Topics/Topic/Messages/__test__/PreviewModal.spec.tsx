@@ -16,6 +16,7 @@ jest.mock('lib/hooks/api/topicMessages', () => ({
 }));
 
 beforeEach(async () => {
+  localStorage.setItem('locale', 'zh-CN');
   (useSerdes as jest.Mock).mockImplementation(() => ({
     data: serdesPayload,
   }));
@@ -43,15 +44,15 @@ const renderComponent = (props?: Partial<InfoModalProps>) => {
 describe('PreviewModal component', () => {
   it('closes PreviewModal', async () => {
     renderComponent();
-    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await userEvent.click(screen.getByRole('button', { name: '关闭' }));
     expect(toggleInfoModal).toHaveBeenCalledTimes(1);
   });
 
   it('return if empty inputs', async () => {
     renderComponent();
-    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
-    expect(screen.getByText('Json path is required')).toBeInTheDocument();
-    expect(screen.getByText('Field is required')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '保存' }));
+    expect(screen.getByText('JSON 路径为必填项')).toBeInTheDocument();
+    expect(screen.getByText('字段名为必填项')).toBeInTheDocument();
   });
 
   describe('Input elements', () => {
@@ -65,14 +66,14 @@ describe('PreviewModal component', () => {
     });
 
     it('field input', async () => {
-      const fieldInput = screen.getByPlaceholderText('Field');
+      const fieldInput = screen.getByPlaceholderText('字段名');
       expect(fieldInput).toHaveValue('');
       await userEvent.type(fieldInput, fieldValue);
       expect(fieldInput).toHaveValue(fieldValue);
     });
 
     it('path input', async () => {
-      const pathInput = screen.getByPlaceholderText('Json Path');
+      const pathInput = screen.getByPlaceholderText('JSON 路径');
       expect(pathInput).toHaveValue('');
       await userEvent.type(pathInput, pathValue);
       expect(pathInput).toHaveValue(pathValue.toString());
@@ -88,7 +89,7 @@ describe('PreviewModal component', () => {
       await act(() => {
         renderComponent({ setFilters });
       });
-      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      await userEvent.click(screen.getByRole('button', { name: '取消' }));
       expect(setFilters).toHaveBeenCalledTimes(1);
     });
 
@@ -98,12 +99,12 @@ describe('PreviewModal component', () => {
       await act(() => {
         renderComponent({ setFilters });
       });
-      userEvent.click(screen.getByRole('button', { name: 'Edit' }));
-      const fieldInput = screen.getByPlaceholderText('Field');
+      userEvent.click(screen.getByRole('button', { name: '编辑' }));
+      const fieldInput = screen.getByPlaceholderText('字段名');
       userEvent.type(fieldInput, fieldValue);
-      const pathInput = screen.getByPlaceholderText('Json Path');
+      const pathInput = screen.getByPlaceholderText('JSON 路径');
       userEvent.type(pathInput, pathValue);
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      userEvent.click(screen.getByRole('button', { name: '保存' }));
       await act(() => {
         renderComponent({ setFilters, toggleIsOpen });
       });

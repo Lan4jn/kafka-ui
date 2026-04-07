@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Button } from 'components/common/Button/Button';
 import DeleteIcon from 'components/common/Icons/DeleteIcon';
 import { useConfirm } from 'lib/hooks/useConfirm';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './Filters.styled';
 import { MessageFilters } from './Filters';
@@ -25,6 +26,7 @@ const SavedFilters: FC<Props> = ({
   onGoBack,
   activeFilter,
 }) => {
+  const { t } = useTranslation();
   const [selectedFilter, setSelectedFilter] = React.useState(-1);
   const confirm = useConfirm();
 
@@ -41,11 +43,15 @@ const SavedFilters: FC<Props> = ({
 
     confirm(
       <>
-        <p>Are you sure want to remove {filterName}?</p>
+        <p>
+          {t('topics.messages.filters.saved.confirmDelete', {
+            name: filterName || '',
+          })}
+        </p>
         {isFilterSelected && (
           <>
             <br />
-            <p>Warning: this filter is currently selected.</p>
+            <p>{t('topics.messages.filters.saved.activeWarning')}</p>
           </>
         )}
       </>,
@@ -59,12 +65,16 @@ const SavedFilters: FC<Props> = ({
   return (
     <>
       <S.BackToCustomText onClick={onGoBack}>
-        Back To create filters
+        {t('topics.messages.filters.saved.back')}
       </S.BackToCustomText>
       <S.SavedFiltersContainer>
-        <S.CreatedFilter>Saved filters</S.CreatedFilter>
+        <S.CreatedFilter>
+          {t('topics.messages.filters.saved.title')}
+        </S.CreatedFilter>
         {filters.length === 0 && (
-          <S.NoSavedFilter>No saved filter(s)</S.NoSavedFilter>
+          <S.NoSavedFilter>
+            {t('topics.messages.filters.saved.empty')}
+          </S.NoSavedFilter>
         )}
         {filters.map((filter, index) => (
           <S.SavedFilter
@@ -75,7 +85,7 @@ const SavedFilters: FC<Props> = ({
             <S.SavedFilterName>{filter.name}</S.SavedFilterName>
             <S.FilterOptions>
               <S.FilterEdit onClick={() => onEdit(index, filter)}>
-                Edit
+                {t('topics.messages.filters.saved.edit')}
               </S.FilterEdit>
               <S.DeleteSavedFilter onClick={() => deleteFilterHandler(index)}>
                 <DeleteIcon />
@@ -91,7 +101,7 @@ const SavedFilters: FC<Props> = ({
           type="button"
           onClick={closeModal}
         >
-          Cancel
+          {t('topics.messages.filters.cancel')}
         </Button>
         <Button
           buttonSize="M"
@@ -100,7 +110,7 @@ const SavedFilters: FC<Props> = ({
           onClick={activateFilter}
           disabled={selectedFilter === -1}
         >
-          Select filter
+          {t('topics.messages.filters.saved.select')}
         </Button>
       </S.FilterButtonWrapper>
     </>

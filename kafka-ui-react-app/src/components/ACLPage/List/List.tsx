@@ -13,12 +13,14 @@ import {
   KafkaAclNamePatternType,
   KafkaAclPermissionEnum,
 } from 'generated-sources';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './List.styled';
 
 const ACList: React.FC = () => {
   const { clusterName } = useAppParams<{ clusterName: ClusterName }>();
   const theme = useTheme();
+  const { t } = useTranslation();
   const { data: aclList } = useAcls(clusterName);
   const { deleteResource } = useDeleteAcl(clusterName);
   const modal = useConfirm(true);
@@ -27,21 +29,19 @@ const ACList: React.FC = () => {
 
   const onDeleteClick = (acl: KafkaAcl | null) => {
     if (acl) {
-      modal('Are you sure want to delete this ACL record?', () =>
-        deleteResource(acl)
-      );
+      modal(t('acl.list.confirmDelete'), () => deleteResource(acl));
     }
   };
 
   const columns = React.useMemo<ColumnDef<KafkaAcl>[]>(
     () => [
       {
-        header: 'Principal',
+        header: t('acl.list.table.principal'),
         accessorKey: 'principal',
         size: 257,
       },
       {
-        header: 'Resource',
+        header: t('acl.list.table.resource'),
         accessorKey: 'resourceType',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue }) => (
@@ -50,7 +50,7 @@ const ACList: React.FC = () => {
         size: 145,
       },
       {
-        header: 'Pattern',
+        header: t('acl.list.table.pattern'),
         accessorKey: 'resourceName',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue, row }) => {
@@ -80,12 +80,12 @@ const ACList: React.FC = () => {
         size: 257,
       },
       {
-        header: 'Host',
+        header: t('acl.list.table.host'),
         accessorKey: 'host',
         size: 257,
       },
       {
-        header: 'Operation',
+        header: t('acl.list.table.operation'),
         accessorKey: 'operation',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue }) => (
@@ -94,7 +94,7 @@ const ACList: React.FC = () => {
         size: 121,
       },
       {
-        header: 'Permission',
+        header: t('acl.list.table.permission'),
         accessorKey: 'permission',
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: ({ getValue }) => (
@@ -127,7 +127,7 @@ const ACList: React.FC = () => {
         size: 76,
       },
     ],
-    [rowId]
+    [rowId, t]
   );
 
   const onRowHover = (value: unknown) => {
@@ -138,11 +138,11 @@ const ACList: React.FC = () => {
 
   return (
     <>
-      <PageHeading text="Access Control List" />
+      <PageHeading text={t('acl.list.title')} />
       <Table
         columns={columns}
         data={aclList ?? []}
-        emptyMessage="No ACL items found"
+        emptyMessage={t('acl.list.empty')}
         onRowHover={onRowHover}
         onMouseLeave={() => setRowId('')}
       />

@@ -10,6 +10,7 @@ import {
 import PageLoader from 'components/common/PageLoader/PageLoader';
 import Dashboard from 'components/Dashboard/Dashboard';
 import ClusterPage from 'components/ClusterPage/ClusterPage';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { ThemeProvider } from 'styled-components';
 import { theme, darkTheme } from 'theme/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -45,6 +46,7 @@ const queryClient = new QueryClient({
 });
 const App: React.FC = () => {
   const { isDarkMode } = useContext(ThemeModeContext);
+  const { t } = useTranslation();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -75,7 +77,10 @@ const App: React.FC = () => {
                       <Route
                         path={accessErrorPage}
                         element={
-                          <ErrorPage status={403} text="Access is Denied" />
+                          <ErrorPage
+                            status={403}
+                            text={t('errors.accessDenied')}
+                          />
                         }
                       />
                       <Route path={errorPage} element={<ErrorPage />} />

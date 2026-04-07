@@ -7,13 +7,14 @@ import { useClusters } from 'lib/hooks/api/clusters';
 import { Cluster, ResourceType, ServerStatus } from 'generated-sources';
 import { ColumnDef } from '@tanstack/react-table';
 import Table, { SizeCell } from 'components/common/NewTable';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import useBoolean from 'lib/hooks/useBoolean';
 import { clusterNewConfigPath } from 'lib/paths';
-import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import { GlobalSettingsContext } from 'components/contexts/GlobalSettingsContext';
-import GlossaryTerm from 'components/common/GlossaryTerm';
 import { ActionCanButton } from 'components/common/ActionComponent';
 import { useGetUserInfo } from 'lib/hooks/api/roles';
+import { useTranslation } from 'components/contexts/LocaleContext';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 import * as S from './Dashboard.styled';
 import ClusterName from './ClusterName';
@@ -24,6 +25,7 @@ const Dashboard: React.FC = () => {
   const clusters = useClusters();
   const { value: showOfflineOnly, toggle } = useBoolean(false);
   const appInfo = React.useContext(GlobalSettingsContext);
+  const { t } = useTranslation();
 
   const config = React.useMemo(() => {
     const clusterList = clusters.data || [];
@@ -39,20 +41,35 @@ const Dashboard: React.FC = () => {
 
   const columns = React.useMemo<ColumnDef<Cluster>[]>(() => {
     const initialColumns: ColumnDef<Cluster>[] = [
-      { header: 'Cluster name', accessorKey: 'name', cell: ClusterName },
-      { header: 'Version', accessorKey: 'version' },
+      {
+        header: t('dashboard.table.clusterName'),
+        accessorKey: 'name',
+        cell: ClusterName,
+      },
+      { header: t('dashboard.table.version'), accessorKey: 'version' },
       {
         header: (
           <GlossaryTerm english={GLOSSARY_TERMS.BROKER}>
-            Brokers count
+            {t('dashboard.table.brokersCount')}
           </GlossaryTerm>
         ),
         accessorKey: 'brokerCount',
       },
-      { header: 'Partitions', accessorKey: 'onlinePartitionCount' },
-      { header: 'Topics', accessorKey: 'topicCount' },
-      { header: 'Production', accessorKey: 'bytesInPerSec', cell: SizeCell },
-      { header: 'Consumption', accessorKey: 'bytesOutPerSec', cell: SizeCell },
+      {
+        header: t('dashboard.table.partitions'),
+        accessorKey: 'onlinePartitionCount',
+      },
+      { header: t('dashboard.table.topics'), accessorKey: 'topicCount' },
+      {
+        header: t('dashboard.table.production'),
+        accessorKey: 'bytesInPerSec',
+        cell: SizeCell,
+      },
+      {
+        header: t('dashboard.table.consumption'),
+        accessorKey: 'bytesOutPerSec',
+        cell: SizeCell,
+      },
     ];
 
     if (appInfo.hasDynamicConfig) {
@@ -64,7 +81,7 @@ const Dashboard: React.FC = () => {
     }
 
     return initialColumns;
-  }, []);
+  }, [appInfo.hasDynamicConfig, t]);
 
   const hasPermissions = useMemo(() => {
     if (!data?.rbacEnabled) return true;
@@ -74,16 +91,24 @@ const Dashboard: React.FC = () => {
   }, [data]);
   return (
     <>
-      <PageHeading text="Dashboard" />
+      <PageHeading text={t('dashboard.title')} />
       <Metrics.Wrapper>
         <Metrics.Section>
-          <Metrics.Indicator label={<Tag color="green">Online</Tag>}>
+          <Metrics.Indicator
+            label={<Tag color="green">{t('dashboard.metrics.online')}</Tag>}
+          >
             <span>{config.online || 0}</span>{' '}
-            <Metrics.LightText>clusters</Metrics.LightText>
+            <Metrics.LightText>
+              {t('dashboard.metrics.clusters')}
+            </Metrics.LightText>
           </Metrics.Indicator>
-          <Metrics.Indicator label={<Tag color="gray">Offline</Tag>}>
+          <Metrics.Indicator
+            label={<Tag color="gray">{t('dashboard.metrics.offline')}</Tag>}
+          >
             <span>{config.offline || 0}</span>{' '}
-            <Metrics.LightText>clusters</Metrics.LightText>
+            <Metrics.LightText>
+              {t('dashboard.metrics.clusters')}
+            </Metrics.LightText>
           </Metrics.Indicator>
         </Metrics.Section>
       </Metrics.Wrapper>
@@ -94,7 +119,7 @@ const Dashboard: React.FC = () => {
             checked={showOfflineOnly}
             onChange={toggle}
           />
-          <label>Only offline clusters</label>
+          <label>{t('dashboard.filters.offlineOnly')}</label>
         </div>
         {appInfo.hasDynamicConfig && (
           <ActionCanButton
@@ -103,7 +128,7 @@ const Dashboard: React.FC = () => {
             to={clusterNewConfigPath}
             canDoAction={hasPermissions}
           >
-            Configure new cluster
+            {t('dashboard.actions.configureNewCluster')}
           </ActionCanButton>
         )}
       </S.Toolbar>
@@ -111,7 +136,11 @@ const Dashboard: React.FC = () => {
         columns={columns}
         data={config?.list}
         enableSorting
-        emptyMessage={clusters.isFetched ? 'No clusters found' : 'Loading...'}
+        emptyMessage={
+          clusters.isFetched
+            ? t('dashboard.table.empty')
+            : t('dashboard.table.loading')
+        }
       />
     </>
   );

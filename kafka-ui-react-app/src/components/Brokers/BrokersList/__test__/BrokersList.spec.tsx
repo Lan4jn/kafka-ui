@@ -8,6 +8,7 @@ import { useBrokers } from 'lib/hooks/api/brokers';
 import { useClusterStats } from 'lib/hooks/api/clusters';
 import { brokersPayload } from 'lib/fixtures/brokers';
 import { clusterStatsPayload } from 'lib/fixtures/clusters';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 const mockedUsedNavigate = jest.fn();
 
@@ -42,6 +43,7 @@ describe('BrokersList Component', () => {
   describe('BrokersList', () => {
     describe('when the brokers are loaded', () => {
       beforeEach(() => {
+        localStorage.setItem('locale', 'zh-CN');
         (useBrokers as jest.Mock).mockImplementation(() => ({
           data: brokersPayload,
         }));
@@ -51,6 +53,22 @@ describe('BrokersList Component', () => {
       });
       it('renders', async () => {
         renderComponent();
+        expect(screen.queryByText(GLOSSARY_TERMS.ISR)).not.toBeInTheDocument();
+
+        await userEvent.hover(screen.getByText('同步副本'));
+
+        expect(await screen.findByText(GLOSSARY_TERMS.ISR)).toBeInTheDocument();
+        expect(
+          screen.getByRole('heading', { name: 'Broker 列表' })
+        ).toBeInTheDocument();
+        expect(screen.getByText('运行状态')).toBeInTheDocument();
+        expect(screen.getByText('分区')).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: 'Broker ID' })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('columnheader', { name: '磁盘使用量' })
+        ).toBeInTheDocument();
         expect(screen.getByRole('table')).toBeInTheDocument();
         expect(screen.getAllByRole('row').length).toEqual(3);
       });
@@ -89,7 +107,9 @@ describe('BrokersList Component', () => {
         renderComponent();
         const onlineWidgetDef = screen.getByText(testInSyncReplicasCount);
         const onlineWidget = screen.getByText(
-          `of ${testInSyncReplicasCount + testOutOfSyncReplicasCount}`
+          (_, element) =>
+            element?.textContent ===
+            ` / ${testInSyncReplicasCount + testOutOfSyncReplicasCount}`
         );
         expect(onlineWidgetDef).toBeInTheDocument();
         expect(onlineWidget).toBeInTheDocument();
@@ -103,10 +123,11 @@ describe('BrokersList Component', () => {
           },
         }));
         renderComponent();
-        const onlineWidget = screen.getByText(
-          `of ${testOutOfSyncReplicasCount}`
+        const onlineWidgets = screen.getAllByText(
+          (_, element) =>
+            element?.textContent === ` / ${testOutOfSyncReplicasCount}`
         );
-        expect(onlineWidget).toBeInTheDocument();
+        expect(onlineWidgets.length).toBeGreaterThan(0);
       });
       it(`shows right count when inSyncReplicasCount: ${testInSyncReplicasCount} outOfSyncReplicasCount: undefined`, async () => {
         (useClusterStats as jest.Mock).mockImplementation(() => ({
@@ -118,7 +139,10 @@ describe('BrokersList Component', () => {
         }));
         renderComponent();
         const onlineWidgetDef = screen.getByText(testInSyncReplicasCount);
-        const onlineWidget = screen.getByText(`of ${testInSyncReplicasCount}`);
+        const onlineWidget = screen.getByText(
+          (_, element) =>
+            element?.textContent === ` / ${testInSyncReplicasCount}`
+        );
         expect(onlineWidgetDef).toBeInTheDocument();
         expect(onlineWidget).toBeInTheDocument();
       });
@@ -159,6 +183,7 @@ describe('BrokersList Component', () => {
 
     describe('when diskUsage is empty', () => {
       beforeEach(() => {
+        localStorage.setItem('locale', 'zh-CN');
         (useBrokers as jest.Mock).mockImplementation(() => ({
           data: brokersPayload,
         }));
@@ -178,7 +203,7 @@ describe('BrokersList Component', () => {
           renderComponent();
           expect(screen.getByRole('table')).toBeInTheDocument();
           expect(
-            screen.getByRole('row', { name: 'No clusters are online' })
+            screen.getByRole('row', { name: '当前没有在线的 Broker' })
           ).toBeInTheDocument();
         });
       });

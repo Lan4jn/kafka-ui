@@ -22,9 +22,14 @@ const restartConnectorMock = jest.fn();
 
 describe('Tasks', () => {
   beforeEach(() => {
+    localStorage.setItem('locale', 'zh-CN');
     (useRestartConnectorTask as jest.Mock).mockImplementation(() => ({
       mutateAsync: restartConnectorMock,
     }));
+  });
+
+  afterEach(() => {
+    localStorage.clear();
   });
 
   const renderComponent = (currentData: Task[] | undefined = undefined) => {
@@ -43,12 +48,15 @@ describe('Tasks', () => {
   it('renders empty table', () => {
     renderComponent();
     expect(screen.getByRole('table')).toBeInTheDocument();
-    expect(screen.getByText('No tasks found')).toBeInTheDocument();
+    expect(screen.getByText('未找到任务')).toBeInTheDocument();
   });
 
   it('renders tasks table', () => {
     renderComponent(tasks);
     expect(screen.getAllByRole('row').length).toEqual(tasks.length + 1);
+    expect(screen.getByText('Worker')).toBeInTheDocument();
+    expect(screen.getByText('状态')).toBeInTheDocument();
+    expect(screen.getByText('追踪')).toBeInTheDocument();
 
     expect(
       screen.getByRole('row', {
@@ -103,22 +111,20 @@ describe('Tasks', () => {
       ).toEqual(tasks.length);
       // Action buttons are enabled
       const actionBtn = screen.getAllByRole('menuitem');
-      expect(actionBtn[0]).toHaveTextContent('Restart task');
+      expect(actionBtn[0]).toHaveTextContent('重启任务');
     });
 
     it('works as expected', async () => {
       renderComponent(tasks);
       await expectDropdownExists();
       const actionBtn = screen.getAllByRole('menuitem');
-      expect(actionBtn[0]).toHaveTextContent('Restart task');
+      expect(actionBtn[0]).toHaveTextContent('重启任务');
 
       await userEvent.click(actionBtn[0]);
-      expect(
-        screen.getByText('Are you sure you want to restart the task?')
-      ).toBeInTheDocument();
+      expect(screen.getByText('确定要重启该任务吗？')).toBeInTheDocument();
 
-      expect(screen.getByText('Confirm the action')).toBeInTheDocument();
-      userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+      expect(screen.getByRole('button', { name: '确认' })).toBeInTheDocument();
+      userEvent.click(screen.getByRole('button', { name: '确认' }));
 
       await waitFor(() => expect(restartConnectorMock).toHaveBeenCalled());
     });

@@ -24,6 +24,7 @@ const clusterName = 'local';
 
 describe('Connectors List Page', () => {
   beforeEach(() => {
+    localStorage.setItem('locale', 'zh-CN');
     (useConnectors as jest.Mock).mockImplementation(() => ({
       isLoading: false,
       data: [],
@@ -40,6 +41,10 @@ describe('Connectors List Page', () => {
       { initialEntries: [clusterConnectorsPath(clusterName)] }
     );
 
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   describe('Heading', () => {
     it('renders header without create button for readonly cluster', async () => {
       await renderComponent({ ...initialValue, isReadOnly: true });
@@ -47,7 +52,7 @@ describe('Connectors List Page', () => {
         screen.getByRole('heading', { name: 'Connectors' })
       ).toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: 'Create Connector' })
+        screen.queryByRole('link', { name: '创建 Connector' })
       ).not.toBeInTheDocument();
     });
 
@@ -57,7 +62,7 @@ describe('Connectors List Page', () => {
         screen.getByRole('heading', { name: 'Connectors' })
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: 'Create Connector' })
+        screen.getByRole('link', { name: '创建 Connector' })
       ).toBeInTheDocument();
     });
   });
@@ -65,7 +70,7 @@ describe('Connectors List Page', () => {
   it('renders search input', async () => {
     await renderComponent();
     expect(
-      screen.getByPlaceholderText('Search by Connect Name, Status or Type')
+      screen.getByPlaceholderText('按 Connect 名称、状态或类型搜索')
     ).toBeInTheDocument();
   });
 
@@ -92,25 +97,20 @@ describe('Connectors List Page', () => {
       const metrics = screen.getByRole('group');
       expect(metrics).toBeInTheDocument();
 
-      const connectorsIndicator = within(metrics).getByTitle(
-        'Total number of connectors'
-      );
+      const connectorsIndicator = within(metrics).getByTitle('Connectors 总数');
       expect(connectorsIndicator).toBeInTheDocument();
       expect(connectorsIndicator).toHaveTextContent('Connectors -');
 
-      const failedConnectorsIndicator = within(metrics).getByTitle(
-        'Number of failed connectors'
-      );
+      const failedConnectorsIndicator =
+        within(metrics).getByTitle('失败的 Connectors 数量');
       expect(failedConnectorsIndicator).toBeInTheDocument();
       expect(failedConnectorsIndicator).toHaveTextContent(
-        'Failed Connectors 0'
+        '失败的 Connectors 0'
       );
 
-      const failedTasksIndicator = within(metrics).getByTitle(
-        'Number of failed tasks'
-      );
+      const failedTasksIndicator = within(metrics).getByTitle('失败的任务数量');
       expect(failedTasksIndicator).toBeInTheDocument();
-      expect(failedTasksIndicator).toHaveTextContent('Failed Tasks 0');
+      expect(failedTasksIndicator).toHaveTextContent('失败的任务 0');
     });
 
     it('renders indicators when connectors list is undefined', async () => {
@@ -123,25 +123,20 @@ describe('Connectors List Page', () => {
       const metrics = screen.getByRole('group');
       expect(metrics).toBeInTheDocument();
 
-      const connectorsIndicator = within(metrics).getByTitle(
-        'Total number of connectors'
-      );
+      const connectorsIndicator = within(metrics).getByTitle('Connectors 总数');
       expect(connectorsIndicator).toBeInTheDocument();
       expect(connectorsIndicator).toHaveTextContent('Connectors -');
 
-      const failedConnectorsIndicator = within(metrics).getByTitle(
-        'Number of failed connectors'
-      );
+      const failedConnectorsIndicator =
+        within(metrics).getByTitle('失败的 Connectors 数量');
       expect(failedConnectorsIndicator).toBeInTheDocument();
       expect(failedConnectorsIndicator).toHaveTextContent(
-        'Failed Connectors -'
+        '失败的 Connectors -'
       );
 
-      const failedTasksIndicator = within(metrics).getByTitle(
-        'Number of failed tasks'
-      );
+      const failedTasksIndicator = within(metrics).getByTitle('失败的任务数量');
       expect(failedTasksIndicator).toBeInTheDocument();
-      expect(failedTasksIndicator).toHaveTextContent('Failed Tasks -');
+      expect(failedTasksIndicator).toHaveTextContent('失败的任务 -');
     });
 
     it('renders indicators list of connectors', async () => {
@@ -155,27 +150,22 @@ describe('Connectors List Page', () => {
       const metrics = screen.getByRole('group');
       expect(metrics).toBeInTheDocument();
 
-      const connectorsIndicator = within(metrics).getByTitle(
-        'Total number of connectors'
-      );
+      const connectorsIndicator = within(metrics).getByTitle('Connectors 总数');
       expect(connectorsIndicator).toBeInTheDocument();
       expect(connectorsIndicator).toHaveTextContent(
         `Connectors ${connectors.length}`
       );
 
-      const failedConnectorsIndicator = within(metrics).getByTitle(
-        'Number of failed connectors'
-      );
+      const failedConnectorsIndicator =
+        within(metrics).getByTitle('失败的 Connectors 数量');
       expect(failedConnectorsIndicator).toBeInTheDocument();
       expect(failedConnectorsIndicator).toHaveTextContent(
-        'Failed Connectors 1'
+        '失败的 Connectors 1'
       );
 
-      const failedTasksIndicator = within(metrics).getByTitle(
-        'Number of failed tasks'
-      );
+      const failedTasksIndicator = within(metrics).getByTitle('失败的任务数量');
       expect(failedTasksIndicator).toBeInTheDocument();
-      expect(failedTasksIndicator).toHaveTextContent('Failed Tasks 1');
+      expect(failedTasksIndicator).toHaveTextContent('失败的任务 1');
     });
   });
 });

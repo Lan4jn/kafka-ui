@@ -7,6 +7,7 @@ import SavedIcon from 'components/common/Icons/SavedIcon';
 import QuestionIcon from 'components/common/Icons/QuestionIcon';
 import useBoolean from 'lib/hooks/useBoolean';
 import { showAlert } from 'lib/errorHandling';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import AddEditFilterContainer from './AddEditFilterContainer';
 import InfoModal from './InfoModal';
@@ -40,6 +41,7 @@ const AddFilter: React.FC<FilterModalProps> = ({
   onClickSavedFilters,
   activeFilter,
 }) => {
+  const { t } = useTranslation();
   const { value: isOpen, toggle } = useBoolean();
 
   const onSubmit = React.useCallback(
@@ -51,8 +53,8 @@ const AddFilter: React.FC<FilterModalProps> = ({
       if (isFilterExists) {
         showAlert('error', {
           id: '',
-          title: 'Validation Error',
-          message: 'Filter with the same name already exists',
+          title: t('topics.sendMessage.validation.title'),
+          message: t('topics.messages.filters.validation.duplicateName'),
         });
         return;
       }
@@ -75,7 +77,7 @@ const AddFilter: React.FC<FilterModalProps> = ({
   return (
     <>
       <S.FilterTitle>
-        Add filter
+        {t('topics.messages.filters.add')}
         <div>
           <S.QuestionIconContainer
             type="button"
@@ -105,11 +107,14 @@ const AddFilter: React.FC<FilterModalProps> = ({
           <S.SavedFiltersTextContainer
             onClick={() => onClickSavedFilters(!isSavedFiltersOpen)}
           >
-            <SavedIcon /> <S.SavedFiltersText>Saved Filters</S.SavedFiltersText>
+            <SavedIcon />
+            <S.SavedFiltersText>
+              {t('topics.messages.filters.saved.title')}
+            </S.SavedFiltersText>
           </S.SavedFiltersTextContainer>
           <AddEditFilterContainer
             cancelBtnHandler={toggleIsOpen}
-            submitBtnText="Add filter"
+            submitBtnText={t('topics.messages.filters.add')}
             submitCallback={onSubmit}
             isAdd
           />

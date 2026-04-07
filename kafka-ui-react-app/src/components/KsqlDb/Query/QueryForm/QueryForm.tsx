@@ -15,6 +15,7 @@ import yup from 'lib/yupExtended';
 import PlusIcon from 'components/common/Icons/PlusIcon';
 import ReactAce from 'react-ace';
 import Input from 'components/common/Input/Input';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './QueryForm.styled';
 
@@ -48,6 +49,7 @@ const QueryForm: React.FC<QueryFormProps> = ({
   submitHandler,
   resetResults,
 }) => {
+  const { t } = useTranslation();
   const methods = useForm<FormValues>({
     mode: 'onTouched',
     resolver: yupResolver(validationSchema),
@@ -113,14 +115,14 @@ const QueryForm: React.FC<QueryFormProps> = ({
           <S.KSQLInputsWrapper>
             <S.Fieldset>
               <S.KSQLInputHeader>
-                <label id="ksqlLabel">KSQL</label>
+                <label id="ksqlLabel">{t('ksqlDb.query.form.ksql')}</label>
                 <Button
                   onClick={() => setValue('ksql', '')}
                   buttonType="primary"
                   buttonSize="S"
                   isInverted
                 >
-                  Clear
+                  {t('ksqlDb.query.actions.clear')}
                 </Button>
               </S.KSQLInputHeader>
               <Controller
@@ -153,25 +155,25 @@ const QueryForm: React.FC<QueryFormProps> = ({
             </S.Fieldset>
 
             <S.Fieldset>
-              Stream properties:
+              {t('ksqlDb.query.form.streamProperties')}
               {fields.map((field, index) => (
                 <S.InputsContainer key={field.id}>
                   <Input
                     name={`streamsProperties.${index}.key`}
-                    placeholder="Key"
+                    placeholder={t('ksqlDb.query.form.placeholders.key')}
                     type="text"
                     autoComplete="off"
                     withError
                   />
                   <Input
                     name={`streamsProperties.${index}.value`}
-                    placeholder="Value"
+                    placeholder={t('ksqlDb.query.form.placeholders.value')}
                     type="text"
                     autoComplete="off"
                     withError
                   />
                   <IconButtonWrapper
-                    aria-label="deleteProperty"
+                    aria-label={t('ksqlDb.query.actions.deleteProperty')}
                     onClick={removeProperty(index)}
                   >
                     <CloseCircleIcon aria-hidden />
@@ -186,7 +188,7 @@ const QueryForm: React.FC<QueryFormProps> = ({
                 onClick={appendProperty}
               >
                 <PlusIcon />
-                Add Stream Property
+                {t('ksqlDb.query.actions.addStreamProperty')}
               </Button>
             </S.Fieldset>
           </S.KSQLInputsWrapper>
@@ -197,7 +199,7 @@ const QueryForm: React.FC<QueryFormProps> = ({
               disabled={fetching || !isDirty || !hasResults}
               onClick={handleClear}
             >
-              Clear results
+              {t('ksqlDb.query.actions.clearResults')}
             </Button>
             <Button
               buttonType="primary"
@@ -206,7 +208,7 @@ const QueryForm: React.FC<QueryFormProps> = ({
               disabled={fetching}
               onClick={handleFocus}
             >
-              Execute
+              {t('ksqlDb.query.actions.execute')}
             </Button>
           </S.ButtonsContainer>
         </form>

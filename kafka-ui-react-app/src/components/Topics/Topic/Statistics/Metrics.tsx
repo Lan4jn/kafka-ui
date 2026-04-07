@@ -16,6 +16,7 @@ import BytesFormatted from 'components/common/BytesFormatted/BytesFormatted';
 import { calculateTimer, formatTimestamp } from 'lib/dateTimeHelpers';
 import { Action, ResourceType } from 'generated-sources';
 import { ActionButton } from 'components/common/ActionComponent';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './Statistics.styles';
 import Total from './Indicators/Total';
@@ -23,6 +24,7 @@ import SizeStats from './Indicators/SizeStats';
 import PartitionTable from './PartitionTable';
 
 const Metrics: React.FC = () => {
+  const { t } = useTranslation();
   const params = useAppParams<RouteParamsClusterTopic>();
 
   const [isAnalyzing, setIsAnalyzing] = useState(true);
@@ -63,10 +65,10 @@ const Metrics: React.FC = () => {
             value: params.topicName,
           }}
         >
-          Stop Analysis
+          {t('topics.statistics.actions.stopAnalysis')}
         </ActionButton>
         <List>
-          <Label>Started at</Label>
+          <Label>{t('topics.statistics.progress.startedAt')}</Label>
           <span>
             {formatTimestamp(data.progress.startedAt, {
               hour: 'numeric',
@@ -74,11 +76,11 @@ const Metrics: React.FC = () => {
               second: 'numeric',
             })}
           </span>
-          <Label>Passed since start</Label>
+          <Label>{t('topics.statistics.progress.elapsed')}</Label>
           <span>{calculateTimer(data.progress.startedAt as number)}</span>
-          <Label>Scanned messages</Label>
+          <Label>{t('topics.statistics.progress.scannedMessages')}</Label>
           <span>{data.progress.msgsScanned}</span>
-          <Label>Scanned size</Label>
+          <Label>{t('topics.statistics.progress.scannedSize')}</Label>
           <span>
             <BytesFormatted value={data.progress.bytesScanned} />
           </span>
@@ -111,16 +113,22 @@ const Metrics: React.FC = () => {
             value: params.topicName,
           }}
         >
-          Restart Analysis
+          {t('topics.statistics.actions.restartAnalysis')}
         </ActionButton>
       </S.ActionsBar>
       <Informers.Wrapper>
         <Total {...totalStats} />
         {totalStats.keySize && (
-          <SizeStats stats={totalStats.keySize} title="Key size" />
+          <SizeStats
+            stats={totalStats.keySize}
+            title={t('topics.statistics.sections.keySize')}
+          />
         )}
         {totalStats.valueSize && (
-          <SizeStats stats={totalStats.valueSize} title="Value size" />
+          <SizeStats
+            stats={totalStats.valueSize}
+            title={t('topics.statistics.sections.valueSize')}
+          />
         )}
       </Informers.Wrapper>
       <PartitionTable data={partitionStats} />

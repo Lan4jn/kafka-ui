@@ -11,6 +11,7 @@ import { useSendMessage, useTopicDetails } from 'lib/hooks/api/topics';
 import { InputLabel } from 'components/common/Input/InputLabel.styled';
 import { useSerdes } from 'lib/hooks/api/topicMessages';
 import { SerdeUsage } from 'generated-sources';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './SendMessage.styled';
 import {
@@ -33,6 +34,7 @@ interface FormType {
 const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
   closeSidebar,
 }) => {
+  const { t } = useTranslation();
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
   const { data: topic } = useTopicDetails({ clusterName, topicName });
   const { data: serdes = {} } = useSerdes({
@@ -90,14 +92,14 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
       try {
         parsedHeaders = JSON.parse(headers);
       } catch (error) {
-        errors.push('Wrong header format');
+        errors.push(t('topics.sendMessage.validation.invalidHeaders'));
       }
     }
 
     if (errors.length > 0) {
       showAlert('error', {
         id: `${clusterName}-${topicName}-createTopicMessageError`,
-        title: 'Validation Error',
+        title: t('topics.sendMessage.validation.title'),
         message: (
           <ul>
             {errors.map((e) => (
@@ -132,7 +134,7 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
       <form onSubmit={handleSubmit(submit)}>
         <S.Columns>
           <S.FlexItem>
-            <InputLabel>Partition</InputLabel>
+            <InputLabel>{t('topics.sendMessage.fields.partition')}</InputLabel>
             <Controller
               control={control}
               name="partition"
@@ -151,7 +153,7 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
           </S.FlexItem>
           <S.Flex>
             <S.FlexItem>
-              <InputLabel>Key Serde</InputLabel>
+              <InputLabel>{t('topics.sendMessage.fields.keySerde')}</InputLabel>
               <Controller
                 control={control}
                 name="keySerde"
@@ -169,7 +171,9 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
               />
             </S.FlexItem>
             <S.FlexItem>
-              <InputLabel>Value Serde</InputLabel>
+              <InputLabel>
+                {t('topics.sendMessage.fields.valueSerde')}
+              </InputLabel>
               <Controller
                 control={control}
                 name="valueSerde"
@@ -195,12 +199,14 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
                 <Switch name={name} onChange={onChange} checked={value} />
               )}
             />
-            <InputLabel>Keep contents</InputLabel>
+            <InputLabel>
+              {t('topics.sendMessage.fields.keepContents')}
+            </InputLabel>
           </div>
         </S.Columns>
         <S.Columns>
           <div>
-            <InputLabel>Key</InputLabel>
+            <InputLabel>{t('topics.sendMessage.fields.key')}</InputLabel>
             <Controller
               control={control}
               name="key"
@@ -216,7 +222,7 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
             />
           </div>
           <div>
-            <InputLabel>Value</InputLabel>
+            <InputLabel>{t('topics.sendMessage.fields.value')}</InputLabel>
             <Controller
               control={control}
               name="content"
@@ -234,7 +240,7 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
         </S.Columns>
         <S.Columns>
           <div>
-            <InputLabel>Headers</InputLabel>
+            <InputLabel>{t('topics.sendMessage.fields.headers')}</InputLabel>
             <Controller
               control={control}
               name="headers"
@@ -256,7 +262,7 @@ const SendMessage: React.FC<{ closeSidebar: () => void }> = ({
           type="submit"
           disabled={isSubmitting}
         >
-          Produce Message
+          {t('topics.sendMessage.actions.submit')}
         </Button>
       </form>
     </S.Wrapper>

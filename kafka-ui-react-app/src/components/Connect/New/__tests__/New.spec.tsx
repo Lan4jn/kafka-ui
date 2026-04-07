@@ -33,7 +33,7 @@ describe('New', () => {
   const clusterName = 'my-cluster';
   const simulateFormSubmit = async () => {
     await userEvent.type(
-      screen.getByPlaceholderText('Connector Name'),
+      screen.getByPlaceholderText('Connector 名称'),
       'my-connector'
     );
     await userEvent.type(
@@ -58,9 +58,28 @@ describe('New', () => {
     );
 
   beforeEach(() => {
+    localStorage.setItem('locale', 'zh-CN');
     (useConnects as jest.Mock).mockImplementation(() => ({
       data: connects,
     }));
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('renders localized copy in Chinese', () => {
+    (useCreateConnector as jest.Mock).mockImplementation(() => ({
+      createResource: jest.fn(),
+    }));
+    renderComponent();
+
+    expect(screen.getByText('创建新 Connector')).toBeInTheDocument();
+    expect(screen.getByText('Connectors')).toBeInTheDocument();
+    expect(screen.getByText('Connect *')).toBeInTheDocument();
+    expect(screen.getByText('名称')).toBeInTheDocument();
+    expect(screen.getByText('配置')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '提交' })).toBeInTheDocument();
   });
 
   it('calls createConnector on form submit and redirects to the list page on success', async () => {

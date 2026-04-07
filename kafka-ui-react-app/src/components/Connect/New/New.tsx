@@ -20,6 +20,7 @@ import Heading from 'components/common/heading/Heading.styled';
 import { useConnects, useCreateConnector } from 'lib/hooks/api/kafkaConnect';
 import get from 'lodash/get';
 import { Connect } from 'generated-sources';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './New.styled';
 
@@ -35,6 +36,7 @@ interface FormValues {
 }
 
 const New: React.FC = () => {
+  const { t } = useTranslation();
   const { clusterName } = useAppParams<ClusterNameRoute>();
   const navigate = useNavigate();
 
@@ -96,16 +98,16 @@ const New: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <PageHeading
-        text="Create new connector"
+        text={t('connect.new.title')}
         backTo={clusterConnectorsPath(clusterName)}
-        backText="Connectors"
+        backText={t('connect.listPage.title')}
       />
       <S.NewConnectFormStyled
         onSubmit={handleSubmit(onSubmit)}
-        aria-label="Create connect form"
+        aria-label={t('connect.new.form.ariaLabel')}
       >
         <S.Filed $hidden={connects?.length <= 1}>
-          <Heading level={3}>Connect *</Heading>
+          <Heading level={3}>{t('connect.new.fields.connect')}</Heading>
           <Controller
             defaultValue={connectOptions[0]?.value}
             control={control}
@@ -128,10 +130,10 @@ const New: React.FC = () => {
         </S.Filed>
 
         <div>
-          <Heading level={3}>Name</Heading>
+          <Heading level={3}>{t('connect.new.fields.name')}</Heading>
           <Input
             inputSize="M"
-            placeholder="Connector Name"
+            placeholder={t('connect.new.placeholders.name')}
             name="name"
             autoFocus
             autoComplete="off"
@@ -143,7 +145,7 @@ const New: React.FC = () => {
         </div>
 
         <div>
-          <Heading level={3}>Config</Heading>
+          <Heading level={3}>{t('connect.new.fields.config')}</Heading>
           <Controller
             control={control}
             name="config"
@@ -161,7 +163,7 @@ const New: React.FC = () => {
           type="submit"
           disabled={!isValid || isSubmitting || !isDirty}
         >
-          Submit
+          {t('connect.new.actions.submit')}
         </Button>
       </S.NewConnectFormStyled>
     </FormProvider>

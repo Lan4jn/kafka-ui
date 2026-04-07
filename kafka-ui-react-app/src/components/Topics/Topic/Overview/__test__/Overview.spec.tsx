@@ -90,9 +90,44 @@ describe('Overview', () => {
     });
 
     it('does not render Partitions', () => {
+      localStorage.setItem('locale', 'zh-CN');
       renderComponent({ ...externalTopicPayload, partitions: [] });
-      expect(screen.getByText('No Partitions found')).toBeInTheDocument();
+      expect(screen.getByText('未找到分区')).toBeInTheDocument();
     });
+  });
+
+  it('renders localized metric labels and table headers', () => {
+    localStorage.setItem('locale', 'zh-CN');
+    renderComponent({
+      ...externalTopicPayload,
+      partitions: [
+        {
+          ...externalTopicPayload.partitions[0],
+          replicas: [{ broker: 1, leader: true, inSync: true }],
+        },
+      ],
+    });
+    expect(screen.getByText('分区')).toBeInTheDocument();
+    expect(screen.getByText('副本因子')).toBeInTheDocument();
+    expect(screen.getByText('同步副本')).toBeInTheDocument();
+    expect(screen.getByText('清理策略')).toBeInTheDocument();
+    expect(screen.getAllByText('消息数')[0]).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: '分区 ID' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: '副本' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: '起始偏移量' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: '下一个偏移量' })
+    ).toBeInTheDocument();
+    expect(screen.getByTitle('主副本')).toBeInTheDocument();
+    expect(
+      screen.getByText((_, element) => element?.textContent === '1 / 1')
+    ).toBeInTheDocument();
   });
 
   describe('should render circular alert', () => {

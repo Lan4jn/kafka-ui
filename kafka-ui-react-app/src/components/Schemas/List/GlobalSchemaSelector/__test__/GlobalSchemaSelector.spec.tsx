@@ -37,6 +37,7 @@ describe('GlobalSchemaSelector', () => {
     );
 
   beforeEach(async () => {
+    localStorage.setItem('locale', 'zh-CN');
     const fetchGlobalCompatibilityLevelMock = fetchMock.getOnce(
       `api/clusters/${clusterName}/schemas/compatibility`,
       { compatibility: CompatibilityLevelCompatibilityEnum.FULL }
@@ -51,6 +52,7 @@ describe('GlobalSchemaSelector', () => {
 
   afterEach(() => {
     fetchMock.reset();
+    localStorage.clear();
   });
 
   it('renders with initial prop', () => {
@@ -59,14 +61,22 @@ describe('GlobalSchemaSelector', () => {
 
   it('shows popup when select value is changed', async () => {
     expectOptionIsSelected(CompatibilityLevelCompatibilityEnum.FULL);
+    expect(screen.getByText('全局兼容级别：')).toBeInTheDocument();
     await selectForwardOption();
-    expect(screen.getByText('Confirm the action')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '确认' })).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        (_, element) =>
+          element?.textContent ===
+          '确定要更新全局兼容级别，并将其设置为 FORWARD 吗？这可能会影响各个 Schema 的兼容级别。'
+      )
+    ).toBeInTheDocument();
   });
 
   it('resets select value when cancel is clicked', async () => {
     await selectForwardOption();
-    await userEvent.click(screen.getByText('Cancel'));
-    expect(screen.queryByText('Confirm the action')).not.toBeInTheDocument();
+    await userEvent.click(screen.getByText('取消'));
+    expect(screen.queryByText('确认')).not.toBeInTheDocument();
     expectOptionIsSelected(CompatibilityLevelCompatibilityEnum.FULL);
   });
 
@@ -86,13 +96,13 @@ describe('GlobalSchemaSelector', () => {
       200
     );
     await waitFor(() => {
-      userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+      userEvent.click(screen.getByRole('button', { name: '确认' }));
     });
     await waitFor(() => expect(putNewCompatibilityMock.called()).toBeTruthy());
     await waitFor(() => expect(getSchemasMock.called()).toBeTruthy());
 
     await waitFor(() =>
-      expect(screen.queryByText('Confirm the action')).not.toBeInTheDocument()
+      expect(screen.queryByText('确认')).not.toBeInTheDocument()
     );
 
     await waitFor(() =>

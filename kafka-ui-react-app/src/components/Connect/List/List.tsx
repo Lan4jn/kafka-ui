@@ -6,12 +6,14 @@ import { FullConnectorInfo } from 'generated-sources';
 import { useConnectors } from 'lib/hooks/api/kafkaConnect';
 import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import ActionsCell from './ActionsCell';
 import TopicsCell from './TopicsCell';
 import RunningTasksCell from './RunningTasksCell';
 
 const List: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { clusterName } = useAppParams<ClusterNameRoute>();
   const [searchParams] = useSearchParams();
@@ -22,16 +24,23 @@ const List: React.FC = () => {
 
   const columns = React.useMemo<ColumnDef<FullConnectorInfo>[]>(
     () => [
-      { header: 'Name', accessorKey: 'name' },
-      { header: 'Connect', accessorKey: 'connect' },
-      { header: 'Type', accessorKey: 'type' },
-      { header: 'Plugin', accessorKey: 'connectorClass' },
-      { header: 'Topics', cell: TopicsCell },
-      { header: 'Status', accessorKey: 'status.state', cell: TagCell },
-      { header: 'Running Tasks', cell: RunningTasksCell },
+      { header: t('connect.list.table.name'), accessorKey: 'name' },
+      { header: t('connect.list.table.connect'), accessorKey: 'connect' },
+      { header: t('connect.list.table.type'), accessorKey: 'type' },
+      {
+        header: t('connect.list.table.plugin'),
+        accessorKey: 'connectorClass',
+      },
+      { header: t('connect.list.table.topics'), cell: TopicsCell },
+      {
+        header: t('connect.list.table.status'),
+        accessorKey: 'status.state',
+        cell: TagCell,
+      },
+      { header: t('connect.list.table.runningTasks'), cell: RunningTasksCell },
       { header: '', id: 'action', cell: ActionsCell },
     ],
-    []
+    [t]
   );
 
   return (
@@ -42,7 +51,7 @@ const List: React.FC = () => {
       onRowClick={({ original: { connect, name } }) =>
         navigate(clusterConnectConnectorPath(clusterName, connect, name))
       }
-      emptyMessage="No connectors found"
+      emptyMessage={t('connect.list.empty')}
     />
   );
 };

@@ -12,6 +12,7 @@ import { StyledForm } from 'components/common/Form/Form.styled';
 import { clusterTopicPath } from 'lib/paths';
 import { useNavigate } from 'react-router-dom';
 import useAppParams from 'lib/hooks/useAppParams';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import CustomParams from './CustomParams/CustomParams';
 import TimeToRetain from './TimeToRetain';
@@ -30,30 +31,17 @@ export interface Props {
   onSubmit: (e: React.BaseSyntheticEvent) => Promise<void>;
 }
 
-const CleanupPolicyOptions: Array<SelectOption> = [
-  { value: 'delete', label: 'Delete' },
-  { value: 'compact', label: 'Compact' },
-  { value: 'compact,delete', label: 'Compact,Delete' },
-];
-
 export const getCleanUpPolicyValue = (cleanUpPolicy?: string) => {
   if (!cleanUpPolicy) return undefined;
 
-  return CleanupPolicyOptions.find((option: SelectOption) => {
-    return (
-      option.value.toString().replace(/,/g, '_') ===
-      cleanUpPolicy?.toLowerCase()
-    );
-  })?.value.toString();
+  return ['delete', 'compact', 'compact,delete']
+    .find((option) => {
+      return (
+        option.toString().replace(/,/g, '_') === cleanUpPolicy?.toLowerCase()
+      );
+    })
+    ?.toString();
 };
-
-const RetentionBytesOptions: Array<SelectOption> = [
-  { value: NOT_SET, label: 'Not Set' },
-  { value: BYTES_IN_GB, label: '1 GB' },
-  { value: BYTES_IN_GB * 10, label: '10 GB' },
-  { value: BYTES_IN_GB * 20, label: '20 GB' },
-  { value: BYTES_IN_GB * 50, label: '50 GB' },
-];
 
 const TopicForm: React.FC<Props> = ({
   config,
@@ -64,6 +52,7 @@ const TopicForm: React.FC<Props> = ({
   onSubmit,
   cleanUpPolicy,
 }) => {
+  const { t } = useTranslation();
   const {
     control,
     formState: { errors, isDirty, isValid },
@@ -71,13 +60,34 @@ const TopicForm: React.FC<Props> = ({
   } = useFormContext();
   const navigate = useNavigate();
   const { clusterName } = useAppParams<{ clusterName: ClusterName }>();
+  const cleanupPolicyOptions: Array<SelectOption> = [
+    {
+      value: 'delete',
+      label: t('topics.form.cleanupPolicy.delete'),
+    },
+    {
+      value: 'compact',
+      label: t('topics.form.cleanupPolicy.compact'),
+    },
+    {
+      value: 'compact,delete',
+      label: t('topics.form.cleanupPolicy.compactDelete'),
+    },
+  ];
+  const retentionBytesOptions: Array<SelectOption> = [
+    { value: NOT_SET, label: t('topics.form.retentionBytes.notSet') },
+    { value: BYTES_IN_GB, label: t('topics.form.retentionBytes.gb1') },
+    { value: BYTES_IN_GB * 10, label: t('topics.form.retentionBytes.gb10') },
+    { value: BYTES_IN_GB * 20, label: t('topics.form.retentionBytes.gb20') },
+    { value: BYTES_IN_GB * 50, label: t('topics.form.retentionBytes.gb50') },
+  ];
   const getCleanUpPolicy =
-    getCleanUpPolicyValue(cleanUpPolicy) || CleanupPolicyOptions[0].value;
+    getCleanUpPolicyValue(cleanUpPolicy) || cleanupPolicyOptions[0].value;
 
   const getRetentionBytes =
-    RetentionBytesOptions.find((option: SelectOption) => {
+    retentionBytesOptions.find((option: SelectOption) => {
       return option.value === retentionBytes;
-    })?.value || RetentionBytesOptions[0].value;
+    })?.value || retentionBytesOptions[0].value;
 
   const onCancel = () => {
     reset();
@@ -90,12 +100,14 @@ const TopicForm: React.FC<Props> = ({
         <fieldset disabled={isEditing}>
           <S.Column>
             <S.NameField>
-              <InputLabel htmlFor="topicFormName">Topic Name *</InputLabel>
+              <InputLabel htmlFor="topicFormName">
+                {t('topics.form.fields.name')}
+              </InputLabel>
               <Input
                 id="topicFormName"
                 autoFocus
                 name="name"
-                placeholder="Topic Name"
+                placeholder={t('topics.form.placeholders.name')}
                 defaultValue={topicName}
                 autoComplete="off"
               />
@@ -109,12 +121,12 @@ const TopicForm: React.FC<Props> = ({
             {!isEditing && (
               <div>
                 <InputLabel htmlFor="topicFormNumberOfPartitions">
-                  Number of Partitions *
+                  {t('topics.form.fields.partitions')}
                 </InputLabel>
                 <Input
                   id="topicFormNumberOfPartitions"
                   type="number"
-                  placeholder="Number of Partitions"
+                  placeholder={t('topics.form.placeholders.partitions')}
                   min="1"
                   name="partitions"
                   positiveOnly
@@ -131,10 +143,10 @@ const TopicForm: React.FC<Props> = ({
                 id="topicFormCleanupPolicyLabel"
                 htmlFor="topicFormCleanupPolicy"
               >
-                Cleanup policy
+                {t('topics.form.fields.cleanupPolicy')}
               </InputLabel>
               <Controller
-                defaultValue={CleanupPolicyOptions[0].value}
+                defaultValue={cleanupPolicyOptions[0].value}
                 control={control}
                 name="cleanupPolicy"
                 render={({ field: { name, onChange } }) => (
@@ -145,7 +157,7 @@ const TopicForm: React.FC<Props> = ({
                     value={getCleanUpPolicy}
                     onChange={onChange}
                     minWidth="250px"
-                    options={CleanupPolicyOptions}
+                    options={cleanupPolicyOptions}
                   />
                 )}
               />
@@ -156,12 +168,12 @@ const TopicForm: React.FC<Props> = ({
         <S.Column>
           <div>
             <InputLabel htmlFor="topicFormMinInSyncReplicas">
-              Min In Sync Replicas
+              {t('topics.form.fields.minInSyncReplicas')}
             </InputLabel>
             <Input
               id="topicFormMinInSyncReplicas"
               type="number"
-              placeholder="Min In Sync Replicas"
+              placeholder={t('topics.form.placeholders.minInSyncReplicas')}
               min="1"
               name="minInSyncReplicas"
               positiveOnly
@@ -174,12 +186,12 @@ const TopicForm: React.FC<Props> = ({
           {!isEditing && (
             <div>
               <InputLabel htmlFor="topicFormReplicationFactor">
-                Replication Factor
+                {t('topics.form.fields.replicationFactor')}
               </InputLabel>
               <Input
                 id="topicFormReplicationFactor"
                 type="number"
-                placeholder="Replication Factor"
+                placeholder={t('topics.form.placeholders.replicationFactor')}
                 min="1"
                 name="replicationFactor"
                 positiveOnly
@@ -204,12 +216,12 @@ const TopicForm: React.FC<Props> = ({
               id="topicFormRetentionBytesLabel"
               htmlFor="topicFormRetentionBytes"
             >
-              Max size on disk in GB
+              {t('topics.form.fields.retentionBytes')}
             </InputLabel>
             <Controller
               control={control}
               name="retentionBytes"
-              defaultValue={RetentionBytesOptions[0].value}
+              defaultValue={retentionBytesOptions[0].value}
               render={({ field: { name, onChange } }) => (
                 <Select
                   id="topicFormRetentionBytes"
@@ -218,7 +230,7 @@ const TopicForm: React.FC<Props> = ({
                   value={getRetentionBytes}
                   onChange={onChange}
                   minWidth="100%"
-                  options={RetentionBytesOptions}
+                  options={retentionBytesOptions}
                 />
               )}
             />
@@ -226,12 +238,12 @@ const TopicForm: React.FC<Props> = ({
 
           <div>
             <InputLabel htmlFor="topicFormMaxMessageBytes">
-              Maximum message size in bytes
+              {t('topics.form.fields.maxMessageBytes')}
             </InputLabel>
             <S.MessageSizeInput
               id="topicFormMaxMessageBytes"
               type="number"
-              placeholder="Maximum message size"
+              placeholder={t('topics.form.placeholders.maxMessageBytes')}
               min="1"
               name="maxMessageBytes"
               positiveOnly
@@ -243,7 +255,9 @@ const TopicForm: React.FC<Props> = ({
           </div>
         </S.Column>
 
-        <S.CustomParamsHeading>Custom parameters</S.CustomParamsHeading>
+        <S.CustomParamsHeading>
+          {t('topics.form.customParameters')}
+        </S.CustomParamsHeading>
         <CustomParams
           config={config}
           isSubmitting={isSubmitting}
@@ -256,7 +270,7 @@ const TopicForm: React.FC<Props> = ({
             buttonSize="L"
             onClick={onCancel}
           >
-            Cancel
+            {t('topics.form.actions.cancel')}
           </Button>
           <Button
             type="submit"
@@ -264,7 +278,9 @@ const TopicForm: React.FC<Props> = ({
             buttonSize="L"
             disabled={!isValid || isSubmitting || !isDirty}
           >
-            {isEditing ? 'Update topic' : 'Create topic'}
+            {isEditing
+              ? t('topics.form.actions.update')
+              : t('topics.form.actions.create')}
           </Button>
         </S.ButtonWrapper>
       </fieldset>

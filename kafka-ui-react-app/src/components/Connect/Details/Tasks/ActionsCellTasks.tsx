@@ -6,8 +6,10 @@ import { useRestartConnectorTask } from 'lib/hooks/api/kafkaConnect';
 import { Dropdown } from 'components/common/Dropdown';
 import { ActionDropdownItem } from 'components/common/ActionComponent';
 import { RouterParamsClusterConnectConnector } from 'lib/paths';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 const ActionsCellTasks: React.FC<CellContext<Task, unknown>> = ({ row }) => {
+  const { t } = useTranslation();
   const { id } = row.original;
   const routerProps = useAppParams<RouterParamsClusterConnectConnector>();
   const restartMutation = useRestartConnectorTask(routerProps);
@@ -22,14 +24,14 @@ const ActionsCellTasks: React.FC<CellContext<Task, unknown>> = ({ row }) => {
       <ActionDropdownItem
         onClick={() => restartTaskHandler(id?.task)}
         danger
-        confirm="Are you sure you want to restart the task?"
+        confirm={t('connect.tasks.actions.restart.confirm')}
         permission={{
           resource: ResourceType.CONNECT,
           action: Action.RESTART,
           value: routerProps.connectorName,
         }}
       >
-        <span>Restart task</span>
+        <span>{t('connect.tasks.actions.restart.label')}</span>
       </ActionDropdownItem>
     </Dropdown>
   );
