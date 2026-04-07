@@ -10,7 +10,7 @@ interface GlossaryTermProps {
 }
 
 const GlossaryTerm: React.FC<GlossaryTermProps> = ({ english, children, placement }) => (
-  <Tooltip value={<span>{children}</span>} content={english} placement={placement} />
+  <Tooltip value={children} content={english} placement={placement} />
 );
 
 export default GlossaryTerm;
