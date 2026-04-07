@@ -16,7 +16,6 @@ import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import { clusterTopicsPath } from 'lib/paths';
 import { en } from 'locales/en';
 import { useUserInfo } from 'lib/hooks/useUserInfo';
-import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 
 const clusterName = 'test-cluster';
 
