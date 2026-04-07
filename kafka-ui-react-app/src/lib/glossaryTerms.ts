@@ -1,0 +1,15 @@
+export const GLOSSARY_TERMS = {
+  BROKER: 'Broker',
+  TOPIC: 'Topic',
+  PARTITION: 'Partition',
+  OFFSET: 'Offset',
+  CONSUMER_GROUP: 'Consumer Group',
+  CONSUMER_LAG: 'Consumer Lag',
+  REPLICATION_FACTOR: 'Replication Factor',
+  ISR: 'In-Sync Replicas',
+  SEGMENT: 'Segment',
+  SERDE: 'Serde',
+  CONNECTOR: 'Connector',
+  KSQL: 'KSQL',
+  ACL: 'ACL',
+} as const;
