@@ -9,7 +9,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import Table, { SizeCell } from 'components/common/NewTable';
 import useBoolean from 'lib/hooks/useBoolean';
 import { clusterNewConfigPath } from 'lib/paths';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import { GlobalSettingsContext } from 'components/contexts/GlobalSettingsContext';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import { ActionCanButton } from 'components/common/ActionComponent';
 import { useGetUserInfo } from 'lib/hooks/api/roles';
 
@@ -39,7 +41,14 @@ const Dashboard: React.FC = () => {
     const initialColumns: ColumnDef<Cluster>[] = [
       { header: 'Cluster name', accessorKey: 'name', cell: ClusterName },
       { header: 'Version', accessorKey: 'version' },
-      { header: 'Brokers count', accessorKey: 'brokerCount' },
+      {
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.BROKER}>
+            Broker 数量
+          </GlossaryTerm>
+        ),
+        accessorKey: 'brokerCount',
+      },
       { header: 'Partitions', accessorKey: 'onlinePartitionCount' },
       { header: 'Topics', accessorKey: 'topicCount' },
       { header: 'Production', accessorKey: 'bytesInPerSec', cell: SizeCell },

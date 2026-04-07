@@ -4,9 +4,11 @@ import BytesFormatted from 'components/common/BytesFormatted/BytesFormatted';
 import Table from 'components/common/NewTable';
 import * as Metrics from 'components/common/Metrics';
 import { Tag } from 'components/common/Tag/Tag.styled';
+import GlossaryTerm from 'components/common/GlossaryTerm';
 import { RouteParamsClusterTopic } from 'lib/paths';
 import useAppParams from 'lib/hooks/useAppParams';
 import { useTopicDetails } from 'lib/hooks/api/topics';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import { ColumnDef } from '@tanstack/react-table';
 
 import * as S from './Overview.styled';
@@ -37,7 +39,11 @@ const Overview: React.FC = () => {
   const columns = React.useMemo<ColumnDef<Partition>[]>(
     () => [
       {
-        header: 'Partition ID',
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
+            分区 ID
+          </GlossaryTerm>
+        ),
         enableSorting: false,
         accessorKey: 'partition',
       },
@@ -64,11 +70,23 @@ const Overview: React.FC = () => {
         },
       },
       {
-        header: 'First Offset',
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
+            最早 Offset
+          </GlossaryTerm>
+        ),
         enableSorting: false,
         accessorKey: 'offsetMin',
       },
-      { header: 'Next Offset', enableSorting: false, accessorKey: 'offsetMax' },
+      {
+        header: (
+          <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
+            最新 Offset
+          </GlossaryTerm>
+        ),
+        enableSorting: false,
+        accessorKey: 'offsetMax',
+      },
       {
         header: 'Message Count',
         enableSorting: false,
@@ -87,10 +105,22 @@ const Overview: React.FC = () => {
     <>
       <Metrics.Wrapper>
         <Metrics.Section>
-          <Metrics.Indicator label="Partitions">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
+                分区
+              </GlossaryTerm>
+            }
+          >
             {data?.partitionCount}
           </Metrics.Indicator>
-          <Metrics.Indicator label="Replication Factor">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.REPLICATION_FACTOR}>
+                副本因子
+              </GlossaryTerm>
+            }
+          >
             {data?.replicationFactor}
           </Metrics.Indicator>
           <Metrics.Indicator
@@ -112,7 +142,11 @@ const Overview: React.FC = () => {
             )}
           </Metrics.Indicator>
           <Metrics.Indicator
-            label="In Sync Replicas"
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.ISR}>
+                同步副本(ISR)
+              </GlossaryTerm>
+            }
             isAlert
             alertType={
               data?.inSyncReplicas === data?.replicas ? 'success' : 'error'
@@ -130,10 +164,23 @@ const Overview: React.FC = () => {
           <Metrics.Indicator label="Type">
             <Tag color="gray">{data?.internal ? 'Internal' : 'External'}</Tag>
           </Metrics.Indicator>
-          <Metrics.Indicator label="Segment Size" title="">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.SEGMENT}>
+                Segment 大小
+              </GlossaryTerm>
+            }
+            title=""
+          >
             <BytesFormatted value={data?.segmentSize} />
           </Metrics.Indicator>
-          <Metrics.Indicator label="Segment Count">
+          <Metrics.Indicator
+            label={
+              <GlossaryTerm english={GLOSSARY_TERMS.SEGMENT}>
+                Segment 计数
+              </GlossaryTerm>
+            }
+          >
             {data?.segmentCount}
           </Metrics.Indicator>
           <Metrics.Indicator label="Clean Up Policy">

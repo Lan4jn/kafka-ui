@@ -9,6 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { clusterTopicPath } from 'lib/paths';
 import { Replica } from 'components/Topics/Topic/Overview/Overview.styled';
 import { useClearTopicMessages, useTopicDetails } from 'lib/hooks/api/topics';
+import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import {
   externalTopicPayload,
   internalTopicPayload,
@@ -55,6 +56,15 @@ describe('Overview', () => {
   it('at least one replica was rendered', () => {
     renderComponent();
     expect(screen.getByLabelText('replica-info')).toBeInTheDocument();
+  });
+
+  it('shows glossary tooltip for the partition metric label', async () => {
+    renderComponent();
+    const label = screen.getByText('分区');
+    await userEvent.hover(label);
+    expect(
+      await screen.findByText(GLOSSARY_TERMS.PARTITION)
+    ).toBeInTheDocument();
   });
 
   it('renders replica cell with props', () => {
