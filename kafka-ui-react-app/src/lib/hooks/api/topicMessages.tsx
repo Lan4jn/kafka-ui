@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
 import { messagesApiClient } from 'lib/api';
 import { StopLoading } from 'components/Topics/Topic/Messages/Messages.styled';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 interface UseTopicMessagesProps {
   clusterName: ClusterName;
@@ -37,6 +38,7 @@ export const useTopicMessages = ({
   topicName,
   searchParams,
 }: UseTopicMessagesProps) => {
+  const { t } = useTranslation();
   const [messages, setMessages] = React.useState<TopicMessage[]>([]);
   const [phase, setPhase] = React.useState<string>();
   const [meta, setMeta] = React.useState<TopicMessageConsuming>();
@@ -152,13 +154,15 @@ export const useTopicMessages = ({
         {
           loading: (
             <>
-              <div>Consuming messages...</div>
+              <div>{t('common.streaming.consumingMessages')}</div>
               &nbsp;
-              <StopLoading onClick={abortFetchData}>Abort</StopLoading>
+              <StopLoading onClick={abortFetchData}>
+                {t('common.actions.abort')}
+              </StopLoading>
             </>
           ),
-          success: 'Cancelled',
-          error: 'Something went wrong. Please try again.',
+          success: t('common.streaming.cancelled'),
+          error: t('common.streaming.retryError'),
         },
         {
           id: 'messages',
@@ -173,7 +177,7 @@ export const useTopicMessages = ({
     }
 
     return abortFetchData;
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   return {
     phase,

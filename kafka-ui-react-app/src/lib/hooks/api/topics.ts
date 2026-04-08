@@ -172,7 +172,11 @@ export function useUpdateTopic(props: GetTopicDetailsRequest) {
     {
       onSuccess: () => {
         showSuccessAlert({
-          message: `Topic successfully updated.`,
+          message: translateMessage(
+            'topics.notifications.updated',
+            undefined,
+            getCurrentLocale()
+          ),
         });
         client.invalidateQueries(topicKeys.all(props.clusterName));
       },
@@ -190,7 +194,11 @@ export function useIncreaseTopicPartitionsCount(props: GetTopicDetailsRequest) {
     {
       onSuccess: () => {
         showSuccessAlert({
-          message: `Number of partitions successfully increased`,
+          message: translateMessage(
+            'topics.notifications.partitionsIncreased',
+            undefined,
+            getCurrentLocale()
+          ),
         });
         client.invalidateQueries(topicKeys.all(props.clusterName));
       },
@@ -208,7 +216,11 @@ export function useUpdateTopicReplicationFactor(props: GetTopicDetailsRequest) {
     {
       onSuccess: () => {
         showSuccessAlert({
-          message: `Replication factor successfully updated`,
+          message: translateMessage(
+            'topics.notifications.replicationUpdated',
+            undefined,
+            getCurrentLocale()
+          ),
         });
         client.invalidateQueries(topicKeys.all(props.clusterName));
       },
@@ -222,7 +234,11 @@ export function useDeleteTopic(clusterName: ClusterName) {
     {
       onSuccess: (_, topicName) => {
         showSuccessAlert({
-          message: `Topic ${topicName} successfully deleted!`,
+          message: translateMessage(
+            'topics.notifications.deleted',
+            { topicName },
+            getCurrentLocale()
+          ),
         });
         client.invalidateQueries(topicKeys.all(clusterName));
       },
@@ -266,7 +282,11 @@ export function useRecreateTopic(props: GetTopicDetailsRequest) {
   return useMutation(() => api.recreateTopic(props), {
     onSuccess: () => {
       showSuccessAlert({
-        message: `Topic ${props.topicName} successfully recreated!`,
+        message: translateMessage(
+          'topics.notifications.recreated',
+          { topicName: props.topicName },
+          getCurrentLocale()
+        ),
       });
       client.invalidateQueries(topicKeys.all(props.clusterName));
     },
@@ -281,7 +301,11 @@ export function useSendMessage(props: GetTopicDetailsRequest) {
     {
       onSuccess: () => {
         showSuccessAlert({
-          message: `Message successfully sent`,
+          message: translateMessage(
+            'topics.notifications.messageSent',
+            undefined,
+            getCurrentLocale()
+          ),
         });
         client.invalidateQueries(topicKeys.all(props.clusterName));
       },
@@ -327,7 +351,11 @@ export function useCancelTopicAnalysis(props: GetTopicDetailsRequest) {
   return useMutation(() => api.cancelTopicAnalysis(props), {
     onSuccess: () => {
       showSuccessAlert({
-        message: `Topic analysis canceled`,
+        message: translateMessage(
+          'topics.notifications.analysisCanceled',
+          undefined,
+          getCurrentLocale()
+        ),
       });
       client.invalidateQueries(topicKeys.statistics(props));
     },

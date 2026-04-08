@@ -9,6 +9,7 @@ import sortBy from 'lodash/sortBy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ClusterName } from 'redux/interfaces';
 import { showSuccessAlert } from 'lib/errorHandling';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
 interface UseConnectorProps {
   clusterName: ClusterName;
@@ -103,7 +104,11 @@ export function useUpdateConnectorConfig(props: UseConnectorProps) {
     {
       onSuccess: () => {
         showSuccessAlert({
-          message: `Config successfully updated.`,
+          message: translateMessage(
+            'connect.notifications.configUpdated',
+            undefined,
+            getCurrentLocale()
+          ),
         });
         client.invalidateQueries(connectorKey(props));
       },

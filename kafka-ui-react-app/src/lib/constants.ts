@@ -99,11 +99,10 @@ export const METRICS_OPTIONS: SelectOption[] = [
 
 export const CONSUMER_GROUP_STATE_TOOLTIPS: Record<ConsumerGroupState, string> =
   {
-    EMPTY: 'The group exists but has no members.',
-    STABLE: 'Consumers are happily consuming and have assigned partitions.',
-    PREPARING_REBALANCE:
-      'Something has changed, and the reassignment of partitions is required.',
-    COMPLETING_REBALANCE: 'Partition reassignment is in progress.',
-    DEAD: 'The group is going to be removed. It might be due to the inactivity, or the group is being migrated to different group coordinator.',
+    EMPTY: 'consumerGroups.stateTooltips.EMPTY',
+    STABLE: 'consumerGroups.stateTooltips.STABLE',
+    PREPARING_REBALANCE: 'consumerGroups.stateTooltips.PREPARING_REBALANCE',
+    COMPLETING_REBALANCE: 'consumerGroups.stateTooltips.COMPLETING_REBALANCE',
+    DEAD: 'consumerGroups.stateTooltips.DEAD',
     UNKNOWN: '',
   } as const;

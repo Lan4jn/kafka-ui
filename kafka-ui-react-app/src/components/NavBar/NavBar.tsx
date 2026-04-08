@@ -25,8 +25,8 @@ const NavBar: React.FC<Props> = ({ onBurgerClick }) => {
   const { locale, setLocale, t } = useTranslation();
 
   const localeOptions = [
-    { label: 'English', value: 'en' },
-    { label: '简体中文', value: 'zh-CN' },
+    { label: t('navbar.locale.en'), value: 'en' },
+    { label: t('navbar.locale.zh-CN'), value: 'zh-CN' },
   ];
 
   const options = [

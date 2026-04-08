@@ -16,6 +16,8 @@ import {
 } from 'generated-sources';
 import { StopLoading } from 'components/Topics/Topic/Messages/Messages.styled';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'components/contexts/LocaleContext';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
 export function useKsqlkDb(clusterName: ClusterName) {
   return useQueries({
@@ -41,6 +43,7 @@ export function useExecuteKsqlkDbQueryMutation() {
 const getFormattedErrorFromTableData = (
   responseValues: KsqlTableResponse['values']
 ): { title: string; message: string } => {
+  const tr = (key: string) => translateMessage(key, undefined, getCurrentLocale());
   // We expect someting like that
   // [[
   //   "@type",
@@ -54,8 +57,8 @@ const getFormattedErrorFromTableData = (
 
   if (!responseValues || !responseValues.length) {
     return {
-      title: 'Unknown error',
-      message: 'Recieved empty response',
+      title: tr('ksqlDb.query.errorUnknownTitle'),
+      message: tr('ksqlDb.query.errorEmptyResponse'),
     };
   }
 
@@ -83,6 +86,7 @@ type UseKsqlkDbSSEProps = {
 };
 
 export const useKsqlkDbSSE = ({ clusterName, pipeId }: UseKsqlkDbSSEProps) => {
+  const { t } = useTranslation();
   const [data, setData] = React.useState<KsqlTableResponse>();
   const [isFetching, setIsFetching] = React.useState<boolean>(false);
 
@@ -132,7 +136,7 @@ export const useKsqlkDbSSE = ({ clusterName, pipeId }: UseKsqlkDbSSEProps) => {
               case 'Query Result':
                 showSuccessAlert({
                   id: `${url}-querySuccess`,
-                  title: 'Query succeed',
+                  title: t('ksqlDb.query.successTitle'),
                   message: '',
                 });
                 break;
@@ -164,13 +168,15 @@ export const useKsqlkDbSSE = ({ clusterName, pipeId }: UseKsqlkDbSSEProps) => {
         {
           loading: (
             <>
-              <div>Consuming query execution result...</div>
+              <div>{t('common.streaming.consumingQueryResults')}</div>
               &nbsp;
-              <StopLoading onClick={abortFetchData}>Abort</StopLoading>
+              <StopLoading onClick={abortFetchData}>
+                {t('common.actions.abort')}
+              </StopLoading>
             </>
           ),
-          success: 'Cancelled',
-          error: 'Something went wrong. Please try again.',
+          success: t('common.streaming.cancelled'),
+          error: t('common.streaming.retryError'),
         },
         {
           id: 'messages',
@@ -180,7 +186,7 @@ export const useKsqlkDbSSE = ({ clusterName, pipeId }: UseKsqlkDbSSEProps) => {
     }
 
     return abortFetchData;
-  }, [pipeId]);
+  }, [pipeId, t]);
 
   return { data, isFetching };
 };

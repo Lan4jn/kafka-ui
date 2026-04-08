@@ -2,6 +2,7 @@ import React from 'react';
 import Alert from 'components/common/Alert/Alert';
 import toast, { ToastType } from 'react-hot-toast';
 import { ErrorResponse } from 'generated-sources';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
 interface ServerResponse {
   status: number;
@@ -52,9 +53,10 @@ export const showAlert = (
 };
 
 export const showSuccessAlert = (options: AlertOptions) => {
+  const locale = getCurrentLocale();
   showAlert('success', {
     ...options,
-    title: options.title || 'Success',
+    title: options.title || translateMessage('common.alert.success', undefined, locale),
   });
 };
 
@@ -62,6 +64,7 @@ export const showServerError = async (
   response: Response,
   options?: AlertOptions
 ) => {
+  const locale = getCurrentLocale();
   let body: Record<string, string> = {};
   try {
     body = await response.json();
@@ -72,14 +75,16 @@ export const showServerError = async (
     showAlert('error', {
       id: response.url,
       title: `${response.status} ${response.statusText}`,
-      message: body?.message || 'An error occurred',
+      message:
+        body?.message ||
+        translateMessage('errors.occurred', undefined, locale),
       ...options,
     });
   } else {
     showAlert('error', {
       id: 'server-error',
-      title: `Something went wrong`,
-      message: 'An error occurred',
+      title: translateMessage('errors.somethingWentWrong', undefined, locale),
+      message: translateMessage('errors.occurred', undefined, locale),
       ...options,
     });
   }

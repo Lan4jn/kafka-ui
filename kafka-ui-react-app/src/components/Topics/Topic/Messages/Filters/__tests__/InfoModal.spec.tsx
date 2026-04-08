@@ -8,7 +8,7 @@ describe('InfoModal component', () => {
   it('closes InfoModal', async () => {
     const toggleInfoModal = jest.fn();
     render(<InfoModal toggleIsOpen={toggleInfoModal} />);
-    await userEvent.click(screen.getByRole('button', { name: 'Ok' }));
+    await userEvent.click(screen.getByRole('button', { name: 'OK' }));
     expect(toggleInfoModal).toHaveBeenCalledTimes(1);
   });
 });

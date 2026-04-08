@@ -85,7 +85,7 @@ const ClusterConfigForm: React.FC<ClusterConfigFormProps> = ({
 
     try {
       const response = await validate.mutateAsync(config);
-      const isConfigValid = getIsValidConfig(response, data.name);
+      const isConfigValid = getIsValidConfig(response, data.name, t);
       if (isConfigValid) {
         showSuccessAlert({
           message: t('clusterConfig.notifications.validationSuccess'),

@@ -11,24 +11,32 @@ import {
   useConnectorConfig,
   useUpdateConnectorConfig,
 } from 'lib/hooks/api/kafkaConnect';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import {
   ConnectEditWarningMessageStyled,
   ConnectEditWrapperStyled,
 } from './Config.styled';
 
-const validationSchema = yup.object().shape({
-  config: yup.string().required().isJsonObject(),
-});
-
 interface FormValues {
   config: string;
 }
 
 const Config: React.FC = () => {
+  const { t } = useTranslation();
   const routerParams = useAppParams<RouterParamsClusterConnectConnector>();
   const { data: config } = useConnectorConfig(routerParams);
   const mutation = useUpdateConnectorConfig(routerParams);
+  const validationSchema = React.useMemo(
+    () =>
+      yup.object().shape({
+        config: yup
+          .string()
+          .required()
+          .isJsonObject(t('validation.jsonObject')),
+      }),
+    [t]
+  );
 
   const {
     handleSubmit,
@@ -67,11 +75,13 @@ const Config: React.FC = () => {
     <ConnectEditWrapperStyled>
       {hasCredentials && (
         <ConnectEditWarningMessageStyled>
-          Please replace ****** with the real credential values to avoid
-          accidentally breaking your connector config!
+          {t('connect.details.config.warning')}
         </ConnectEditWarningMessageStyled>
       )}
-      <form onSubmit={handleSubmit(onSubmit)} aria-label="Edit connect form">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        aria-label={t('connect.details.config.formAriaLabel')}
+      >
         <div>
           <Controller
             control={control}
@@ -90,7 +100,7 @@ const Config: React.FC = () => {
           type="submit"
           disabled={!isValid || isSubmitting || !isDirty}
         >
-          Submit
+          {t('connect.details.config.actions.submit')}
         </Button>
       </form>
     </ConnectEditWrapperStyled>

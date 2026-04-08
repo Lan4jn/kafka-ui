@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ClusterName } from 'redux/interfaces';
 import { showSuccessAlert } from 'lib/errorHandling';
 import { KafkaAcl } from 'generated-sources';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
 export function useAcls(clusterName: ClusterName) {
   return useQuery(
@@ -24,7 +25,11 @@ export function useCreateAclMutation(clusterName: ClusterName) {
     {
       onSuccess() {
         showSuccessAlert({
-          message: 'Your ACL was created successfully',
+          message: translateMessage(
+            'acl.notifications.created',
+            undefined,
+            getCurrentLocale()
+          ),
         });
       },
     }
@@ -48,7 +53,13 @@ export function useDeleteAclMutation(clusterName: ClusterName) {
     (acl: KafkaAcl) => api.deleteAcl({ clusterName, kafkaAcl: acl }),
     {
       onSuccess: () => {
-        showSuccessAlert({ message: 'ACL deleted' });
+        showSuccessAlert({
+          message: translateMessage(
+            'acl.notifications.deleted',
+            undefined,
+            getCurrentLocale()
+          ),
+        });
         queryClient.invalidateQueries(['clusters', clusterName, 'acls']);
       },
     }

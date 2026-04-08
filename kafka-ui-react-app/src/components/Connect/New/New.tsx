@@ -24,11 +24,6 @@ import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './New.styled';
 
-const validationSchema = yup.object().shape({
-  name: yup.string().required(),
-  config: yup.string().required().isJsonObject(),
-});
-
 interface FormValues {
   connectName: Connect['name'];
   name: string;
@@ -39,6 +34,17 @@ const New: React.FC = () => {
   const { t } = useTranslation();
   const { clusterName } = useAppParams<ClusterNameRoute>();
   const navigate = useNavigate();
+  const validationSchema = React.useMemo(
+    () =>
+      yup.object().shape({
+        name: yup.string().required(),
+        config: yup
+          .string()
+          .required()
+          .isJsonObject(t('validation.jsonObject')),
+      }),
+    [t]
+  );
 
   const { data: connects = [] } = useConnects(clusterName);
   const mutation = useCreateConnector(clusterName);

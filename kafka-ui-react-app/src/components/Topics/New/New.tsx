@@ -22,9 +22,10 @@ enum Filters {
 const New: React.FC = () => {
   const { clusterName } = useAppParams<ClusterNameRoute>();
   const { t } = useTranslation();
+  const validationSchema = React.useMemo(() => topicFormValidationSchema(t), [t]);
   const methods = useForm<TopicFormData>({
     mode: 'onChange',
-    resolver: yupResolver(topicFormValidationSchema),
+    resolver: yupResolver(validationSchema),
   });
 
   const createTopic = useCreateTopic(clusterName);

@@ -59,6 +59,10 @@ const Details: React.FC = () => {
     : Object.keys(partitionsByTopic);
 
   const hasAssignedTopics = consumerGroup?.data?.topics !== 0;
+  const stateTooltipKey =
+    CONSUMER_GROUP_STATE_TOOLTIPS[
+      consumerGroup.data?.state || ConsumerGroupState.UNKNOWN
+    ];
 
   return (
     <div>
@@ -107,9 +111,7 @@ const Details: React.FC = () => {
                 </Tag>
               }
               content={
-                CONSUMER_GROUP_STATE_TOOLTIPS[
-                  consumerGroup.data?.state || ConsumerGroupState.UNKNOWN
-                ]
+                stateTooltipKey ? t(stateTooltipKey) : ''
               }
               placement="bottom-start"
             />

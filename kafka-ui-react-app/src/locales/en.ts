@@ -2,7 +2,24 @@ export const en: Record<string, string> = {
   'common.na': 'N/A',
   'common.actions.cancel': 'Cancel',
   'common.actions.confirm': 'Confirm',
+  'common.actions.ok': 'OK',
+  'common.actions.save': 'Save',
+  'common.actions.abort': 'Abort',
   'common.metrics.currentOfTotal': '{current} of {total}',
+  'common.pagination.previous': 'Previous',
+  'common.pagination.next': 'Next',
+  'common.pagination.goToPage': 'Go to page:',
+  'common.pagination.pageOf': 'Page {current} of {total}',
+  'common.streaming.consumingMessages': 'Consuming messages...',
+  'common.streaming.consumingQueryResults':
+    'Consuming query execution result...',
+  'common.streaming.cancelled': 'Cancelled',
+  'common.streaming.retryError': 'Something went wrong. Please try again.',
+  'common.alert.success': 'Success',
+  'common.warning': 'Warning',
+  'common.copy.success': 'Copied successfully!',
+  'common.copy.unavailable':
+    'Copying to clipboard is unavailable due to unsecured (non-HTTPS) connection',
   'navbar.language': 'Language',
   'navbar.locale.en': 'English',
   'navbar.locale.zh-CN': 'Chinese (Simplified)',
@@ -17,6 +34,8 @@ export const en: Record<string, string> = {
   'common.table.noRows': 'No rows found',
   'common.actions.delete': 'Delete',
   'errors.accessDenied': 'Access denied',
+  'errors.occurred': 'An error occurred',
+  'errors.somethingWentWrong': 'Something went wrong',
   'errorPage.text': 'Page is not found',
   'errorPage.button': 'Go Back to Dashboard',
   'dashboard.title': 'Dashboard',
@@ -34,6 +53,7 @@ export const en: Record<string, string> = {
   'dashboard.table.consumption': 'Consumption',
   'dashboard.table.empty': 'No clusters found',
   'dashboard.table.loading': 'Loading...',
+  'dashboard.table.readOnly': 'Read-only',
   'consumerGroups.list.title': 'Consumers',
   'consumerGroups.list.searchPlaceholder': 'Search by Consumer Group ID',
   'consumerGroups.list.table.groupId': 'Group ID',
@@ -44,10 +64,23 @@ export const en: Record<string, string> = {
   'consumerGroups.list.table.state': 'State',
   'consumerGroups.list.table.empty': 'No active consumer groups found',
   'consumerGroups.list.table.loading': 'Loading...',
+  'consumerGroups.stateTooltips.EMPTY': 'The group exists but has no members.',
+  'consumerGroups.stateTooltips.STABLE':
+    'Consumers are happily consuming and have assigned partitions.',
+  'consumerGroups.stateTooltips.PREPARING_REBALANCE':
+    'Something has changed, and the reassignment of partitions is required.',
+  'consumerGroups.stateTooltips.COMPLETING_REBALANCE':
+    'Partition reassignment is in progress.',
+  'consumerGroups.stateTooltips.DEAD':
+    'The group is going to be removed. It might be due to inactivity, or the group is being migrated to a different coordinator.',
   'consumerGroups.details.actions.resetOffsets': 'Reset offsets',
   'consumerGroups.details.actions.delete': 'Delete consumer group',
   'consumerGroups.details.confirmDelete':
     'Are you sure you want to delete this consumer group?',
+  'consumerGroups.notifications.deleted':
+    'Consumer group {consumerGroupID} deleted',
+  'consumerGroups.notifications.resetOffsets':
+    'Consumer group {consumerGroupID} offsets reset',
   'consumerGroups.details.metrics.assignedTopics': 'Assigned Topics',
   'consumerGroups.details.metrics.assignedPartitions': 'Assigned Partitions',
   'consumerGroups.details.metrics.coordinatorId': 'Coordinator ID',
@@ -85,6 +118,16 @@ export const en: Record<string, string> = {
     'Are you sure you want to purge messages of selected topics?',
   'topics.notifications.clearSuccess':
     'Topic {topicName} messages were successfully cleared.',
+  'topics.notifications.updated': 'Topic updated successfully.',
+  'topics.notifications.partitionsIncreased':
+    'Number of partitions increased successfully.',
+  'topics.notifications.replicationUpdated':
+    'Replication factor updated successfully.',
+  'topics.notifications.deleted': 'Topic {topicName} deleted successfully.',
+  'topics.notifications.recreated':
+    'Topic {topicName} recreated successfully.',
+  'topics.notifications.messageSent': 'Message sent successfully.',
+  'topics.notifications.analysisCanceled': 'Topic analysis canceled.',
   'topics.list.title': 'Topics',
   'topics.list.actions.add': 'Add a Topic',
   'topics.list.searchPlaceholder': 'Search by Topic Name',
@@ -188,6 +231,22 @@ export const en: Record<string, string> = {
   'topics.messages.filters.search': 'Search',
   'topics.messages.filters.addFilters': 'Add Filters',
   'topics.messages.filters.add': 'Add filter',
+  'topics.messages.filters.editTitle': 'Edit filter',
+  'topics.messages.filters.info.variablesTitle':
+    'Variables bound to groovy context:',
+  'topics.messages.filters.info.variablesBody':
+    'partition, timestampMs, keyAsText, valueAsText, header, key (json if possible), value (json if possible).',
+  'topics.messages.filters.info.jsonParsingTitle': 'JSON parsing logic:',
+  'topics.messages.filters.info.jsonParsingBody':
+    'Key and Value (if they can be parsed to JSON) they are bound as JSON objects, otherwise bound as nulls.',
+  'topics.messages.filters.info.sampleTitle': 'Sample filters:',
+  'topics.messages.filters.info.sampleRegex': 'regex for key as a string',
+  'topics.messages.filters.info.sampleValueJson': 'in case value is json',
+  'topics.messages.filters.info.sampleNullAndText':
+    'search for values that are not nulls and are not json',
+  'topics.messages.filters.info.sampleHeaders': 'header value matching',
+  'topics.messages.filters.info.multilineTitle':
+    'multiline filters are also allowed:',
   'topics.messages.filters.validation.duplicateName':
     'Filter with the same name already exists',
   'topics.messages.filters.form.ariaLabel': 'Filters submit form',
@@ -292,6 +351,17 @@ export const en: Record<string, string> = {
   'topics.form.placeholders.maxMessageBytes': 'Maximum message size',
   'topics.form.validation.retentionMsMin':
     'must be greater than or equal to -1',
+  'topics.form.validation.nameRequired': 'Topic Name is required',
+  'topics.form.validation.namePattern':
+    'Only alphanumeric, _, -, and . allowed',
+  'topics.form.validation.partitionsMin':
+    'Number of Partitions must be greater than or equal to 1',
+  'topics.form.validation.partitionsRequiredNumber':
+    'Number of Partitions is required and must be a number',
+  'topics.form.validation.customParamRequired':
+    'Custom parameter is required',
+  'topics.form.validation.customParamValueRequired': 'Value is required',
+  'topics.form.ariaLabel': 'topic form',
   'topics.form.cleanupPolicy.delete': 'Delete',
   'topics.form.cleanupPolicy.compact': 'Compact',
   'topics.form.cleanupPolicy.compactDelete': 'Compact,Delete',
@@ -407,6 +477,11 @@ export const en: Record<string, string> = {
   'connect.new.fields.config': 'Config',
   'connect.new.placeholders.name': 'Connector Name',
   'connect.new.actions.submit': 'Submit',
+  'connect.notifications.configUpdated': 'Config updated successfully.',
+  'connect.details.config.warning':
+    'Please replace ****** with the real credential values to avoid accidentally breaking your connector config!',
+  'connect.details.config.formAriaLabel': 'Edit connect form',
+  'connect.details.config.actions.submit': 'Submit',
   'connect.tasks.table.id': 'ID',
   'connect.tasks.table.worker': 'Worker',
   'connect.tasks.table.state': 'State',
@@ -434,6 +509,12 @@ export const en: Record<string, string> = {
     'Error validating application config',
   'clusterConfig.notifications.validateError.message':
     'There was an error validating the application config',
+  'clusterConfig.validation.requiredField': 'required field',
+  'clusterConfig.validation.positiveOnly': 'positive only',
+  'clusterConfig.validation.numbersOnly': 'numbers only',
+  'clusterConfig.validation.required': 'required',
+  'clusterConfig.validation.clusterNameMin':
+    'Cluster name must be at least 3 characters',
   'clusterConfig.fileUpload.uploading': 'Uploading...',
   'clusterConfig.ssl.location': '{title} Location',
   'clusterConfig.ssl.password': '{title} Password',
@@ -523,6 +604,9 @@ export const en: Record<string, string> = {
   'ksqlDb.query.actions.addStreamProperty': 'Add Stream Property',
   'ksqlDb.query.actions.clearResults': 'Clear results',
   'ksqlDb.query.actions.execute': 'Execute',
+  'ksqlDb.query.successTitle': 'Query succeeded',
+  'ksqlDb.query.errorUnknownTitle': 'Unknown error',
+  'ksqlDb.query.errorEmptyResponse': 'Received empty response',
   'ksqlDb.query.table.empty': 'No tables or streams found',
   'ksqlDb.table.name': 'Name',
   'ksqlDb.table.topic': 'Topic',
@@ -593,4 +677,7 @@ export const en: Record<string, string> = {
   'acl.list.table.operation': 'Operation',
   'acl.list.table.permission': 'Permission',
   'acl.list.empty': 'No ACL items found',
+  'acl.notifications.created': 'Your ACL was created successfully',
+  'acl.notifications.deleted': 'ACL deleted',
+  'validation.jsonObject': 'Value must be a valid JSON object',
 };

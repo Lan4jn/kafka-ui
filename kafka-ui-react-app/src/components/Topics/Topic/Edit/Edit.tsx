@@ -16,6 +16,7 @@ import {
 } from 'lib/hooks/api/topics';
 import DangerZone from 'components/Topics/Topic/Edit/DangerZone/DangerZone';
 import { ConfigSource } from 'generated-sources';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 export const TOPIC_EDIT_FORM_DEFAULT_PROPS = {
   partitions: 1,
@@ -29,6 +30,7 @@ export const TOPIC_EDIT_FORM_DEFAULT_PROPS = {
 };
 
 const Edit: React.FC = () => {
+  const { t } = useTranslation();
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
   const { data: topic } = useTopicDetails({ clusterName, topicName });
   const { data: topicConfig } = useTopicConfig({ clusterName, topicName });
@@ -38,7 +40,7 @@ const Edit: React.FC = () => {
 
   const methods = useForm<TopicFormData>({
     defaultValues,
-    resolver: yupResolver(topicFormValidationSchema),
+    resolver: yupResolver(topicFormValidationSchema(t)),
     mode: 'onChange',
   });
 

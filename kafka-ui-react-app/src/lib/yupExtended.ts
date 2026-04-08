@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
 import { TOPIC_NAME_VALIDATION_PATTERN } from './constants';
 
@@ -32,10 +33,15 @@ export const isValidJsonObject = (value?: string) => {
 };
 
 const isJsonObject = (message?: string) => {
+  const fallbackMessage = translateMessage(
+    'validation.jsonObject',
+    undefined,
+    getCurrentLocale()
+  );
   return yup.string().test(
     'isJsonObject',
     // eslint-disable-next-line no-template-curly-in-string
-    message || '${path} is not JSON object',
+    message || fallbackMessage,
     isValidJsonObject
   );
 };
@@ -62,33 +68,35 @@ export function cacheTest(
 
 yup.addMethod(yup.StringSchema, 'isJsonObject', isJsonObject);
 
-export const topicFormValidationSchema = yup.object().shape({
-  name: yup
-    .string()
-    .max(249)
-    .required('Topic Name is required')
-    .matches(
-      TOPIC_NAME_VALIDATION_PATTERN,
-      'Only alphanumeric, _, -, and . allowed'
+export const topicFormValidationSchema = (
+  t: (key: string, params?: Record<string, string | number>) => string
+) =>
+  yup.object().shape({
+    name: yup
+      .string()
+      .max(249)
+      .required(t('topics.form.validation.nameRequired'))
+      .matches(TOPIC_NAME_VALIDATION_PATTERN, t('topics.form.validation.namePattern')),
+    partitions: yup
+      .number()
+      .min(1, t('topics.form.validation.partitionsMin'))
+      .max(2147483647)
+      .required()
+      .typeError(t('topics.form.validation.partitionsRequiredNumber')),
+    replicationFactor: yup.string(),
+    minInSyncReplicas: yup.string(),
+    cleanupPolicy: yup.string().required(),
+    retentionMs: yup.string(),
+    retentionBytes: yup.number(),
+    maxMessageBytes: yup.string(),
+    customParams: yup.array().of(
+      yup.object().shape({
+        name: yup.string().required(t('topics.form.validation.customParamRequired')),
+        value: yup
+          .string()
+          .required(t('topics.form.validation.customParamValueRequired')),
+      })
     ),
-  partitions: yup
-    .number()
-    .min(1, 'Number of Partitions must be greater than or equal to 1')
-    .max(2147483647)
-    .required()
-    .typeError('Number of Partitions is required and must be a number'),
-  replicationFactor: yup.string(),
-  minInSyncReplicas: yup.string(),
-  cleanupPolicy: yup.string().required(),
-  retentionMs: yup.string(),
-  retentionBytes: yup.number(),
-  maxMessageBytes: yup.string(),
-  customParams: yup.array().of(
-    yup.object().shape({
-      name: yup.string().required('Custom parameter is required'),
-      value: yup.string().required('Value is required'),
-    })
-  ),
-});
+  });
 
 export default yup;

@@ -86,10 +86,11 @@ const List = () => {
         // eslint-disable-next-line react/no-unstable-nested-components
         cell: (args) => {
           const value = args.getValue() as ConsumerGroupState;
+          const tooltipKey = CONSUMER_GROUP_STATE_TOOLTIPS[value];
           return (
             <Tooltip
               value={<TagCell {...args} />}
-              content={CONSUMER_GROUP_STATE_TOOLTIPS[value]}
+              content={tooltipKey ? t(tooltipKey) : ''}
               placement="bottom-end"
             />
           );

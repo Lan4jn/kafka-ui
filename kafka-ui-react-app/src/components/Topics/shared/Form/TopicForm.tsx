@@ -95,7 +95,7 @@ const TopicForm: React.FC<Props> = ({
   };
 
   return (
-    <StyledForm onSubmit={onSubmit} aria-label="topic form">
+    <StyledForm onSubmit={onSubmit} aria-label={t('topics.form.ariaLabel')}>
       <fieldset disabled={isSubmitting}>
         <fieldset disabled={isEditing}>
           <S.Column>

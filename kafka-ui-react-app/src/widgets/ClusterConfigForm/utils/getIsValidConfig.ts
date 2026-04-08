@@ -1,9 +1,12 @@
 import { ApplicationConfigValidation } from 'generated-sources';
 import { showAlert } from 'lib/errorHandling';
 
+type Translator = (key: string, params?: Record<string, string | number>) => string;
+
 export const getIsValidConfig = (
   { clusters }: ApplicationConfigValidation,
-  name: string
+  name: string,
+  t: Translator
 ) => {
   let isValid = true;
   const prefix = `cluster-${name}`;
@@ -13,7 +16,7 @@ export const getIsValidConfig = (
     isValid = false;
     showAlert('error', {
       id: `${prefix}-kafka`,
-      title: 'Kafka Cluster',
+      title: t('clusterConfig.kafkaCluster.title'),
       message: clusterErrors?.kafka.errorMessage,
     });
   }
@@ -21,7 +24,7 @@ export const getIsValidConfig = (
     isValid = false;
     showAlert('error', {
       id: `${prefix}-schemaRegistry`,
-      title: 'Schema Registry',
+      title: t('clusterConfig.schemaRegistry.title'),
       message: clusterErrors?.schemaRegistry.errorMessage,
     });
   }
@@ -29,7 +32,7 @@ export const getIsValidConfig = (
     isValid = false;
     showAlert('error', {
       id: `${prefix}-ksqldb`,
-      title: 'KSQL DB',
+      title: t('clusterConfig.ksql.title'),
       message: clusterErrors?.ksqldb?.errorMessage,
     });
   }
@@ -39,7 +42,7 @@ export const getIsValidConfig = (
         isValid = false;
         showAlert('error', {
           id: `${prefix}-kafkaConnects-${key}`,
-          title: `Kafka Connect. ${key}`,
+          title: `${t('clusterConfig.kafkaConnect.title')}. ${key}`,
           message: val.errorMessage,
         });
       }

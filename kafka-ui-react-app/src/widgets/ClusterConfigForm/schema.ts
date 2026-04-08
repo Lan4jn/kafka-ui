@@ -1,12 +1,18 @@
 import { isArray } from 'lodash';
 import { object, string, number, array, boolean, mixed, lazy } from 'yup';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
-const requiredString = string().required('required field');
+const tr = (key: string, params?: Record<string, string | number>) =>
+  translateMessage(key, params, getCurrentLocale());
+
+const requiredString = string().required(
+  tr('clusterConfig.validation.requiredField')
+);
 
 const portSchema = number()
-  .positive('positive only')
-  .typeError('numbers only')
-  .required('required');
+  .positive(tr('clusterConfig.validation.positiveOnly'))
+  .typeError(tr('clusterConfig.validation.numbersOnly'))
+  .required(tr('clusterConfig.validation.required'));
 
 const bootstrapServerSchema = object({
   host: requiredString,
@@ -18,7 +24,7 @@ const sslSchema = lazy((value) => {
     return object({
       location: string().when('password', {
         is: (v: string) => !!v,
-        then: (schema) => schema.required('required field'),
+        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       password: string(),
     });
@@ -33,11 +39,11 @@ const urlWithAuthSchema = lazy((value) => {
       isAuth: boolean(),
       username: string().when('isAuth', {
         is: true,
-        then: (schema) => schema.required('required field'),
+        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       password: string().when('isAuth', {
         is: true,
-        then: (schema) => schema.required('required field'),
+        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       keystore: sslSchema,
     });
@@ -51,11 +57,11 @@ const kafkaConnectSchema = object({
   isAuth: boolean(),
   username: string().when('isAuth', {
     is: true,
-    then: (schema) => schema.required('required field'),
+    then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
   }),
   password: string().when('isAuth', {
     is: true,
-    then: (schema) => schema.required('required field'),
+    then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
   }),
   keystore: sslSchema,
 });
@@ -70,16 +76,18 @@ const kafkaConnectsSchema = lazy((value) => {
 const metricsSchema = lazy((value) => {
   if (typeof value === 'object') {
     return object({
-      type: string().oneOf(['JMX', 'PROMETHEUS']).required('required field'),
+      type: string()
+        .oneOf(['JMX', 'PROMETHEUS'])
+        .required(tr('clusterConfig.validation.requiredField')),
       port: portSchema,
       isAuth: boolean(),
       username: string().when('isAuth', {
         is: true,
-        then: (schema) => schema.required('required field'),
+        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       password: string().when('isAuth', {
         is: true,
-        then: (schema) => schema.required('required field'),
+        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       keystore: sslSchema,
     });
@@ -132,7 +140,7 @@ const authSchema = lazy((value) => {
   if (typeof value === 'object') {
     return object({
       method: string()
-        .required('required field')
+        .required(tr('clusterConfig.validation.requiredField'))
         .oneOf([
           'SASL/JAAS',
           'SASL/GSSAPI',
@@ -160,7 +168,7 @@ const authSchema = lazy((value) => {
               'SASL/AWS IAM',
             ].includes(v);
           },
-          then: (schema) => schema.required('required field'),
+          then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
         }),
       keystore: lazy((_, { parent }) => {
         if (parent.method === 'mTLS') {
@@ -179,9 +187,9 @@ const authSchema = lazy((value) => {
 
 const formSchema = object({
   name: string()
-    .required('required field')
-    .min(3, 'Cluster name must be at least 3 characters'),
-  readOnly: boolean().required('required field'),
+    .required(tr('clusterConfig.validation.requiredField'))
+    .min(3, tr('clusterConfig.validation.clusterNameMin')),
+  readOnly: boolean().required(tr('clusterConfig.validation.requiredField')),
   bootstrapServers: array().of(bootstrapServerSchema).min(1),
   truststore: sslSchema,
   auth: authSchema,

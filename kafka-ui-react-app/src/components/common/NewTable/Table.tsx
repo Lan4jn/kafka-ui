@@ -18,6 +18,7 @@ import { useSearchParams, useLocation } from 'react-router-dom';
 import { PER_PAGE } from 'lib/constants';
 import { Button } from 'components/common/Button/Button';
 import Input from 'components/common/Input/Input';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import * as S from './Table.styled';
 import updateSortingState from './utils/updateSortingState';
@@ -133,6 +134,7 @@ const Table: React.FC<TableProps<any>> = ({
   onRowHover,
   onMouseLeave,
 }) => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const [rowSelection, setRowSelection] = React.useState({});
@@ -322,7 +324,7 @@ const Table: React.FC<TableProps<any>> = ({
             {table.getRowModel().rows.length === 0 && (
               <S.Row>
                 <S.EmptyTableMessageCell colSpan={100}>
-                  {emptyMessage || 'No rows found'}
+                  {emptyMessage || t('common.table.noRows')}
                 </S.EmptyTableMessageCell>
               </S.Row>
             )}
@@ -346,7 +348,7 @@ const Table: React.FC<TableProps<any>> = ({
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
-              ← Previous
+              {`← ${t('common.pagination.previous')}`}
             </Button>
             <Button
               buttonType="secondary"
@@ -354,7 +356,7 @@ const Table: React.FC<TableProps<any>> = ({
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              Next →
+              {`${t('common.pagination.next')} →`}
             </Button>
             <Button
               buttonType="secondary"
@@ -366,7 +368,7 @@ const Table: React.FC<TableProps<any>> = ({
             </Button>
 
             <S.GoToPage>
-              <span>Go to page:</span>
+              <span>{t('common.pagination.goToPage')}</span>
               <Input
                 type="number"
                 positiveOnly
@@ -383,8 +385,10 @@ const Table: React.FC<TableProps<any>> = ({
           </S.Pages>
           <S.PageInfo>
             <span>
-              Page {table.getState().pagination.pageIndex + 1} of{' '}
-              {table.getPageCount()}{' '}
+              {t('common.pagination.pageOf', {
+                current: table.getState().pagination.pageIndex + 1,
+                total: table.getPageCount(),
+              })}
             </span>
           </S.PageInfo>
         </S.Pagination>

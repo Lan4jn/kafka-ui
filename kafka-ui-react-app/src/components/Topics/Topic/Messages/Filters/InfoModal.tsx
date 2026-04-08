@@ -1,52 +1,55 @@
 import React from 'react';
 import * as S from 'components/Topics/Topic/Messages/Filters/Filters.styled';
 import { Button } from 'components/common/Button/Button';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 interface InfoModalProps {
   toggleIsOpen(): void;
 }
 
 const InfoModal: React.FC<InfoModalProps> = ({ toggleIsOpen }) => {
+  const { t } = useTranslation();
+
   return (
     <S.InfoModal>
       <S.InfoParagraph>
-        <b>Variables bound to groovy context:</b> partition, timestampMs,
-        keyAsText, valueAsText, header, key (json if possible), value (json if
-        possible).
+        <b>{t('topics.messages.filters.info.variablesTitle')}</b>{' '}
+        {t('topics.messages.filters.info.variablesBody')}
       </S.InfoParagraph>
       <S.InfoParagraph>
-        <b>JSON parsing logic:</b>
+        <b>{t('topics.messages.filters.info.jsonParsingTitle')}</b>
       </S.InfoParagraph>
       <S.InfoParagraph>
-        Key and Value (if they can be parsed to JSON) they are bound as JSON
-        objects, otherwise bound as nulls.
+        {t('topics.messages.filters.info.jsonParsingBody')}
       </S.InfoParagraph>
       <S.InfoParagraph>
-        <b>Sample filters:</b>
+        <b>{t('topics.messages.filters.info.sampleTitle')}</b>
       </S.InfoParagraph>
       <ol aria-label="info-list">
         <S.ListItem>
           <code>keyAsText != null && keyAsText ~&quot;([Gg])roovy&quot;</code> -
-          regex for key as a string
+          {t('topics.messages.filters.info.sampleRegex')}
         </S.ListItem>
         <S.ListItem>
           <code>
             value.name == &quot;iS.ListItemax&quot; && value.age &gt; 30
           </code>{' '}
-          - in case value is json
+          - {t('topics.messages.filters.info.sampleValueJson')}
         </S.ListItem>
         <S.ListItem>
-          <code>value == null && valueAsText != null</code> - search for values
-          that are not nulls and are not json
+          <code>value == null && valueAsText != null</code> -{' '}
+          {t('topics.messages.filters.info.sampleNullAndText')}
         </S.ListItem>
         <S.ListItem>
           <code>
             headers.sentBy == &quot;some system&quot; &&
             headers[&quot;sentAt&quot;] == &quot;2020-01-01&quot;
           </code>
+          {' - '}
+          {t('topics.messages.filters.info.sampleHeaders')}
         </S.ListItem>
         <S.ListItem>
-          multiline filters are also allowed:
+          {t('topics.messages.filters.info.multilineTitle')}
           <S.InfoParagraph>
             <pre>
               def name = value.name
@@ -66,7 +69,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ toggleIsOpen }) => {
           type="button"
           onClick={toggleIsOpen}
         >
-          Ok
+          {t('common.actions.ok')}
         </Button>
       </S.ButtonContainer>
     </S.InfoModal>

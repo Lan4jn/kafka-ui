@@ -8,6 +8,7 @@ import {
   SortOrder,
 } from 'generated-sources';
 import { showSuccessAlert } from 'lib/errorHandling';
+import { getCurrentLocale, translateMessage } from 'lib/i18n';
 
 export type ConsumerGroupID = ConsumerGroup['groupId'];
 
@@ -52,7 +53,11 @@ export const useDeleteConsumerGroupMutation = ({
     {
       onSuccess: () => {
         showSuccessAlert({
-          message: `Consumer ${consumerGroupID} group deleted`,
+          message: translateMessage(
+            'consumerGroups.notifications.deleted',
+            { consumerGroupID },
+            getCurrentLocale()
+          ),
         });
         queryClient.invalidateQueries([
           'clusters',
@@ -79,7 +84,11 @@ export const useResetConsumerGroupOffsetsMutation = ({
     {
       onSuccess: () => {
         showSuccessAlert({
-          message: `Consumer ${consumerGroupID} group offsets reset`,
+          message: translateMessage(
+            'consumerGroups.notifications.resetOffsets',
+            { consumerGroupID },
+            getCurrentLocale()
+          ),
         });
         queryClient.invalidateQueries([
           'clusters',
