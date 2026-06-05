@@ -48,7 +48,8 @@ const Dashboard: React.FC = () => {
       },
       { header: t('dashboard.table.version'), accessorKey: 'version' },
       {
-        header: (
+        // eslint-disable-next-line react/no-unstable-nested-components
+        header: () => (
           <GlossaryTerm english={GLOSSARY_TERMS.BROKER}>
             {t('dashboard.table.brokersCount')}
           </GlossaryTerm>

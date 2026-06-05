@@ -46,7 +46,8 @@ const TopicTable: React.FC = () => {
       },
       {
         id: TopicColumnsToSort.TOTAL_PARTITIONS,
-        header: (
+        // eslint-disable-next-line react/no-unstable-nested-components
+        header: () => (
           <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
             {t('topics.list.table.partitions')}
           </GlossaryTerm>
@@ -69,7 +70,8 @@ const TopicTable: React.FC = () => {
         },
       },
       {
-        header: (
+        // eslint-disable-next-line react/no-unstable-nested-components
+        header: () => (
           <GlossaryTerm english={GLOSSARY_TERMS.REPLICATION_FACTOR}>
             {t('topics.list.table.replicationFactor')}
           </GlossaryTerm>

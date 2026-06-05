@@ -6,6 +6,7 @@ import Nav from 'components/Nav/Nav';
 import useBoolean from 'lib/hooks/useBoolean';
 import { clusterNewConfigPath } from 'lib/paths';
 import { GlobalSettingsContext } from 'components/contexts/GlobalSettingsContext';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { useClusters } from 'lib/hooks/api/clusters';
 import { ResourceType } from 'generated-sources';
 import { useGetUserInfo } from 'lib/hooks/api/roles';
@@ -18,6 +19,7 @@ const PageContainer: React.FC<PropsWithChildren<unknown>> = ({ children }) => {
   } = useBoolean(false);
   const clusters = useClusters();
   const appInfo = React.useContext(GlobalSettingsContext);
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { data: authInfo } = useGetUserInfo();
@@ -44,7 +46,10 @@ const PageContainer: React.FC<PropsWithChildren<unknown>> = ({ children }) => {
     <>
       <NavBar onBurgerClick={toggle} />
       <S.Container>
-        <S.Sidebar aria-label="Sidebar" $visible={isSidebarVisible}>
+        <S.Sidebar
+          aria-label={t('pageContainer.aria.sidebar')}
+          $visible={isSidebarVisible}
+        >
           <Nav />
         </S.Sidebar>
         <S.Overlay
@@ -53,7 +58,7 @@ const PageContainer: React.FC<PropsWithChildren<unknown>> = ({ children }) => {
           onKeyDown={closeSidebar}
           tabIndex={-1}
           aria-hidden="true"
-          aria-label="Overlay"
+          aria-label={t('pageContainer.aria.overlay')}
         />
         {children}
       </S.Container>

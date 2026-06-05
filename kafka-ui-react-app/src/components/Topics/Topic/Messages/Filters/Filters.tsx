@@ -24,7 +24,6 @@ import Search from 'components/common/Search/Search';
 import FilterModal, {
   FilterEdit,
 } from 'components/Topics/Topic/Messages/Filters/FilterModal';
-import { SeekDirectionOptions } from 'components/Topics/Topic/Messages/Messages';
 import TopicMessagesContext from 'components/contexts/TopicMessagesContext';
 import useBoolean from 'lib/hooks/useBoolean';
 import { RouteParamsClusterTopic } from 'lib/paths';
@@ -40,6 +39,10 @@ import { InputLabel } from 'components/common/Input/InputLabel.styled';
 import { getSerdeOptions } from 'components/Topics/Topic/SendMessage/utils';
 import { useSerdes } from 'lib/hooks/api/topicMessages';
 import { useTranslation } from 'components/contexts/LocaleContext';
+import {
+  getSeekDirectionOptions,
+  getSeekTypeOptions,
+} from 'components/Topics/Topic/Messages/options';
 
 import * as S from './Filters.styled';
 import {
@@ -77,11 +80,6 @@ export interface ActiveMessageFilter {
 
 const PER_PAGE = 100;
 
-export const SeekTypeOptions = [
-  { value: SeekType.OFFSET, label: 'Offset' },
-  { value: SeekType.TIMESTAMP, label: 'Timestamp' },
-];
-
 const Filters: React.FC<FiltersProps> = ({
   phaseMessage,
   meta: { elapsedMs, bytesConsumed, messagesConsumed, filterApplyErrors },
@@ -99,6 +97,11 @@ const Filters: React.FC<FiltersProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const seekTypeOptions = React.useMemo(() => getSeekTypeOptions(t), [t]);
+  const seekDirectionOptions = React.useMemo(
+    () => getSeekDirectionOptions(t),
+    [t]
+  );
 
   const page = searchParams.get('page');
 
@@ -120,7 +123,7 @@ const Filters: React.FC<FiltersProps> = ({
   );
 
   const [currentSeekType, setCurrentSeekType] = React.useState<SeekType>(
-    SeekTypeOptions.find(
+    seekTypeOptions.find(
       (ele) => ele.value === (searchParams.get('seekType') as SeekType)
     ) !== undefined
       ? (searchParams.get('seekType') as SeekType)
@@ -459,7 +462,7 @@ const Filters: React.FC<FiltersProps> = ({
                 value={currentSeekType}
                 selectSize="M"
                 minWidth="100px"
-                options={SeekTypeOptions}
+                options={seekTypeOptions}
                 disabled={isTailing}
               />
 
@@ -555,7 +558,7 @@ const Filters: React.FC<FiltersProps> = ({
           onChange={(option) => changeSeekDirection(option as string)}
           value={seekDirection}
           minWidth="120px"
-          options={SeekDirectionOptions}
+          options={seekDirectionOptions}
           isLive={isLive}
         />
       </div>
@@ -645,7 +648,7 @@ const Filters: React.FC<FiltersProps> = ({
           </S.MetricsIcon>
           <span>
             {t('topics.messages.filters.metrics.messagesConsumedValue', {
-              count: messagesConsumed,
+              count: messagesConsumed ?? 0,
             })}
           </span>
         </S.Metric>

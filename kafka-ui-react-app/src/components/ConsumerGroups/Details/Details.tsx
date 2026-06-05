@@ -110,9 +110,7 @@ const Details: React.FC = () => {
                   {consumerGroup.data?.state}
                 </Tag>
               }
-              content={
-                stateTooltipKey ? t(stateTooltipKey) : ''
-              }
+              content={stateTooltipKey ? t(stateTooltipKey) : ''}
               placement="bottom-start"
             />
           </Metrics.Indicator>

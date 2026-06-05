@@ -37,7 +37,7 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
     await clearMessages.mutateAsync(topicName);
   };
   const deleteTopicsHandler = () => {
-    confirm('Are you sure you want to remove selected topics?', async () => {
+    confirm(t('topics.confirmations.deleteSelectedTopics'), async () => {
       try {
         await Promise.all(
           selectedTopics.map((topicName) => deleteTopic.mutateAsync(topicName))
@@ -141,7 +141,7 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
         disabled={!selectedTopics.length}
         canDoAction={canDeleteSelectedTopics}
       >
-        Delete selected topics
+        {t('topics.actions.deleteSelectedTopics')}
       </ActionCanButton>
       <ActionCanButton
         buttonSize="M"
@@ -150,7 +150,7 @@ const BatchActionsbar: React.FC<BatchActionsbarProps> = ({
         canDoAction={canCopySelectedTopic}
         to={getCopyTopicPath()}
       >
-        Copy selected topic
+        {t('topics.actions.copySelectedTopic')}
       </ActionCanButton>
       <ActionCanButton
         buttonSize="M"

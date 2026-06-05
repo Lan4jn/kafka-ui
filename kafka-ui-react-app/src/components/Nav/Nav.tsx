@@ -11,7 +11,7 @@ const Nav: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <aside aria-label="Sidebar Menu">
+    <aside aria-label={t('nav.aria.sidebarMenu')}>
       <S.List>
         <ClusterMenuItem to="/" title={t('nav.dashboard')} isTopLevel />
       </S.List>

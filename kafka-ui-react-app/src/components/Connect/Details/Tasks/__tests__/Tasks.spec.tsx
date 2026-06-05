@@ -96,7 +96,7 @@ describe('Tasks', () => {
       });
       expect(firstTaskRow).toBeInTheDocument();
       const extBtn = within(firstTaskRow).getByRole('button', {
-        name: 'Dropdown Toggle',
+        name: /Dropdown Toggle|切换下拉菜单/,
       });
       expect(extBtn).toBeEnabled();
       await userEvent.click(extBtn);
@@ -107,7 +107,8 @@ describe('Tasks', () => {
       renderComponent(tasks);
       await expectDropdownExists();
       expect(
-        screen.getAllByRole('button', { name: 'Dropdown Toggle' }).length
+        screen.getAllByRole('button', { name: /Dropdown Toggle|切换下拉菜单/ })
+          .length
       ).toEqual(tasks.length);
       // Action buttons are enabled
       const actionBtn = screen.getAllByRole('menuitem');

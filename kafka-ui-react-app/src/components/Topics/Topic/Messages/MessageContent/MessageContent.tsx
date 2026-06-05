@@ -108,7 +108,7 @@ const MessageContent: React.FC<MessageContentProps> = ({
                 <S.MetadataValue>{formatTimestamp(timestamp)}</S.MetadataValue>
                 <S.MetadataMeta>
                   {t('topics.messages.details.timestampType', {
-                    type: timestampType,
+                    type: timestampType ?? '',
                   })}
                 </S.MetadataMeta>
               </span>

@@ -60,7 +60,7 @@ const NavBar: React.FC<Props> = ({ onBurgerClick }) => {
   ];
 
   return (
-    <S.Navbar role="navigation" aria-label="Page Header">
+    <S.Navbar role="navigation" aria-label={t('navbar.aria.pageHeader')}>
       <S.NavbarBrand>
         <S.NavbarBrand>
           <S.NavbarBurger
@@ -68,7 +68,7 @@ const NavBar: React.FC<Props> = ({ onBurgerClick }) => {
             onKeyDown={onBurgerClick}
             role="button"
             tabIndex={0}
-            aria-label="burger"
+            aria-label={t('navbar.aria.burger')}
           >
             <S.Span role="separator" />
             <S.Span role="separator" />

@@ -22,7 +22,11 @@ const useDataSaver = (
     } else {
       showAlert('warning', {
         id: subject,
-        title: translateMessage('common.warning', undefined, getCurrentLocale()),
+        title: translateMessage(
+          'common.warning',
+          undefined,
+          getCurrentLocale()
+        ),
         message: translateMessage(
           'common.copy.unavailable',
           undefined,

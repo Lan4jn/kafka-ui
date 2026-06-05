@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { ServerStatus } from 'generated-sources';
 
 import * as S from './ClusterTab.styled';
@@ -15,20 +16,24 @@ const ClusterTab: React.FC<ClusterTabProps> = ({
   title,
   isOpen,
   toggleClusterMenu,
-}) => (
-  <S.Wrapper onClick={toggleClusterMenu} isOpen>
-    <S.Title title={title}>{title}</S.Title>
+}) => {
+  const { t } = useTranslation();
 
-    <S.StatusIconWrapper>
-      <S.StatusIcon status={status} aria-label="status">
-        <title>{status}</title>
-      </S.StatusIcon>
-    </S.StatusIconWrapper>
+  return (
+    <S.Wrapper onClick={toggleClusterMenu} isOpen>
+      <S.Title title={title}>{title}</S.Title>
 
-    <S.ChevronWrapper>
-      <S.ChevronIcon $open={isOpen} />
-    </S.ChevronWrapper>
-  </S.Wrapper>
-);
+      <S.StatusIconWrapper>
+        <S.StatusIcon status={status} aria-label={t('nav.aria.clusterStatus')}>
+          <title>{t(`common.status.${status}`)}</title>
+        </S.StatusIcon>
+      </S.StatusIconWrapper>
+
+      <S.ChevronWrapper>
+        <S.ChevronIcon $open={isOpen} />
+      </S.ChevronWrapper>
+    </S.Wrapper>
+  );
+};
 
 export default ClusterTab;

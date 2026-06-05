@@ -1,11 +1,9 @@
 import React from 'react';
-import { SeekDirectionOptions } from 'components/Topics/Topic/Messages/Messages';
 import Filters, {
   FiltersProps,
-  SeekTypeOptions,
 } from 'components/Topics/Topic/Messages/Filters/Filters';
 import { EventSourceMock, render, WithRoute } from 'lib/testHelpers';
-import { screen, within } from '@testing-library/react';
+import { cleanup, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TopicMessagesContext, {
   ContextProps,
@@ -63,6 +61,8 @@ const renderComponent = (
   );
 
 beforeEach(async () => {
+  localStorage.clear();
+  localStorage.setItem('locale', 'en');
   (useTopicDetails as jest.Mock).mockImplementation(() => ({
     data: externalTopicPayload,
   }));
@@ -108,32 +108,30 @@ describe('Filters component', () => {
     });
 
     it('timestamp input', async () => {
+      localStorage.setItem('locale', 'zh-CN');
+      cleanup();
+      renderComponent();
       const seekTypeSelect = screen.getAllByRole('listbox');
       const option = screen.getAllByRole('option');
 
       await userEvent.click(seekTypeSelect[0]);
 
-      await userEvent.selectOptions(seekTypeSelect[0], ['Timestamp']);
+      await userEvent.selectOptions(seekTypeSelect[0], ['时间戳']);
 
-      expect(option[0]).toHaveTextContent('Timestamp');
-      const timestampInput = screen.getByPlaceholderText('Select timestamp');
+      expect(option[0]).toHaveTextContent('时间戳');
+      const timestampInput = screen.getByPlaceholderText('选择时间戳');
       expect(timestampInput).toHaveValue('');
 
       await userEvent.type(timestampInput, inputValue);
 
       expect(timestampInput).toHaveValue(inputValue);
-      expect(screen.getByText('Submit')).toBeInTheDocument();
+      expect(screen.getByText('提交')).toBeInTheDocument();
     });
   });
 
   describe('Select elements', () => {
     let seekTypeSelects: HTMLElement[];
     let options: HTMLElement[];
-
-    const selectedDirectionOptionValue = SeekDirectionOptions[0];
-    const mockDirectionOptionSelectLabel = selectedDirectionOptionValue.label;
-    const selectTypeOptionValue = SeekTypeOptions[0];
-    const mockTypeOptionSelectLabel = selectTypeOptionValue.label;
 
     beforeEach(() => {
       renderComponent();
@@ -142,30 +140,34 @@ describe('Filters component', () => {
     });
 
     it('seekType select', async () => {
-      expect(options[0]).toHaveTextContent('Offset');
+      localStorage.setItem('locale', 'zh-CN');
+      cleanup();
+      renderComponent();
+      seekTypeSelects = screen.getAllByRole('listbox');
+      options = screen.getAllByRole('option');
+
+      expect(options[0]).toHaveTextContent('偏移量');
       await userEvent.click(seekTypeSelects[0]);
-      await userEvent.selectOptions(seekTypeSelects[0], [
-        mockTypeOptionSelectLabel,
-      ]);
-      expect(options[0]).toHaveTextContent(mockTypeOptionSelectLabel);
-      expect(screen.getByText('Submit')).toBeInTheDocument();
+      await userEvent.selectOptions(seekTypeSelects[0], ['时间戳']);
+      expect(options[0]).toHaveTextContent('时间戳');
+      expect(screen.getByText('提交')).toBeInTheDocument();
     });
 
     it('seekDirection select', async () => {
       await userEvent.click(seekTypeSelects[3]);
-      await userEvent.selectOptions(seekTypeSelects[3], [
-        mockDirectionOptionSelectLabel,
-      ]);
-      expect(options[3]).toHaveTextContent(mockDirectionOptionSelectLabel);
+      await userEvent.selectOptions(seekTypeSelects[3], ['Oldest First']);
+      expect(options[3]).toHaveTextContent('Oldest First');
     });
   });
 
   it('stop loading when live mode is active', async () => {
+    localStorage.setItem('locale', 'zh-CN');
+    cleanup();
     renderComponent();
-    await userEvent.click(screen.getByText('Stop loading'));
+    await userEvent.click(screen.getByText('停止加载'));
     const option = screen.getAllByRole('option');
-    expect(option[3]).toHaveTextContent('Oldest First');
-    expect(screen.getByText('Submit')).toBeInTheDocument();
+    expect(option[3]).toHaveTextContent('最早优先');
+    expect(screen.getByText('提交')).toBeInTheDocument();
   });
 
   it('renders addFilter modal', async () => {

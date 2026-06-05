@@ -89,7 +89,7 @@ describe('App', () => {
     const user = userEvent.setup();
 
     await user.click(screen.getByText('English'));
-    await user.click(screen.getByText('简体中文'));
+    await user.click(screen.getByText(/简体中文|Chinese \(Simplified\)/));
 
     expect(localStorage.getItem('locale')).toBe('zh-CN');
   });

@@ -16,6 +16,7 @@ import {
 
 const clusterName = 'local';
 const topicName = 'topic';
+const dropdownToggleLabel = /Dropdown Toggle|切换下拉菜单/;
 const defaultContextValues = {
   isReadOnly: false,
   hasKafkaConnectConfigured: true,
@@ -86,7 +87,7 @@ describe('Overview', () => {
         ...externalTopicPayload,
         cleanUpPolicy: CleanUpPolicy.DELETE,
       });
-      expect(screen.getAllByLabelText('Dropdown Toggle').length).toEqual(1);
+      expect(screen.getAllByLabelText(dropdownToggleLabel).length).toEqual(1);
     });
 
     it('does not render Partitions', () => {
@@ -175,14 +176,14 @@ describe('Overview', () => {
         },
         { ...defaultContextValues, isReadOnly: true }
       );
-      expect(screen.getByLabelText('Dropdown Toggle')).toBeDisabled();
+      expect(screen.getByLabelText(dropdownToggleLabel)).toBeDisabled();
     });
 
     it('should check if the dropdown is disabled when it is internal', () => {
       renderComponent({
         ...internalTopicPayload,
       });
-      expect(screen.getByLabelText('Dropdown Toggle')).toBeDisabled();
+      expect(screen.getByLabelText(dropdownToggleLabel)).toBeDisabled();
     });
 
     it('should check if the dropdown is disabled when cleanUpPolicy is not DELETE', () => {
@@ -190,7 +191,7 @@ describe('Overview', () => {
         ...externalTopicPayload,
         cleanUpPolicy: CleanUpPolicy.COMPACT,
       });
-      expect(screen.getByLabelText('Dropdown Toggle')).toBeDisabled();
+      expect(screen.getByLabelText(dropdownToggleLabel)).toBeDisabled();
     });
   });
 });

@@ -5,8 +5,9 @@ import { render } from 'lib/testHelpers';
 import PageContainer from 'components/PageContainer/PageContainer';
 import { useClusters } from 'lib/hooks/api/clusters';
 import { Cluster, ServerStatus } from 'generated-sources';
+import { en } from 'locales/en';
 
-const burgerButtonOptions = { name: 'burger' };
+const burgerButtonOptions = { name: en['navbar.aria.burger'] };
 
 jest.mock('components/Version/Version', () => () => <div>Version</div>);
 interface DataType {
@@ -30,7 +31,7 @@ describe('Page Container', () => {
       })),
     });
     render(
-      <PageContainer setDarkMode={jest.fn()}>
+      <PageContainer>
         <div>child</div>
       </PageContainer>,
       {
@@ -41,12 +42,13 @@ describe('Page Container', () => {
 
   it('handle burger click correctly', async () => {
     renderComponent(false, { data: undefined });
-    const burger = within(screen.getByLabelText('Page Header')).getByRole(
-      'button',
-      burgerButtonOptions
-    );
-    const overlay = screen.getByLabelText('Overlay');
-    expect(screen.getByLabelText('Sidebar')).toBeInTheDocument();
+    const burger = within(
+      screen.getByLabelText(en['navbar.aria.pageHeader'])
+    ).getByRole('button', burgerButtonOptions);
+    const overlay = screen.getByLabelText(en['pageContainer.aria.overlay']);
+    expect(
+      screen.getByLabelText(en['pageContainer.aria.sidebar'])
+    ).toBeInTheDocument();
     expect(overlay).toBeInTheDocument();
     expect(overlay).toHaveStyleRule('visibility: hidden');
     expect(burger).toHaveStyleRule('display: none');

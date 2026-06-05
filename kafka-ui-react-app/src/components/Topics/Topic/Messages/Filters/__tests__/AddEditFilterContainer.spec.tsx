@@ -73,7 +73,7 @@ describe('AddEditFilterContainer component', () => {
       await user.keyboard('{Control>}[KeyA]{/Control}{backspace}');
       await user.tab();
 
-      expect(screen.getByText(/required field/i)).toBeInTheDocument();
+      expect(screen.getByText(/required/i)).toBeInTheDocument();
     });
   });
 

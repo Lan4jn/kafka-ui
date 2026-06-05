@@ -25,7 +25,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ toggleIsOpen }) => {
       <S.InfoParagraph>
         <b>{t('topics.messages.filters.info.sampleTitle')}</b>
       </S.InfoParagraph>
-      <ol aria-label="info-list">
+      <ol aria-label={t('topics.messages.filters.info.aria.list')}>
         <S.ListItem>
           <code>keyAsText != null && keyAsText ~&quot;([Gg])roovy&quot;</code> -
           {t('topics.messages.filters.info.sampleRegex')}

@@ -43,15 +43,19 @@ describe('AddFilter component', () => {
       await act(() => {
         renderComponent();
       });
-      expect(screen.getByRole('button', { name: 'info' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /info|Filter help/ })
+      ).toBeInTheDocument();
     });
 
     it('renders InfoModal', async () => {
       renderComponent();
-      await userEvent.click(screen.getByRole('button', { name: 'info' }));
-      expect(screen.getByRole('button', { name: 'Ok' })).toBeInTheDocument();
+      await userEvent.click(
+        screen.getByRole('button', { name: /info|Filter help/ })
+      );
+      expect(screen.getByRole('button', { name: /Ok|OK/ })).toBeInTheDocument();
       expect(
-        screen.getByRole('list', { name: 'info-list' })
+        screen.getByRole('list', { name: /info-list|Filter examples list/ })
       ).toBeInTheDocument();
     });
 
@@ -109,7 +113,6 @@ describe('AddFilter component', () => {
         renderComponent();
         renderComponent({ isSavedFiltersOpen: true });
       });
-      await userEvent.click(screen.getByText('Saved Filters'));
       const index = 0;
       const editButton = screen.getAllByText('Edit')[index];
       await userEvent.click(editButton);

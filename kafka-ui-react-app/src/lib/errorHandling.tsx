@@ -56,7 +56,9 @@ export const showSuccessAlert = (options: AlertOptions) => {
   const locale = getCurrentLocale();
   showAlert('success', {
     ...options,
-    title: options.title || translateMessage('common.alert.success', undefined, locale),
+    title:
+      options.title ||
+      translateMessage('common.alert.success', undefined, locale),
   });
 };
 
@@ -76,8 +78,7 @@ export const showServerError = async (
       id: response.url,
       title: `${response.status} ${response.statusText}`,
       message:
-        body?.message ||
-        translateMessage('errors.occurred', undefined, locale),
+        body?.message || translateMessage('errors.occurred', undefined, locale),
       ...options,
     });
   } else {

@@ -1,7 +1,10 @@
 import { ApplicationConfigValidation } from 'generated-sources';
 import { showAlert } from 'lib/errorHandling';
 
-type Translator = (key: string, params?: Record<string, string | number>) => string;
+type Translator = (
+  key: string,
+  params?: Record<string, string | number>
+) => string;
 
 export const getIsValidConfig = (
   { clusters }: ApplicationConfigValidation,

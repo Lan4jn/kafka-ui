@@ -68,23 +68,23 @@ describe('Configs', () => {
   });
 
   it('updates textbox value', async () => {
-    await userEvent.click(screen.getAllByLabelText('editAction')[0]);
+    await userEvent.click(screen.getAllByLabelText(/editAction|编辑配置值/)[0]);
 
-    const textbox = screen.getByLabelText('inputValue');
+    const textbox = screen.getByLabelText('配置值');
     expect(textbox).toBeInTheDocument();
     expect(textbox).toHaveValue('producer');
 
     await userEvent.type(textbox, 'new value');
 
     expect(
-      screen.getByRole('button', { name: 'confirmAction' })
+      screen.getByRole('button', { name: /confirmAction|确认编辑/ })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'cancelAction' })
+      screen.getByRole('button', { name: /cancelAction|取消编辑/ })
     ).toBeInTheDocument();
 
     await userEvent.click(
-      screen.getByRole('button', { name: 'confirmAction' })
+      screen.getByRole('button', { name: /confirmAction|确认编辑/ })
     );
 
     expect(screen.getByText('确定要修改该值吗？')).toBeInTheDocument();

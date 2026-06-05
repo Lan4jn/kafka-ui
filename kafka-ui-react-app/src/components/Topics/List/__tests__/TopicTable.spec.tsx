@@ -136,7 +136,9 @@ describe('TopicTable Components', () => {
       renderComponent({ topics: topicsPayload, pageCount: 1 });
 
       await userEvent.hover(screen.getByText('分区数'));
-      expect(await screen.findByText(GLOSSARY_TERMS.PARTITION)).toBeInTheDocument();
+      expect(
+        await screen.findByText(GLOSSARY_TERMS.PARTITION)
+      ).toBeInTheDocument();
 
       await userEvent.hover(screen.getByText('副本因子'));
       expect(
@@ -198,12 +200,13 @@ describe('TopicTable Components', () => {
         let view: ReturnType<typeof renderComponent>;
 
         beforeEach(() => {
+          localStorage.setItem('locale', 'zh-CN');
           payload = {
             topics: [
               externalTopicPayload,
               { ...externalTopicPayload, name: 'test-topic' },
             ],
-            totalPages: 1,
+            pageCount: 1,
           };
           view = renderComponent(payload);
           expect(screen.getAllByRole('checkbox').length).toEqual(3);
@@ -215,27 +218,24 @@ describe('TopicTable Components', () => {
             await userEvent.click(screen.getAllByRole('checkbox')[1]);
           });
           it('renders batch actions bar', () => {
-            expect(getButtonByName('Delete selected topics')).toBeEnabled();
-            expect(getButtonByName('Copy selected topic')).toBeEnabled();
-            expect(
-              getButtonByName(en['topics.actions.purgeSelectedTopics'])
-            ).toBeEnabled();
+            expect(getButtonByName('删除所选主题')).toBeEnabled();
+            expect(getButtonByName('复制所选主题')).toBeEnabled();
+            expect(getButtonByName('清空所选主题消息')).toBeEnabled();
           });
           it('recomputes permitted actions when rbacFlag changes', async () => {
-            expect(
-              getButtonByName(en['topics.actions.purgeSelectedTopics'])
-            ).toBeEnabled();
+            expect(getButtonByName('清空所选主题消息')).toBeEnabled();
 
             (useUserInfo as jest.Mock).mockReturnValue({
               roles: defaultRoles,
               rbacFlag: true,
             });
 
-            view.rerender(getComponent(payload));
+            (useTopics as jest.Mock).mockImplementation(() => ({
+              data: payload,
+            }));
+            view.rerender(getComponent());
 
-            expect(
-              getButtonByName(en['topics.actions.purgeSelectedTopics'])
-            ).toBeDisabled();
+            expect(getButtonByName('清空所选主题消息')).toBeDisabled();
           });
         });
         describe('when more then one topics are selected', () => {
@@ -244,21 +244,17 @@ describe('TopicTable Components', () => {
             await userEvent.click(screen.getAllByRole('checkbox')[2]);
           });
           it('renders batch actions bar', () => {
-            expect(getButtonByName('Delete selected topics')).toBeEnabled();
-            expect(getButtonByName('Copy selected topic')).toBeDisabled();
-            expect(
-              getButtonByName(en['topics.actions.purgeSelectedTopics'])
-            ).toBeEnabled();
+            expect(getButtonByName('删除所选主题')).toBeEnabled();
+            expect(getButtonByName('复制所选主题')).toBeDisabled();
+            expect(getButtonByName('清空所选主题消息')).toBeEnabled();
           });
           it('handels delete button click', async () => {
-            const button = getButtonByName('Delete selected topics');
+            const button = getButtonByName('删除所选主题');
             await userEvent.click(button);
             expect(
-              screen.getByText(
-                'Are you sure you want to remove selected topics?'
-              )
+              screen.getByText('确定要删除所选主题吗？')
             ).toBeInTheDocument();
-            const confirmBtn = getButtonByName('Confirm');
+            const confirmBtn = getButtonByName('确认');
             expect(confirmBtn).toBeInTheDocument();
             expect(deleteTopicMock).not.toHaveBeenCalled();
             await userEvent.click(confirmBtn);
@@ -267,14 +263,12 @@ describe('TopicTable Components', () => {
             expect(screen.getAllByRole('checkbox')[2]).not.toBeChecked();
           });
           it('handels purge messages button click', async () => {
-            const button = getButtonByName(
-              en['topics.actions.purgeSelectedTopics']
-            );
+            const button = getButtonByName('清空所选主题消息');
             await userEvent.click(button);
             expect(
-              screen.getByText(en['topics.confirmations.purgeSelectedTopics'])
+              screen.getByText('确定要清空所选主题的消息吗？')
             ).toBeInTheDocument();
-            const confirmBtn = getButtonByName('Confirm');
+            const confirmBtn = getButtonByName('确认');
             expect(confirmBtn).toBeInTheDocument();
             expect(clearTopicMessages).not.toHaveBeenCalled();
             await userEvent.click(confirmBtn);
@@ -288,7 +282,7 @@ describe('TopicTable Components', () => {
     describe('Action buttons', () => {
       const expectDropdownExists = async () => {
         const btn = screen.getByRole('button', {
-          name: 'Dropdown Toggle',
+          name: /Dropdown Toggle|切换下拉菜单/,
         });
         expect(btn).toBeEnabled();
         await userEvent.click(btn);
@@ -296,14 +290,18 @@ describe('TopicTable Components', () => {
       };
       it('renders disable action buttons for read-only cluster', () => {
         renderComponent({ topics: topicsPayload, pageCount: 1 }, true);
-        const btns = screen.getAllByRole('button', { name: 'Dropdown Toggle' });
+        const btns = screen.getAllByRole('button', {
+          name: /Dropdown Toggle|切换下拉菜单/,
+        });
         expect(btns[0]).toBeDisabled();
         expect(btns[1]).toBeDisabled();
       });
       it('renders action buttons', async () => {
         await renderComponent({ topics: topicsPayload, pageCount: 1 });
         expect(
-          screen.getAllByRole('button', { name: 'Dropdown Toggle' }).length
+          screen.getAllByRole('button', {
+            name: /Dropdown Toggle|切换下拉菜单/,
+          }).length
         ).toEqual(2);
         // Internal topic action buttons are disabled
         const internalTopicRow = screen.getByRole('row', {
@@ -312,7 +310,7 @@ describe('TopicTable Components', () => {
         expect(internalTopicRow).toBeInTheDocument();
         expect(
           within(internalTopicRow).getByRole('button', {
-            name: 'Dropdown Toggle',
+            name: /Dropdown Toggle|切换下拉菜单/,
           })
         ).toBeDisabled();
         // External topic action buttons are enabled
@@ -321,7 +319,7 @@ describe('TopicTable Components', () => {
         });
         expect(externalTopicRow).toBeInTheDocument();
         const extBtn = within(externalTopicRow).getByRole('button', {
-          name: 'Dropdown Toggle',
+          name: /Dropdown Toggle|切换下拉菜单/,
         });
         expect(extBtn).toBeEnabled();
         await userEvent.click(extBtn);
@@ -341,6 +339,8 @@ describe('TopicTable Components', () => {
           await expectDropdownExists();
           const actionBtn = screen.getAllByRole('menuitem');
           expect(actionBtn[0]).toHaveTextContent('清空消息');
+          expect(actionBtn[0]).toHaveTextContent('只有启用 DELETE 策略的主题');
+          expect(actionBtn[0]).toHaveTextContent('才允许清空消息');
           expect(actionBtn[0]).not.toHaveAttribute('aria-disabled');
         });
         it('is disabled for topic without CleanUpPolicy.DELETE', async () => {
@@ -381,10 +381,11 @@ describe('TopicTable Components', () => {
 
       describe('and remove topic action', () => {
         it('is visible only when topic deletion allowed for cluster', async () => {
+          localStorage.setItem('locale', 'zh-CN');
           renderComponent({ topics: [topicsPayload[1]] });
           await expectDropdownExists();
           const actionBtn = screen.getAllByRole('menuitem');
-          expect(actionBtn[2]).toHaveTextContent('Remove Topic');
+          expect(actionBtn[2]).toHaveTextContent('删除主题');
           expect(actionBtn[2]).not.toHaveAttribute('aria-disabled');
         });
         it('is disabled when topic deletion is not allowed for cluster', async () => {
@@ -395,29 +396,27 @@ describe('TopicTable Components', () => {
           expect(actionBtn[2]).toHaveAttribute('aria-disabled');
         });
         it('works as expected', async () => {
+          localStorage.setItem('locale', 'zh-CN');
           renderComponent({ topics: [topicsPayload[1]] });
           await expectDropdownExists();
-          await userEvent.click(screen.getByText('Remove Topic'));
+          await userEvent.click(screen.getByText('删除主题'));
           expect(
-            screen.getByText(en['confirmation.title'])
+            screen.getByRole('dialog', { name: '确认对话框' })
           ).toBeInTheDocument();
-          await userEvent.click(
-            screen.getByRole('button', { name: 'Confirm' })
-          );
+          await userEvent.click(screen.getByRole('button', { name: '确认' }));
           expect(deleteTopicMock).toHaveBeenCalled();
         });
       });
       describe('and recreate topic action', () => {
         it('works as expected', async () => {
+          localStorage.setItem('locale', 'zh-CN');
           renderComponent({ topics: [topicsPayload[1]] });
           await expectDropdownExists();
-          await userEvent.click(screen.getByText('Recreate Topic'));
+          await userEvent.click(screen.getByText('重建主题'));
           expect(
-            screen.getByText(en['confirmation.title'])
+            screen.getByRole('dialog', { name: '确认对话框' })
           ).toBeInTheDocument();
-          await userEvent.click(
-            screen.getByRole('button', { name: 'Confirm' })
-          );
+          await userEvent.click(screen.getByRole('button', { name: '确认' }));
           expect(recreateTopicMock).toHaveBeenCalled();
         });
       });

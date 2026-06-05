@@ -35,6 +35,8 @@ describe('GlossaryTerm', () => {
     expect(renderedText).toBeInTheDocument();
 
     await userEvent.hover(renderedText);
-    expect(await screen.findByText(GLOSSARY_TERMS.CONSUMER_GROUP)).toBeInTheDocument();
+    expect(
+      await screen.findByText(GLOSSARY_TERMS.CONSUMER_GROUP)
+    ).toBeInTheDocument();
   });
 });

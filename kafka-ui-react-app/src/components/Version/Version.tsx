@@ -1,5 +1,6 @@
 import React from 'react';
 import WarningIcon from 'components/common/Icons/WarningIcon';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { gitCommitPath } from 'lib/paths';
 import { useLatestVersion } from 'lib/hooks/api/latestVersion';
 import { formatTimestamp } from 'lib/dateTimeHelpers';
@@ -7,6 +8,7 @@ import { formatTimestamp } from 'lib/dateTimeHelpers';
 import * as S from './Version.styled';
 
 const Version: React.FC = () => {
+  const { t } = useTranslation();
   const { data: latestVersionInfo = {} } = useLatestVersion();
   const { buildTime, commitId, isLatestRelease, version } =
     latestVersionInfo.build;
@@ -21,9 +23,9 @@ const Version: React.FC = () => {
     <S.Wrapper>
       {!isLatestRelease && (
         <S.OutdatedWarning
-          title={`Your app version is outdated. Latest version is ${
-            versionTag || 'UNKNOWN'
-          }`}
+          title={t('version.outdated.title', {
+            version: versionTag || 'UNKNOWN',
+          })}
         >
           <WarningIcon />
         </S.OutdatedWarning>
@@ -32,7 +34,7 @@ const Version: React.FC = () => {
       {commitId && (
         <div>
           <S.CurrentCommitLink
-            title="Current commit"
+            title={t('version.currentCommit')}
             target="__blank"
             href={gitCommitPath(commitId)}
           >

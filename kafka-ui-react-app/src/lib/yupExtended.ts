@@ -76,7 +76,10 @@ export const topicFormValidationSchema = (
       .string()
       .max(249)
       .required(t('topics.form.validation.nameRequired'))
-      .matches(TOPIC_NAME_VALIDATION_PATTERN, t('topics.form.validation.namePattern')),
+      .matches(
+        TOPIC_NAME_VALIDATION_PATTERN,
+        t('topics.form.validation.namePattern')
+      ),
     partitions: yup
       .number()
       .min(1, t('topics.form.validation.partitionsMin'))
@@ -91,7 +94,9 @@ export const topicFormValidationSchema = (
     maxMessageBytes: yup.string(),
     customParams: yup.array().of(
       yup.object().shape({
-        name: yup.string().required(t('topics.form.validation.customParamRequired')),
+        name: yup
+          .string()
+          .required(t('topics.form.validation.customParamRequired')),
         value: yup
           .string()
           .required(t('topics.form.validation.customParamValueRequired')),

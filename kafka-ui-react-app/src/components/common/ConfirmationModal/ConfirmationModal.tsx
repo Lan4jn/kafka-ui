@@ -13,7 +13,7 @@ const ConfirmationModal: React.FC = () => {
   if (!isOpen) return null;
 
   return (
-    <S.Wrapper role="dialog" aria-label="Confirmation Dialog">
+    <S.Wrapper role="dialog" aria-label={t('confirmation.aria.dialog')}>
       <S.Overlay onClick={context.cancel} aria-hidden="true" role="button" />
       <S.Modal>
         <S.Header>{t('confirmation.title')}</S.Header>

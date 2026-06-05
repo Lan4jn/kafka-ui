@@ -43,7 +43,8 @@ export function useExecuteKsqlkDbQueryMutation() {
 const getFormattedErrorFromTableData = (
   responseValues: KsqlTableResponse['values']
 ): { title: string; message: string } => {
-  const tr = (key: string) => translateMessage(key, undefined, getCurrentLocale());
+  const tr = (key: string) =>
+    translateMessage(key, undefined, getCurrentLocale());
   // We expect someting like that
   // [[
   //   "@type",

@@ -4,7 +4,7 @@ import NavBar from 'components/NavBar/NavBar';
 import { screen, within } from '@testing-library/react';
 import { en } from 'locales/en';
 
-const burgerButtonOptions = { name: 'burger' };
+const burgerButtonOptions = { name: en['navbar.aria.burger'] };
 
 jest.mock('components/Version/Version', () => () => <div>Version</div>);
 jest.mock('components/NavBar/UserInfo/UserInfo', () => () => (
@@ -21,7 +21,7 @@ describe('NavBar', () => {
       })),
     });
 
-    render(<NavBar onBurgerClick={jest.fn()} setDarkMode={jest.fn()} />);
+    render(<NavBar onBurgerClick={jest.fn()} />);
   });
 
   it('correctly renders header', () => {

@@ -8,7 +8,11 @@ import { Dropdown } from 'components/common/Dropdown';
 import { useClearTopicMessages, useTopicDetails } from 'lib/hooks/api/topics';
 import { ActionDropdownItem } from 'components/common/ActionComponent';
 
-const ActionsCell: React.FC<CellContext<Partition, unknown>> = ({ row }) => {
+type PartitionWithMessageCount = Partition & { messageCount: number };
+
+const ActionsCell: React.FC<
+  CellContext<PartitionWithMessageCount, unknown>
+> = ({ row }) => {
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
   const { data } = useTopicDetails({ clusterName, topicName });
   const { isReadOnly } = React.useContext(ClusterContext);

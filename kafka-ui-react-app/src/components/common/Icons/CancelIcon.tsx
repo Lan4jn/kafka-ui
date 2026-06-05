@@ -1,8 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'components/contexts/LocaleContext';
 import { useTheme } from 'styled-components';
 
 const CancelIcon: React.FC = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,8 +15,8 @@ const CancelIcon: React.FC = () => {
       aria-describedby="desc"
       role="img"
     >
-      <title>Cancel</title>
-      <desc>A line styled icon from Orion Icon Library.</desc>
+      <title>{t('common.icons.cancel.title')}</title>
+      <desc>{t('common.icons.commonDesc')}</desc>
       <path
         data-name="layer1"
         d="M53.122 48.88L36.243 32l16.878-16.878a3 3 0 0 0-4.242-4.242L32 27.758l-16.878-16.88a3 3 0 0 0-4.243 4.243l16.878 16.88-16.88 16.88a3 3 0 0 0 4.243 4.241L32 36.243l16.878 16.88a3 3 0 0 0 4.244-4.243z"

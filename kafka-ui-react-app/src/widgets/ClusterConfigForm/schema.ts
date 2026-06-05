@@ -24,7 +24,8 @@ const sslSchema = lazy((value) => {
     return object({
       location: string().when('password', {
         is: (v: string) => !!v,
-        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
+        then: (schema) =>
+          schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       password: string(),
     });
@@ -39,11 +40,13 @@ const urlWithAuthSchema = lazy((value) => {
       isAuth: boolean(),
       username: string().when('isAuth', {
         is: true,
-        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
+        then: (schema) =>
+          schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       password: string().when('isAuth', {
         is: true,
-        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
+        then: (schema) =>
+          schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       keystore: sslSchema,
     });
@@ -57,11 +60,13 @@ const kafkaConnectSchema = object({
   isAuth: boolean(),
   username: string().when('isAuth', {
     is: true,
-    then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
+    then: (schema) =>
+      schema.required(tr('clusterConfig.validation.requiredField')),
   }),
   password: string().when('isAuth', {
     is: true,
-    then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
+    then: (schema) =>
+      schema.required(tr('clusterConfig.validation.requiredField')),
   }),
   keystore: sslSchema,
 });
@@ -83,11 +88,13 @@ const metricsSchema = lazy((value) => {
       isAuth: boolean(),
       username: string().when('isAuth', {
         is: true,
-        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
+        then: (schema) =>
+          schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       password: string().when('isAuth', {
         is: true,
-        then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
+        then: (schema) =>
+          schema.required(tr('clusterConfig.validation.requiredField')),
       }),
       keystore: sslSchema,
     });
@@ -168,7 +175,8 @@ const authSchema = lazy((value) => {
               'SASL/AWS IAM',
             ].includes(v);
           },
-          then: (schema) => schema.required(tr('clusterConfig.validation.requiredField')),
+          then: (schema) =>
+            schema.required(tr('clusterConfig.validation.requiredField')),
         }),
       keystore: lazy((_, { parent }) => {
         if (parent.method === 'mTLS') {

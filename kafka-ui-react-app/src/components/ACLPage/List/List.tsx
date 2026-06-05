@@ -132,7 +132,8 @@ const ACList: React.FC = () => {
 
   const onRowHover = (value: unknown) => {
     if (value && typeof value === 'object' && 'id' in value) {
-      setRowId(value.id as string);
+      const row = value as { id?: string };
+      if (row.id) setRowId(row.id);
     }
   };
 

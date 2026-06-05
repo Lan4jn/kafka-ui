@@ -15,6 +15,8 @@ import { GLOSSARY_TERMS } from 'lib/glossaryTerms';
 import * as S from './Overview.styled';
 import ActionsCell from './ActionsCell';
 
+type PartitionWithMessageCount = Partition & { messageCount: number };
+
 const Overview: React.FC = () => {
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
   const { data } = useTopicDetails({ clusterName, topicName });
@@ -30,18 +32,21 @@ const Overview: React.FC = () => {
   const newData = React.useMemo(() => {
     if (!data?.partitions) return [];
 
-    return data.partitions.map((items: Partition) => {
-      return {
-        ...items,
-        messageCount: items.offsetMax - items.offsetMin,
-      };
-    });
+    return data.partitions.map(
+      (items: Partition): PartitionWithMessageCount => {
+        return {
+          ...items,
+          messageCount: items.offsetMax - items.offsetMin,
+        };
+      }
+    );
   }, [data?.partitions]);
 
-  const columns = React.useMemo<ColumnDef<Partition>[]>(
+  const columns = React.useMemo<ColumnDef<PartitionWithMessageCount>[]>(
     () => [
       {
-        header: (
+        // eslint-disable-next-line react/no-unstable-nested-components
+        header: () => (
           <GlossaryTerm english={GLOSSARY_TERMS.PARTITION}>
             {t('topics.overview.table.partitionId')}
           </GlossaryTerm>
@@ -72,7 +77,8 @@ const Overview: React.FC = () => {
         },
       },
       {
-        header: (
+        // eslint-disable-next-line react/no-unstable-nested-components
+        header: () => (
           <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
             {t('topics.overview.table.firstOffset')}
           </GlossaryTerm>
@@ -81,7 +87,8 @@ const Overview: React.FC = () => {
         accessorKey: 'offsetMin',
       },
       {
-        header: (
+        // eslint-disable-next-line react/no-unstable-nested-components
+        header: () => (
           <GlossaryTerm english={GLOSSARY_TERMS.OFFSET}>
             {t('topics.overview.table.nextOffset')}
           </GlossaryTerm>
@@ -92,12 +99,12 @@ const Overview: React.FC = () => {
       {
         header: t('topics.overview.table.messageCount'),
         enableSorting: false,
-        accessorKey: `messageCount`,
+        accessorKey: 'messageCount',
       },
       {
         header: '',
         enableSorting: false,
-        accessorKey: 'actions',
+        id: 'actions',
         cell: ActionsCell,
       },
     ],
@@ -164,7 +171,7 @@ const Overview: React.FC = () => {
             <Metrics.LightText>
               {t('common.metrics.currentOfTotal', {
                 current: '',
-                total: data?.replicas,
+                total: data?.replicas ?? '',
               })}
             </Metrics.LightText>
           </Metrics.Indicator>

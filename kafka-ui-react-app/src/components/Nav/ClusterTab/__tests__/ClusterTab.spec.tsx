@@ -28,12 +28,12 @@ describe('ClusterTab component', () => {
 
   it('renders correct status icon for online cluster', () => {
     render(setupWrapper());
-    expect(screen.getByText(ServerStatus.ONLINE)).toBeInTheDocument();
+    expect(screen.getByText(/online/i)).toBeInTheDocument();
   });
 
   it('renders correct status icon for offline cluster', () => {
     render(setupWrapper({ status: ServerStatus.OFFLINE }));
-    expect(screen.getByText(ServerStatus.OFFLINE)).toBeInTheDocument();
+    expect(screen.getByText(/offline/i)).toBeInTheDocument();
   });
 
   it('handles onClick action', () => {

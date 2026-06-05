@@ -48,9 +48,9 @@ const ActionsCell: React.FC<CellContext<Topic, unknown>> = ({ row }) => {
       >
         {t('topics.actions.clearMessages')}
         <DropdownItemHint>
-          Clearing messages is only allowed for topics
+          {t('topics.details.hints.clearMessages.line1')}
           <br />
-          with DELETE policy
+          {t('topics.details.hints.clearMessages.line2')}
         </DropdownItemHint>
       </ActionDropdownItem>
       <ActionDropdownItem
@@ -58,7 +58,8 @@ const ActionsCell: React.FC<CellContext<Topic, unknown>> = ({ row }) => {
         onClick={recreateTopic.mutateAsync}
         confirm={
           <>
-            Are you sure to recreate <b>{name}</b> topic?
+            {t('topics.details.confirmations.recreate.prefix')} <b>{name}</b>{' '}
+            {t('topics.details.confirmations.recreate.suffix')}
           </>
         }
         danger
@@ -68,14 +69,15 @@ const ActionsCell: React.FC<CellContext<Topic, unknown>> = ({ row }) => {
           value: name,
         }}
       >
-        Recreate Topic
+        {t('topics.details.actions.recreate')}
       </ActionDropdownItem>
       <ActionDropdownItem
         disabled={!isTopicDeletionAllowed}
         onClick={() => deleteTopic.mutateAsync(name)}
         confirm={
           <>
-            Are you sure want to remove <b>{name}</b> topic?
+            {t('topics.details.confirmations.remove.prefix')} <b>{name}</b>{' '}
+            {t('topics.details.confirmations.remove.suffix')}
           </>
         }
         danger
@@ -85,12 +87,12 @@ const ActionsCell: React.FC<CellContext<Topic, unknown>> = ({ row }) => {
           value: name,
         }}
       >
-        Remove Topic
+        {t('topics.details.actions.remove')}
         {!isTopicDeletionAllowed && (
           <DropdownItemHint>
-            The topic deletion is restricted at the broker
+            {t('topics.details.hints.removeDisabled.line1')}
             <br />
-            configuration level (delete.topic.enable = false)
+            {t('topics.details.hints.removeDisabled.line2')}
           </DropdownItemHint>
         )}
       </ActionDropdownItem>

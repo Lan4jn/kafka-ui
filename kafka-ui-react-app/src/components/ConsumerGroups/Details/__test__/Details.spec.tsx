@@ -75,7 +75,7 @@ describe('ConsumerGroups Details', () => {
     expect(screen.getByText('消费积压')).toBeInTheDocument();
 
     await userEvent.click(
-      screen.getByRole('button', { name: 'Dropdown Toggle' })
+      screen.getByRole('button', { name: /Dropdown Toggle|切换下拉菜单/ })
     );
 
     expect(screen.getByText('重置偏移量')).toBeInTheDocument();

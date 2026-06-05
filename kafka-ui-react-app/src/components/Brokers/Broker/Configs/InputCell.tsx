@@ -43,14 +43,14 @@ const InputCell: React.FC<InputCellProps> = ({ row, getValue, onUpdate }) => {
         type="text"
         inputSize="S"
         value={value}
-        aria-label="inputValue"
+        aria-label={t('brokers.configs.aria.inputValue')}
         onChange={({ target }) => setValue(target?.value)}
       />
       <S.ButtonsWrapper>
         <Button
           buttonType="primary"
           buttonSize="S"
-          aria-label="confirmAction"
+          aria-label={t('brokers.configs.aria.confirmAction')}
           onClick={onSave}
         >
           <CheckmarkIcon /> {t('brokers.configs.actions.save')}
@@ -58,7 +58,7 @@ const InputCell: React.FC<InputCellProps> = ({ row, getValue, onUpdate }) => {
         <Button
           buttonType="primary"
           buttonSize="S"
-          aria-label="cancelAction"
+          aria-label={t('brokers.configs.aria.cancelAction')}
           onClick={() => setIsEdit(false)}
         >
           <CancelIcon /> {t('brokers.configs.actions.cancel')}
@@ -77,7 +77,7 @@ const InputCell: React.FC<InputCellProps> = ({ row, getValue, onUpdate }) => {
       <ActionButton
         buttonType="primary"
         buttonSize="S"
-        aria-label="editAction"
+        aria-label={t('brokers.configs.aria.editAction')}
         onClick={() => setIsEdit(true)}
         permission={{
           resource: ResourceType.CLUSTERCONFIG,

@@ -7,31 +7,14 @@ import useAppParams from 'lib/hooks/useAppParams';
 import { RouteParamsClusterTopic } from 'lib/paths';
 import { getDefaultSerdeName } from 'components/Topics/Topic/Messages/getDefaultSerdeName';
 import { MESSAGES_PER_PAGE } from 'lib/constants';
+import { useTranslation } from 'components/contexts/LocaleContext';
 
 import MessagesTable from './MessagesTable';
 import FiltersContainer from './Filters/FiltersContainer';
-
-export const SeekDirectionOptionsObj = {
-  [SeekDirection.FORWARD]: {
-    value: SeekDirection.FORWARD,
-    label: 'Oldest First',
-    isLive: false,
-  },
-  [SeekDirection.BACKWARD]: {
-    value: SeekDirection.BACKWARD,
-    label: 'Newest First',
-    isLive: false,
-  },
-  [SeekDirection.TAILING]: {
-    value: SeekDirection.TAILING,
-    label: 'Live Mode',
-    isLive: true,
-  },
-};
-
-export const SeekDirectionOptions = Object.values(SeekDirectionOptionsObj);
+import { getSeekDirectionOptions, getSeekDirectionOptionsObj } from './options';
 
 const Messages: React.FC = () => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { clusterName, topicName } = useAppParams<RouteParamsClusterTopic>();
 
@@ -54,7 +37,15 @@ const Messages: React.FC = () => {
     setSearchParams(searchParams);
   }, [serdes]);
 
-  const defaultSeekValue = SeekDirectionOptions[0];
+  const seekDirectionOptionsObj = React.useMemo(
+    () => getSeekDirectionOptionsObj(t),
+    [t]
+  );
+
+  const defaultSeekValue = React.useMemo(
+    () => getSeekDirectionOptions(t)[0],
+    [t]
+  );
 
   const [seekDirection, setSeekDirection] = React.useState<SeekDirection>(
     (searchParams.get('seekDirection') as SeekDirection) ||
@@ -62,26 +53,29 @@ const Messages: React.FC = () => {
   );
 
   const [isLive, setIsLive] = useState<boolean>(
-    SeekDirectionOptionsObj[seekDirection].isLive
+    seekDirectionOptionsObj[seekDirection].isLive
   );
 
-  const changeSeekDirection = useCallback((val: string) => {
-    switch (val) {
-      case SeekDirection.FORWARD:
-        setSeekDirection(SeekDirection.FORWARD);
-        setIsLive(SeekDirectionOptionsObj[SeekDirection.FORWARD].isLive);
-        break;
-      case SeekDirection.BACKWARD:
-        setSeekDirection(SeekDirection.BACKWARD);
-        setIsLive(SeekDirectionOptionsObj[SeekDirection.BACKWARD].isLive);
-        break;
-      case SeekDirection.TAILING:
-        setSeekDirection(SeekDirection.TAILING);
-        setIsLive(SeekDirectionOptionsObj[SeekDirection.TAILING].isLive);
-        break;
-      default:
-    }
-  }, []);
+  const changeSeekDirection = useCallback(
+    (val: string) => {
+      switch (val) {
+        case SeekDirection.FORWARD:
+          setSeekDirection(SeekDirection.FORWARD);
+          setIsLive(seekDirectionOptionsObj[SeekDirection.FORWARD].isLive);
+          break;
+        case SeekDirection.BACKWARD:
+          setSeekDirection(SeekDirection.BACKWARD);
+          setIsLive(seekDirectionOptionsObj[SeekDirection.BACKWARD].isLive);
+          break;
+        case SeekDirection.TAILING:
+          setSeekDirection(SeekDirection.TAILING);
+          setIsLive(seekDirectionOptionsObj[SeekDirection.TAILING].isLive);
+          break;
+        default:
+      }
+    },
+    [seekDirectionOptionsObj]
+  );
 
   const contextValue = useMemo(
     () => ({

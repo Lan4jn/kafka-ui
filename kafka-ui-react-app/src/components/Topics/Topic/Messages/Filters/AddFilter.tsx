@@ -81,7 +81,7 @@ const AddFilter: React.FC<FilterModalProps> = ({
         <div>
           <S.QuestionIconContainer
             type="button"
-            aria-label="info"
+            aria-label={t('topics.messages.filters.info.aria.button')}
             onClick={toggle}
           >
             <QuestionIcon />

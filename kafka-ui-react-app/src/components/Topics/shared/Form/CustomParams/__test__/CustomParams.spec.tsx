@@ -186,7 +186,7 @@ describe('CustomParams', () => {
       );
 
       const deleteSecondFieldsetButton = screen.getByTitle(
-        'Delete customParam field 1'
+        /Delete customParam field 1|Delete custom parameter field 1/
       );
       await act(async () => {
         await userEvent.click(deleteSecondFieldsetButton);
