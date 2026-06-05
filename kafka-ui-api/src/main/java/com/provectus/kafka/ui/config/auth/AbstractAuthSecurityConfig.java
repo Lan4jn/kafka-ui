@@ -15,6 +15,7 @@ abstract class AbstractAuthSecurityConfig {
       "/actuator/info",
       "/actuator/prometheus",
       "/auth",
+      "/auth/public-key",
       "/login",
       "/logout",
       "/oauth2/**",

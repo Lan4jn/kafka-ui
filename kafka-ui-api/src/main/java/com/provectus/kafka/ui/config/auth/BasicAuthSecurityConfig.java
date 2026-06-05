@@ -24,7 +24,8 @@ public class BasicAuthSecurityConfig extends AbstractAuthSecurityConfig {
   public static final String LOGOUT_URL = "/auth?logout";
 
   @Bean
-  public SecurityWebFilterChain configure(ServerHttpSecurity http) {
+  public SecurityWebFilterChain configure(ServerHttpSecurity http,
+                                          EncryptedPasswordAuthenticationManager authenticationManager) {
     log.info("Configuring LOGIN_FORM authentication.");
 
     final var authHandler = new RedirectServerAuthenticationSuccessHandler();
@@ -40,7 +41,10 @@ public class BasicAuthSecurityConfig extends AbstractAuthSecurityConfig {
             .anyExchange()
             .authenticated()
         )
-        .formLogin(spec -> spec.loginPage(LOGIN_URL).authenticationSuccessHandler(authHandler))
+        .formLogin(spec -> spec
+            .loginPage(LOGIN_URL)
+            .authenticationManager(authenticationManager)
+            .authenticationSuccessHandler(authHandler))
         .logout(spec -> spec
             .logoutSuccessHandler(logoutSuccessHandler)
             .requiresLogout(ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, "/logout")))

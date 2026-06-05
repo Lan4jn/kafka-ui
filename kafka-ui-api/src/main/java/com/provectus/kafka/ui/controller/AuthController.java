@@ -1,5 +1,7 @@
 package com.provectus.kafka.ui.controller;
 
+import com.provectus.kafka.ui.config.auth.LoginEncryptionService;
+import com.provectus.kafka.ui.config.auth.LoginEncryptionService.PublicKeyDto;
 import java.nio.charset.Charset;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,8 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class AuthController {
 
+  private final LoginEncryptionService loginEncryptionService;
+
   @GetMapping(value = "/auth", produces = {"text/html"})
   public Mono<byte[]> getAuth(ServerWebExchange exchange) {
     Mono<CsrfToken> token = exchange.getAttributeOrDefault(CsrfToken.class.getName(), Mono.empty());
@@ -22,6 +26,11 @@ public class AuthController {
         .map(AuthController::csrfToken)
         .defaultIfEmpty("")
         .map(csrfTokenHtmlInput -> createPage(exchange, csrfTokenHtmlInput));
+  }
+
+  @GetMapping(value = "/auth/public-key", produces = {"application/json"})
+  public Mono<PublicKeyDto> getPublicKey() {
+    return Mono.just(loginEncryptionService.publicKey());
   }
 
   private byte[] createPage(ServerWebExchange exchange, String csrfTokenHtmlInput) {
@@ -69,11 +78,32 @@ public class AuthController {
         + "placeholder=\"Username\" required autofocus>\n"
         + "        </p>\n" + "        <p>\n"
         + "          <label for=\"password\" class=\"sr-only\">Password</label>\n"
-        + "          <input type=\"password\" id=\"password\" name=\"password\" "
+        + "          <input type=\"password\" id=\"password\" "
         + "class=\"form-control\" placeholder=\"Password\" required>\n"
-        + "        </p>\n" + csrfTokenHtmlInput
+        + "        </p>\n"
+        + "        <input type=\"hidden\" id=\"encryptedPassword\" name=\"password\">\n"
+        + csrfTokenHtmlInput
         + "        <button class=\"btn btn-lg btn-primary btn-block\" "
         + "type=\"submit\">Sign in</button>\n"
+        + "        <script>\n"
+        + "          const form = document.querySelector('form');\n"
+        + "          form.addEventListener('submit', async (event) => {\n"
+        + "            event.preventDefault();\n"
+        + "            const password = document.getElementById('password');\n"
+        + "            const keyResponse = await fetch('" + contextPath + "/auth/public-key');\n"
+        + "            const key = await keyResponse.json();\n"
+        + "            const decode = (value) => Uint8Array.from(atob(value.replace(/-/g, '+').replace(/_/g, '/')), "
+        + "(char) => char.charCodeAt(0));\n"
+        + "            const publicKey = await crypto.subtle.importKey('jwk', { kty: 'RSA', n: key.n, e: key.e, "
+        + "alg: 'RSA-OAEP-256', ext: true }, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);\n"
+        + "            const encrypted = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publicKey, "
+        + "new TextEncoder().encode(password.value));\n"
+        + "            const encryptedBytes = new Uint8Array(encrypted);\n"
+        + "            document.getElementById('encryptedPassword').value = "
+        + "btoa(String.fromCharCode(...encryptedBytes));\n"
+        + "            form.submit();\n"
+        + "          });\n"
+        + "        </script>\n"
         + "      </form>\n";
   }
 

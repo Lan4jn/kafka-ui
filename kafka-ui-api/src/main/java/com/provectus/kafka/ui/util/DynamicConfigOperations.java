@@ -7,17 +7,15 @@ import com.provectus.kafka.ui.config.auth.OAuthProperties;
 import com.provectus.kafka.ui.config.auth.RoleBasedAccessControlProperties;
 import com.provectus.kafka.ui.exception.FileUploadException;
 import com.provectus.kafka.ui.exception.ValidationException;
+import com.provectus.kafka.ui.persistence.ApplicationSqliteOperations;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -26,7 +24,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.PropertySource;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.DumperOptions;
@@ -40,14 +38,12 @@ import org.yaml.snakeyaml.representer.Representer;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class DynamicConfigOperations {
 
   static final String DYNAMIC_CONFIG_ENABLED_ENV_PROPERTY = "dynamic.config.enabled";
   static final String FILTERING_GROOVY_ENABLED_PROPERTY = "filtering.groovy.enabled";
   static final String DYNAMIC_CONFIG_PATH_ENV_PROPERTY = "dynamic.config.path";
-  static final String DYNAMIC_CONFIG_PATH_ENV_PROPERTY_DEFAULT = "/etc/kafkaui/dynamic_config.yaml";
 
   static final String CONFIG_RELATED_UPLOADS_DIR_PROPERTY = "config.related.uploads.dir";
   static final String CONFIG_RELATED_UPLOADS_DIR_DEFAULT = "/etc/kafkaui/uploads";
@@ -60,6 +56,12 @@ public class DynamicConfigOperations {
   }
 
   private final ConfigurableApplicationContext ctx;
+  private final ApplicationSqliteOperations sqliteOperations;
+
+  public DynamicConfigOperations(ConfigurableApplicationContext ctx) {
+    this.ctx = ctx;
+    this.sqliteOperations = new ApplicationSqliteOperations(ctx);
+  }
 
   public boolean dynamicConfigEnabled() {
     return "true".equalsIgnoreCase(ctx.getEnvironment().getProperty(DYNAMIC_CONFIG_ENABLED_ENV_PROPERTY));
@@ -69,26 +71,19 @@ public class DynamicConfigOperations {
     return "true".equalsIgnoreCase(ctx.getEnvironment().getProperty(FILTERING_GROOVY_ENABLED_PROPERTY));
   }
 
-  private Path dynamicConfigFilePath() {
-    return Paths.get(
-        Optional.ofNullable(ctx.getEnvironment().getProperty(DYNAMIC_CONFIG_PATH_ENV_PROPERTY))
-            .orElse(DYNAMIC_CONFIG_PATH_ENV_PROPERTY_DEFAULT)
-    );
-  }
-
   @SneakyThrows
   public Optional<PropertySource<?>> loadDynamicPropertySource() {
     if (dynamicConfigEnabled()) {
-      Path configPath = dynamicConfigFilePath();
-      if (!Files.exists(configPath) || !Files.isReadable(configPath)) {
-        log.warn("Dynamic config file {} doesnt exist or not readable", configPath);
+      Optional<String> yaml = sqliteOperations.readDynamicConfig();
+      if (yaml.isEmpty()) {
+        log.warn("Dynamic config sqlite {} has no stored config", sqliteOperations.databasePath());
         return Optional.empty();
       }
       var propertySource = new CompositePropertySource("dynamicProperties");
       new YamlPropertySourceLoader()
-          .load("dynamicProperties", new FileSystemResource(configPath))
+          .load("dynamicProperties", new ByteArrayResource(yaml.get().getBytes()))
           .forEach(propertySource::addPropertySource);
-      log.info("Dynamic config loaded from {}", configPath);
+      log.info("Dynamic config loaded from sqlite {}", sqliteOperations.databasePath());
       return Optional.of(propertySource);
     }
     return Optional.empty();
@@ -122,7 +117,7 @@ public class DynamicConfigOperations {
     properties.initAndValidate();
 
     String yaml = serializeToYaml(properties);
-    writeYamlToFile(yaml, dynamicConfigFilePath());
+    sqliteOperations.writeDynamicConfig(yaml);
   }
 
   public Mono<Path> uploadConfigRelatedFile(FilePart file) {
@@ -165,30 +160,6 @@ public class DynamicConfigOperations {
       throw new ValidationException(
           "Dynamic config change is not allowed. "
               + "Set dynamic.config.enabled property to 'true' to enabled it.");
-    }
-  }
-
-  @SneakyThrows
-  private void writeYamlToFile(String yaml, Path path) {
-    if (Files.isDirectory(path)) {
-      throw new ValidationException("Dynamic file path is a directory, but should be a file path");
-    }
-    if (!Files.exists(path.getParent())) {
-      Files.createDirectories(path.getParent());
-    }
-    if (Files.exists(path) && !Files.isWritable(path)) {
-      throw new ValidationException("File already exists and is not writable");
-    }
-    try {
-      Files.writeString(
-          path,
-          yaml,
-          StandardOpenOption.CREATE,
-          StandardOpenOption.WRITE,
-          StandardOpenOption.TRUNCATE_EXISTING // to override existing file
-      );
-    } catch (IOException e) {
-      throw new ValidationException("Error writing to " + path, e);
     }
   }
 
