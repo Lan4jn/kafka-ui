@@ -24,19 +24,23 @@ describe('Nav', () => {
 
   const getDashboard = () => screen.getByText('Dashboard');
 
+  const getUsers = () => screen.getByText('Users');
+
   const getMenuItemsCount = () => screen.getAllByRole('menuitem').length;
   it('renders loader', () => {
     renderComponent();
 
-    expect(getMenuItemsCount()).toEqual(1);
+    expect(getMenuItemsCount()).toEqual(2);
     expect(getDashboard()).toBeInTheDocument();
+    expect(getUsers()).toBeInTheDocument();
   });
 
   it('renders ClusterMenu', () => {
     renderComponent([onlineClusterPayload, offlineClusterPayload]);
     expect(screen.getAllByRole('menu').length).toEqual(3);
-    expect(getMenuItemsCount()).toEqual(3);
+    expect(getMenuItemsCount()).toEqual(4);
     expect(getDashboard()).toBeInTheDocument();
+    expect(getUsers()).toBeInTheDocument();
     expect(screen.getByText(onlineClusterPayload.name)).toBeInTheDocument();
     expect(screen.getByText(offlineClusterPayload.name)).toBeInTheDocument();
   });

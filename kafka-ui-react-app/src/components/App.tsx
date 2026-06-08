@@ -6,6 +6,7 @@ import {
   errorPage,
   getNonExactPath,
   clusterNewConfigPath,
+  usersPath,
 } from 'lib/paths';
 import PageLoader from 'components/common/PageLoader/PageLoader';
 import Dashboard from 'components/Dashboard/Dashboard';
@@ -20,6 +21,7 @@ import GlobalCSS from 'components/globalCss';
 import * as S from 'components/App.styled';
 import ClusterConfigForm from 'widgets/ClusterConfigForm';
 import { ThemeModeContext } from 'components/contexts/ThemeModeContext';
+import Users from 'components/Users/Users';
 
 import ConfirmationModal from './common/ConfirmationModal/ConfirmationModal';
 import { ConfirmContextProvider } from './contexts/ConfirmContext';
@@ -70,6 +72,7 @@ const App: React.FC = () => {
                         path={getNonExactPath(clusterNewConfigPath)}
                         element={<ClusterConfigForm />}
                       />
+                      <Route path={usersPath} element={<Users />} />
                       <Route
                         path={getNonExactPath(clusterPath())}
                         element={<ClusterPage />}

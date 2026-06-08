@@ -1,6 +1,7 @@
 import { useClusters } from 'lib/hooks/api/clusters';
 import React from 'react';
 import { useTranslation } from 'components/contexts/LocaleContext';
+import { usersPath } from 'lib/paths';
 
 import ClusterMenu from './ClusterMenu';
 import ClusterMenuItem from './ClusterMenuItem';
@@ -14,6 +15,7 @@ const Nav: React.FC = () => {
     <aside aria-label={t('nav.aria.sidebarMenu')}>
       <S.List>
         <ClusterMenuItem to="/" title={t('nav.dashboard')} isTopLevel />
+        <ClusterMenuItem to={usersPath} title={t('nav.users')} isTopLevel />
       </S.List>
       {clusters.isSuccess &&
         clusters.data.map((cluster) => (
